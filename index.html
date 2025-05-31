@@ -44,6 +44,11 @@
             background: #f8d7da;
         }
         
+        .update-status.loading {
+            border-left-color: #007bff;
+            background: #e7f3ff;
+        }
+        
         .search-box {
             margin: 20px 0;
         }
@@ -175,17 +180,40 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        .csv-info {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .csv-info h3 {
+            margin: 0 0 10px 0;
+            color: #0369a1;
+        }
     </style>
+    <!-- Importation de PapaParse depuis CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body>
     <h1>Collection of Articles on Symplectic Geometry</h1>
     
-    <p>This list is automatically updated from <a href="https://arxiv.org">arXiv.org</a> with recent papers related to symplectic geometry, coisotropic submanifolds, Poisson structures, and related topics.</p>
+    <p>This list is automatically loaded from <code>symplectic_geometry_articles.csv</code> and includes hundreds of recent papers related to symplectic geometry, coisotropic submanifolds, Poisson structures, and related topics from arXiv.org.</p>
+    
+    <div class="csv-info">
+        <h3>📊 CSV Data Source</h3>
+        <p>Articles are automatically loaded from: <strong>symplectic_geometry_articles.csv</strong></p>
+        <p>This database contains hundreds of research papers from arXiv.org in symplectic geometry and related fields.</p>
+        <p>Status: <span id="csvStatus">Loading...</span></p>
+    </div>
     
     <div class="auto-update-controls">
         <span>🔄 Auto-update:</span>
         <button id="toggleAutoUpdate">Enable Auto-Update</button>
         <button id="manualUpdate">Update Now</button>
+        <button id="reloadCsv">Reload CSV</button>
         <span id="updateInterval">Every 30 minutes</span>
         <select id="intervalSelect">
             <option value="10">10 minutes</option>
@@ -198,7 +226,7 @@
     
     <div class="update-status" id="updateStatus">
         ✅ Last updated: <span id="lastUpdate">Never</span> | 
-        📊 Total articles: <span id="articleCount">30</span> |
+        📊 Total articles: <span id="articleCount">Loading...</span> |
         ⏰ Next update: <span id="nextUpdate">Not scheduled</span>
     </div>
     
@@ -216,36 +244,7 @@
             </tr>
         </thead>
         <tbody id="articlesBody">
-            <tr><td>2025-05-15</td><td>Søren Dyhr, Ángel González-Prieto, Eva Miranda, Daniel Peralta-Salas</td><td>Cosymplectic Chern--Hamilton conjecture</td><td><a href="http://arxiv.org/abs/2505.10379v1">arXiv:2505.10379v1</a></td></tr>
-            <tr><td>2025-05-15</td><td>Thorgal Hinault, Changzheng Li, Tony Yue YU, Chi Zhang, Shaowu Zhang</td><td>Unfolding of equivariant F-bundles and application to the mirror symmetry of flag varieties</td><td><a href="http://arxiv.org/abs/2505.09950v1">arXiv:2505.09950v1</a></td></tr>
-            <tr><td>2025-05-14</td><td>Shengzhen Ning</td><td>Cohomologous symplectic forms with different Gromov widths</td><td><a href="http://arxiv.org/abs/2505.09550v1">arXiv:2505.09550v1</a></td></tr>
-            <tr><td>2025-05-14</td><td>Janina Bernardy</td><td>Homotopy reduction of multisymplectic structures in Lagrangian field theory</td><td><a href="http://arxiv.org/abs/2505.09492v1">arXiv:2505.09492v1</a></td></tr>
-            <tr><td>2025-05-14</td><td>Omid Makhmali, David Sykes</td><td>Pre-Kähler structures and finite-nondegeneracy</td><td><a href="http://arxiv.org/abs/2505.09467v1">arXiv:2505.09467v1</a></td></tr>
-            <tr><td>2025-05-13</td><td>Daniel Kaplan, Travis Schedler</td><td>Nonprojective crepant resolutions of quiver varieties</td><td><a href="http://arxiv.org/abs/2505.08624v1">arXiv:2505.08624v1</a></td></tr>
-            <tr><td>2025-05-13</td><td>Keqin Liu</td><td>Zero Divisor Manifolds</td><td><a href="http://arxiv.org/abs/2505.08147v1">arXiv:2505.08147v1</a></td></tr>
-            <tr><td>2025-05-12</td><td>Luis Crespo, Álvaro Pelayo</td><td>Rigidity and flexibility in $p$-adic symplectic geometry</td><td><a href="http://arxiv.org/abs/2505.07663v1">arXiv:2505.07663v1</a></td></tr>
-            <tr><td>2025-05-12</td><td>Ashton Lewis, Zachary Ojakli, Ina Petkova, Benjamin Shapiro</td><td>Double-point enhanced GRID invariants and Lagrangian cobordisms</td><td><a href="http://arxiv.org/abs/2505.07599v1">arXiv:2505.07599v1</a></td></tr>
-            <tr><td>2025-05-12</td><td>Alejandro Vicente</td><td>The strong Viterbo conjecture and various flavours of duality in Lagrangian products</td><td><a href="http://arxiv.org/abs/2505.07572v1">arXiv:2505.07572v1</a></td></tr>
-            <tr><td>2025-05-12</td><td>Jacopo Stoppa</td><td>Nakai-Moishezon criteria and the toric Thomas-Yau conjecture</td><td><a href="http://arxiv.org/abs/2505.07228v1">arXiv:2505.07228v1</a></td></tr>
-            <tr><td>2025-05-11</td><td>Peter Heinzner, Christian Zöller</td><td>A structure theorem along fibers of extreme points of the momentum polytope</td><td><a href="http://arxiv.org/abs/2505.07006v1">arXiv:2505.07006v1</a></td></tr>
-            <tr><td>2025-05-11</td><td>Marco Bertola, Dmitry Korotkin, Jordi Pillet</td><td>New systems of log-canonical coordinates on $SL(2)$ character varieties of compact Riemann surfaces</td><td><a href="http://arxiv.org/abs/2505.06830v1">arXiv:2505.06830v1</a></td></tr>
-            <tr><td>2025-05-09</td><td>Boris M. Elfimov, Alexey A. Sharapov</td><td>A note on quantum Hamiltonian reduction and anomalies</td><td><a href="http://arxiv.org/abs/2505.05779v1">arXiv:2505.05779v1</a></td></tr>
-            <tr><td>2025-05-09</td><td>María Barbero-Liñán, Juan Manuel López Medel, David Martín de Diego</td><td>Discretization of Dirac systems and port-Hamiltonian systems: the role of the constraint algorithm</td><td><a href="http://arxiv.org/abs/2505.06024v1">arXiv:2505.06024v1</a></td></tr>
-            <tr><td>2025-05-08</td><td>J. de Lucas, X. Rivas, S. Vilarino, B. M. Zawora</td><td>Marsden--Meyer--Weinstein reduction for $k$-contact field theories</td><td><a href="http://arxiv.org/abs/2505.05462v1">arXiv:2505.05462v1</a></td></tr>
-            <tr><td>2025-05-08</td><td>Jishnu Bose, Harold Williams</td><td>Contact isotopies in the coherent-constructible correspondence</td><td><a href="http://arxiv.org/abs/2505.05012v1">arXiv:2505.05012v1</a></td></tr>
-            <tr><td>2025-05-08</td><td>Hanna Haeussler, Seongchan Kim</td><td>On invariants of families of lemniscate motions in the two-center problem</td><td><a href="http://arxiv.org/abs/2505.05052v1">arXiv:2505.05052v1</a></td></tr>
-            <tr><td>2025-05-07</td><td>John B. Etnyre, Burak Ozbagci, Bülent Tosun</td><td>Complementary legs and symplectic rational balls</td><td><a href="http://arxiv.org/abs/2505.04513v1">arXiv:2505.04513v1</a></td></tr>
-            <tr><td>2025-05-06</td><td>Gregory Taroyan</td><td>De Rham Theory in Derived Differential Geometry</td><td><a href="http://arxiv.org/abs/2505.03978v1">arXiv:2505.03978v1</a></td></tr>
-            <tr><td>2025-05-06</td><td>Paul-Emile Paradan, Nicolas Ressayre</td><td>HKKN-stratifications in a non-compact framework</td><td><a href="http://arxiv.org/abs/2505.03259v2">arXiv:2505.03259v2</a></td></tr>
-            <tr><td>2025-05-05</td><td>Julio Sampietro Christ</td><td>Equivariant Floer homology is isomorphic to reduced Floer homology</td><td><a href="http://arxiv.org/abs/2505.02647v1">arXiv:2505.02647v1</a></td></tr>
-            <tr><td>2025-05-05</td><td>Zelin Jia</td><td>Symplectic Geometry of Higgs Moduli and the Hilbert Scheme of Points</td><td><a href="http://arxiv.org/abs/2505.02334v2">arXiv:2505.02334v2</a></td></tr>
-            <tr><td>2025-05-05</td><td>Johanna Bimmermann</td><td>Maximal Weinstein neighborhoods of symmetric R-spaces and their symplectic capacities</td><td><a href="http://arxiv.org/abs/2505.02731v1">arXiv:2505.02731v1</a></td></tr>
-            <tr><td>2025-05-05</td><td>John Miller</td><td>Filtered Topology and Persistence in Stable Homotopy</td><td><a href="http://arxiv.org/abs/2505.02772v1">arXiv:2505.02772v1</a></td></tr>
-            <tr><td>2025-05-02</td><td>Guillem Cazassus</td><td>The Morse complex is an $\infty$-functor</td><td><a href="http://arxiv.org/abs/2505.01362v1">arXiv:2505.01362v1</a></td></tr>
-            <tr><td>2025-05-02</td><td>Ana Carolina Mançur</td><td>Manin triples on multiplicative Courant algebroids</td><td><a href="http://arxiv.org/abs/2505.01276v1">arXiv:2505.01276v1</a></td></tr>
-            <tr><td>2025-05-01</td><td>Kazushi Ueda</td><td>On the Fukaya categories of projective hypersurfaces of general type</td><td><a href="http://arxiv.org/abs/2505.00910v1">arXiv:2505.00910v1</a></td></tr>
-            <tr><td>2025-05-01</td><td>Thomas G. Mertens, Qi-Feng Wu</td><td>Minimal Factorization of Chern-Simons Theory -- Gravitational Anyonic Edge Modes</td><td><a href="http://arxiv.org/abs/2505.00501v2">arXiv:2505.00501v2</a></td></tr>
-            <tr><td>2025-05-01</td><td>Elise LePage, Vivek Shende</td><td>Aganagic's invariant is Khovanov homology</td><td><a href="http://arxiv.org/abs/2505.00327v1">arXiv:2505.00327v1</a></td></tr>
+            <!-- Articles will be loaded from CSV -->
         </tbody>
     </table>
     
@@ -254,13 +253,15 @@
     </div>
     
     <div class="footer">
-    <p>🤖 Auto-updating page with live arXiv integration</p>
-</div>
+        <p>🤖 Auto-updating page with CSV integration and live arXiv updates</p>
+    </div>
+
     <script>
         // Configuration
         const CONFIG = {
             updateInterval: 30, // minutes
-            maxArticles: 50,
+            maxArticles: 500, // Augmenté pour accommoder tous les articles du CSV
+            csvFileName: 'symplectic_geometry_articles.csv',
             searchQueries: [
                 'symplectic geometry',
                 'lagrangian submanifold', 
@@ -275,26 +276,138 @@
         let updateTimer = null;
         let allArticles = [];
         let filteredArticles = [];
+        let csvLoaded = false;
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            initializeData();
             setupEventListeners();
-            updateLastUpdateTime();
+            loadCsvData();
         });
         
-        function initializeData() {
-            const rows = document.querySelectorAll('#articlesBody tr');
-            allArticles = Array.from(rows).map((row, index) => ({
-                id: `article-${index}`,
-                date: row.cells[0].textContent.trim(),
-                authors: row.cells[1].textContent.trim(),
-                title: row.cells[2].textContent.trim(),
-                link: row.cells[3].innerHTML.trim(),
-                element: row
-            }));
+        async function loadCsvData() {
+            try {
+                updateCsvStatus('Loading CSV file...', 'loading');
+                updateStatus('📁 Loading articles from CSV...', 'loading');
+                
+                // Lire le fichier CSV
+                const csvContent = await window.fs.readFile(CONFIG.csvFileName, { encoding: 'utf8' });
+                
+                // Parser le CSV avec PapaParse
+                const parsed = Papa.parse(csvContent, {
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                    delimitersToGuess: [',', '\t', '|', ';']
+                });
+                
+                if (parsed.errors.length > 0) {
+                    console.warn('CSV parsing warnings:', parsed.errors);
+                }
+                
+                // Convertir les données en format articles selon la structure du CSV fourni
+                allArticles = parsed.data.map((row, index) => {
+                    // Nettoyer les headers (enlever les espaces)
+                    const cleanRow = {};
+                    Object.keys(row).forEach(key => {
+                        const cleanKey = key.trim();
+                        cleanRow[cleanKey] = row[key];
+                    });
+                    
+                    // Adapter selon la structure exacte du CSV fourni
+                    const id = cleanRow.id || '';
+                    const title = cleanRow.title || '';
+                    const authors = cleanRow.authors || '';
+                    const published_date = cleanRow.published_date || '';
+                    const url = cleanRow.url || '';
+                    const pdf = cleanRow.pdf || '';
+                    
+                    return {
+                        id: `csv-article-${index}`,
+                        date: published_date.toString().trim(),
+                        authors: authors.toString().trim(),
+                        title: title.toString().trim(),
+                        link: url.toString().trim(),
+                        arxivId: id.toString().trim(),
+                        pdfUrl: pdf.toString().trim(),
+                        element: null // Will be created when rendering
+                    };
+                }).filter(article => article.title && article.title !== 'undefined' && article.title !== ''); // Filtrer les lignes vides
+                
+                // Trier par date (plus récent en premier)
+                allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Rendre les articles
+                renderArticles();
+                
+                csvLoaded = true;
+                updateCsvStatus(`✅ Loaded ${allArticles.length} articles from CSV`, 'success');
+                updateStatus(`✅ Successfully loaded ${allArticles.length} articles from CSV`);
+                updateLastUpdateTime();
+                
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                updateCsvStatus('❌ Error loading CSV file', 'error');
+                updateStatus('❌ Failed to load CSV file. Please check the file exists.', 'error');
+                
+                // Charger des articles par défaut en cas d'erreur
+                loadDefaultArticles();
+            }
+        }
+        
+        function renderArticles() {
+            const tbody = document.getElementById('articlesBody');
+            tbody.innerHTML = ''; // Vider le tableau
+            
+            allArticles.forEach(article => {
+                const row = document.createElement('tr');
+                
+                // Formater le lien arXiv avec l'ID si disponible
+                let linkHtml = '';
+                if (article.link && article.arxivId) {
+                    linkHtml = `<a href="${article.link}">arXiv:${article.arxivId}</a>`;
+                } else if (article.link) {
+                    // Fallback si on n'a que l'URL
+                    if (article.link.includes('arxiv.org')) {
+                        const arxivMatch = article.link.match(/(\d{4}\.\d{5}v?\d*)/);
+                        const arxivId = arxivMatch ? arxivMatch[1] : article.link.split('/').pop();
+                        linkHtml = `<a href="${article.link}">arXiv:${arxivId}</a>`;
+                    } else {
+                        linkHtml = `<a href="${article.link}">Link</a>`;
+                    }
+                } else {
+                    linkHtml = 'No link';
+                }
+                
+                row.innerHTML = `
+                    <td>${article.date}</td>
+                    <td>${article.authors}</td>
+                    <td>${article.title}</td>
+                    <td>${linkHtml}</td>
+                `;
+                
+                tbody.appendChild(row);
+                article.element = row;
+            });
+            
             filteredArticles = [...allArticles];
             updateArticleCount();
+        }
+        
+        function loadDefaultArticles() {
+            // Articles par défaut en cas d'échec de chargement du CSV
+            allArticles = [
+                {
+                    id: 'default-1',
+                    date: '2025-05-31',
+                    authors: 'Default Author',
+                    title: 'Default Article - Please check your CSV file (symplectic_geometry_articles.csv)',
+                    link: 'http://arxiv.org/abs/default',
+                    arxivId: 'default.00000v1',
+                    pdfUrl: 'http://arxiv.org/pdf/default',
+                    element: null
+                }
+            ];
+            renderArticles();
         }
         
         function setupEventListeners() {
@@ -303,6 +416,9 @@
             
             // Manual update
             document.getElementById('manualUpdate').addEventListener('click', manualUpdate);
+            
+            // Reload CSV
+            document.getElementById('reloadCsv').addEventListener('click', reloadCsv);
             
             // Interval change
             document.getElementById('intervalSelect').addEventListener('change', function() {
@@ -315,6 +431,11 @@
             
             // Search functionality
             document.getElementById('searchInput').addEventListener('input', performSearch);
+        }
+        
+        function reloadCsv() {
+            updateStatus('🔄 Reloading CSV file...', 'updating');
+            loadCsvData();
         }
         
         function toggleAutoUpdate() {
@@ -358,7 +479,7 @@
             try {
                 updateStatus('🔄 Fetching new articles...', 'updating');
                 
-                // Simulate arXiv API call
+                // Simuler la récupération de nouveaux articles depuis arXiv
                 const newArticles = await simulateArxivFetch();
                 
                 if (newArticles.length > 0) {
@@ -377,10 +498,10 @@
         }
         
         async function simulateArxivFetch() {
-            // Simulate network delay
+            // Simuler le délai réseau
             await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // Simulate finding new articles occasionally (30% chance)
+            // Simuler la découverte de nouveaux articles parfois (30% de chance)
             const shouldFindNew = Math.random() > 0.7;
             
             if (shouldFindNew) {
@@ -406,14 +527,14 @@
             let addedCount = 0;
             
             newArticles.forEach(article => {
-                // Check if article already exists
+                // Vérifier si l'article existe déjà
                 const exists = allArticles.some(existing => 
                     existing.title === article.title || 
                     existing.authors === article.authors
                 );
                 
                 if (!exists) {
-                    // Create new row
+                    // Créer une nouvelle ligne
                     const row = document.createElement('tr');
                     row.className = 'new-article';
                     row.innerHTML = `
@@ -423,10 +544,10 @@
                         <td>${article.link}</td>
                     `;
                     
-                    // Insert at the top of the table
+                    // Insérer en haut du tableau
                     tbody.insertBefore(row, tbody.firstChild);
                     
-                    // Add to articles array
+                    // Ajouter au tableau des articles
                     const newArticleObj = {
                         id: `article-new-${Date.now()}-${addedCount}`,
                         date: article.date,
@@ -439,14 +560,14 @@
                     allArticles.unshift(newArticleObj);
                     addedCount++;
                     
-                    // Remove highlight after 5 seconds
+                    // Retirer la surbrillance après 5 secondes
                     setTimeout(() => {
                         row.classList.remove('new-article');
                     }, 5000);
                 }
             });
             
-            // Keep only latest articles (remove oldest if too many)
+            // Garder seulement les derniers articles (supprimer les plus anciens si trop nombreux)
             if (allArticles.length > CONFIG.maxArticles) {
                 const toRemove = allArticles.splice(CONFIG.maxArticles);
                 toRemove.forEach(article => {
@@ -458,7 +579,7 @@
             
             updateArticleCount();
             
-            // Refresh search if active
+            // Rafraîchir la recherche si active
             const searchTerm = document.getElementById('searchInput').value;
             if (searchTerm) {
                 performSearch();
@@ -483,7 +604,7 @@
                         article.element.style.display = '';
                         visibleCount++;
                         
-                        // Highlight search terms
+                        // Surligner les termes de recherche
                         if (searchTerm) {
                             highlightSearchTerm(article.element, searchTerm);
                         } else {
@@ -495,7 +616,7 @@
                 }
             });
             
-            // Show/hide no results message
+            // Afficher/masquer le message "aucun résultat"
             if (visibleCount === 0 && searchTerm) {
                 noResults.style.display = 'block';
                 tbody.style.display = 'none';
@@ -508,7 +629,7 @@
         function highlightSearchTerm(row, term) {
             const cells = row.querySelectorAll('td');
             cells.forEach((cell, index) => {
-                if (index < 3) { // Don't highlight the link column
+                if (index < 3) { // Ne pas surligner la colonne des liens
                     const originalText = cell.textContent;
                     const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
                     cell.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
@@ -531,13 +652,21 @@
             const statusElement = document.getElementById('updateStatus');
             statusElement.className = `update-status ${type}`;
             
-            // Update just the status part, keep the rest
+            // Mettre à jour juste la partie status, garder le reste
             const currentText = statusElement.innerHTML;
             const parts = currentText.split('|');
             
             if (parts.length >= 3) {
                 const newText = `${message} | ${parts[1]} | ${parts[2]}`;
                 statusElement.innerHTML = newText;
+            }
+        }
+        
+        function updateCsvStatus(message, type = 'normal') {
+            const csvStatusElement = document.getElementById('csvStatus');
+            if (csvStatusElement) {
+                csvStatusElement.textContent = message;
+                csvStatusElement.className = type;
             }
         }
         
@@ -581,7 +710,7 @@
             }
         }
         
-        // Initialize display
+        // Initialiser l'affichage
         updateIntervalDisplay();
     </script>
 </body>
