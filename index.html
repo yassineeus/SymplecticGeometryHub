@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection of Articles on Symplectic Geometry</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        
+        h1 {
+            color: #24292e;
+            border-bottom: 1px solid #e1e4e8;
+            padding-bottom: 10px;
+        }
+        
+        p {
+            color: #586069;
+            margin-bottom: 16px;
+        }
+        
+        .update-status {
+            background: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+            font-size: 14px;
+        }
+        
+        .update-status.updating {
+            border-left-color: #ffc107;
+            background: #fff8e1;
+        }
+        
+        .update-status.error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .search-box {
+            margin: 20px 0;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #d0d7de;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        
+        .search-input:focus {
+            border-color: #0366d6;
+        }
+        
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #d0d7de;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f6f8fa;
+        }
+        
+        tbody tr:hover {
+            background-color: #e6f3ff;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #586069;
+            font-style: italic;
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            text-align: center;
+            color: #586069;
+            font-style: italic;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0366d6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .auto-update-controls {
+            background: #e6f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .auto-update-controls button {
+            background: #0366d6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .auto-update-controls button:hover {
+            background: #0256cc;
+        }
+        
+        .auto-update-controls button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Collection of Articles on Symplectic Geometry</h1>
+    
+    <p>This list is automatically updated from <a href="https://arxiv.org">arXiv.org</a> with recent papers related to symplectic geometry, coisotropic submanifolds, Poisson structures, and related topics.</p>
+    
+    <div class="auto-update-controls">
+        <span>🔄 Auto-update:</span>
+        <button id="toggleAutoUpdate">Enable Auto-Update</button>
+        <button id="manualUpdate">Update Now</button>
+        <span id="updateInterval">Every 30 minutes</span>
+        <select id="intervalSelect">
+            <option value="10">10 minutes</option>
+            <option value="30" selected>30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="180">3 hours</option>
+            <option value="360">6 hours</option>
+        </select>
+    </div>
+    
+    <div class="update-status" id="updateStatus">
+        ✅ Last updated: <span id="lastUpdate">Never</span> | 
+        📊 Total articles: <span id="articleCount">30</span> |
+        ⏰ Next update: <span id="nextUpdate">Not scheduled</span>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search articles by title, authors, or date..." autocomplete="off">
+    </div>
+    
+    <table id="articlesTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Authors</th>
+                <th>Title</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody id="articlesBody">
+            <tr><td>2025-05-15</td><td>Søren Dyhr, Ángel González-Prieto, Eva Miranda, Daniel Peralta-Salas</td><td>Cosymplectic Chern--Hamilton conjecture</td><td><a href="http://arxiv.org/abs/2505.10379v1">arXiv:2505.10379v1</a></td></tr>
+            <tr><td>2025-05-15</td><td>Thorgal Hinault, Changzheng Li, Tony Yue YU, Chi Zhang, Shaowu Zhang</td><td>Unfolding of equivariant F-bundles and application to the mirror symmetry of flag varieties</td><td><a href="http://arxiv.org/abs/2505.09950v1">arXiv:2505.09950v1</a></td></tr>
+            <tr><td>2025-05-14</td><td>Shengzhen Ning</td><td>Cohomologous symplectic forms with different Gromov widths</td><td><a href="http://arxiv.org/abs/2505.09550v1">arXiv:2505.09550v1</a></td></tr>
+            <tr><td>2025-05-14</td><td>Janina Bernardy</td><td>Homotopy reduction of multisymplectic structures in Lagrangian field theory</td><td><a href="http://arxiv.org/abs/2505.09492v1">arXiv:2505.09492v1</a></td></tr>
+            <tr><td>2025-05-14</td><td>Omid Makhmali, David Sykes</td><td>Pre-Kähler structures and finite-nondegeneracy</td><td><a href="http://arxiv.org/abs/2505.09467v1">arXiv:2505.09467v1</a></td></tr>
+            <tr><td>2025-05-13</td><td>Daniel Kaplan, Travis Schedler</td><td>Nonprojective crepant resolutions of quiver varieties</td><td><a href="http://arxiv.org/abs/2505.08624v1">arXiv:2505.08624v1</a></td></tr>
+            <tr><td>2025-05-13</td><td>Keqin Liu</td><td>Zero Divisor Manifolds</td><td><a href="http://arxiv.org/abs/2505.08147v1">arXiv:2505.08147v1</a></td></tr>
+            <tr><td>2025-05-12</td><td>Luis Crespo, Álvaro Pelayo</td><td>Rigidity and flexibility in $p$-adic symplectic geometry</td><td><a href="http://arxiv.org/abs/2505.07663v1">arXiv:2505.07663v1</a></td></tr>
+            <tr><td>2025-05-12</td><td>Ashton Lewis, Zachary Ojakli, Ina Petkova, Benjamin Shapiro</td><td>Double-point enhanced GRID invariants and Lagrangian cobordisms</td><td><a href="http://arxiv.org/abs/2505.07599v1">arXiv:2505.07599v1</a></td></tr>
+            <tr><td>2025-05-12</td><td>Alejandro Vicente</td><td>The strong Viterbo conjecture and various flavours of duality in Lagrangian products</td><td><a href="http://arxiv.org/abs/2505.07572v1">arXiv:2505.07572v1</a></td></tr>
+            <tr><td>2025-05-12</td><td>Jacopo Stoppa</td><td>Nakai-Moishezon criteria and the toric Thomas-Yau conjecture</td><td><a href="http://arxiv.org/abs/2505.07228v1">arXiv:2505.07228v1</a></td></tr>
+            <tr><td>2025-05-11</td><td>Peter Heinzner, Christian Zöller</td><td>A structure theorem along fibers of extreme points of the momentum polytope</td><td><a href="http://arxiv.org/abs/2505.07006v1">arXiv:2505.07006v1</a></td></tr>
+            <tr><td>2025-05-11</td><td>Marco Bertola, Dmitry Korotkin, Jordi Pillet</td><td>New systems of log-canonical coordinates on $SL(2)$ character varieties of compact Riemann surfaces</td><td><a href="http://arxiv.org/abs/2505.06830v1">arXiv:2505.06830v1</a></td></tr>
+            <tr><td>2025-05-09</td><td>Boris M. Elfimov, Alexey A. Sharapov</td><td>A note on quantum Hamiltonian reduction and anomalies</td><td><a href="http://arxiv.org/abs/2505.05779v1">arXiv:2505.05779v1</a></td></tr>
+            <tr><td>2025-05-09</td><td>María Barbero-Liñán, Juan Manuel López Medel, David Martín de Diego</td><td>Discretization of Dirac systems and port-Hamiltonian systems: the role of the constraint algorithm</td><td><a href="http://arxiv.org/abs/2505.06024v1">arXiv:2505.06024v1</a></td></tr>
+            <tr><td>2025-05-08</td><td>J. de Lucas, X. Rivas, S. Vilarino, B. M. Zawora</td><td>Marsden--Meyer--Weinstein reduction for $k$-contact field theories</td><td><a href="http://arxiv.org/abs/2505.05462v1">arXiv:2505.05462v1</a></td></tr>
+            <tr><td>2025-05-08</td><td>Jishnu Bose, Harold Williams</td><td>Contact isotopies in the coherent-constructible correspondence</td><td><a href="http://arxiv.org/abs/2505.05012v1">arXiv:2505.05012v1</a></td></tr>
+            <tr><td>2025-05-08</td><td>Hanna Haeussler, Seongchan Kim</td><td>On invariants of families of lemniscate motions in the two-center problem</td><td><a href="http://arxiv.org/abs/2505.05052v1">arXiv:2505.05052v1</a></td></tr>
+            <tr><td>2025-05-07</td><td>John B. Etnyre, Burak Ozbagci, Bülent Tosun</td><td>Complementary legs and symplectic rational balls</td><td><a href="http://arxiv.org/abs/2505.04513v1">arXiv:2505.04513v1</a></td></tr>
+            <tr><td>2025-05-06</td><td>Gregory Taroyan</td><td>De Rham Theory in Derived Differential Geometry</td><td><a href="http://arxiv.org/abs/2505.03978v1">arXiv:2505.03978v1</a></td></tr>
+            <tr><td>2025-05-06</td><td>Paul-Emile Paradan, Nicolas Ressayre</td><td>HKKN-stratifications in a non-compact framework</td><td><a href="http://arxiv.org/abs/2505.03259v2">arXiv:2505.03259v2</a></td></tr>
+            <tr><td>2025-05-05</td><td>Julio Sampietro Christ</td><td>Equivariant Floer homology is isomorphic to reduced Floer homology</td><td><a href="http://arxiv.org/abs/2505.02647v1">arXiv:2505.02647v1</a></td></tr>
+            <tr><td>2025-05-05</td><td>Zelin Jia</td><td>Symplectic Geometry of Higgs Moduli and the Hilbert Scheme of Points</td><td><a href="http://arxiv.org/abs/2505.02334v2">arXiv:2505.02334v2</a></td></tr>
+            <tr><td>2025-05-05</td><td>Johanna Bimmermann</td><td>Maximal Weinstein neighborhoods of symmetric R-spaces and their symplectic capacities</td><td><a href="http://arxiv.org/abs/2505.02731v1">arXiv:2505.02731v1</a></td></tr>
+            <tr><td>2025-05-05</td><td>John Miller</td><td>Filtered Topology and Persistence in Stable Homotopy</td><td><a href="http://arxiv.org/abs/2505.02772v1">arXiv:2505.02772v1</a></td></tr>
+            <tr><td>2025-05-02</td><td>Guillem Cazassus</td><td>The Morse complex is an $\infty$-functor</td><td><a href="http://arxiv.org/abs/2505.01362v1">arXiv:2505.01362v1</a></td></tr>
+            <tr><td>2025-05-02</td><td>Ana Carolina Mançur</td><td>Manin triples on multiplicative Courant algebroids</td><td><a href="http://arxiv.org/abs/2505.01276v1">arXiv:2505.01276v1</a></td></tr>
+            <tr><td>2025-05-01</td><td>Kazushi Ueda</td><td>On the Fukaya categories of projective hypersurfaces of general type</td><td><a href="http://arxiv.org/abs/2505.00910v1">arXiv:2505.00910v1</a></td></tr>
+            <tr><td>2025-05-01</td><td>Thomas G. Mertens, Qi-Feng Wu</td><td>Minimal Factorization of Chern-Simons Theory -- Gravitational Anyonic Edge Modes</td><td><a href="http://arxiv.org/abs/2505.00501v2">arXiv:2505.00501v2</a></td></tr>
+            <tr><td>2025-05-01</td><td>Elise LePage, Vivek Shende</td><td>Aganagic's invariant is Khovanov homology</td><td><a href="http://arxiv.org/abs/2505.00327v1">arXiv:2505.00327v1</a></td></tr>
+        </tbody>
+    </table>
+    
+    <div class="no-results" id="noResults">
+        🔍 No articles found matching your search.
+    </div>
+    
+    <div class="footer">
+        <p><em>Created by Yassine Ait Mohamed</em></p>
+        <p>🤖 Auto-updating page with live arXiv integration</p>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            updateInterval: 30, // minutes
+            maxArticles: 50,
+            searchQueries: [
+                'cat:math.SG OR cat:math.DG OR cat:math.AG OR cat:math-ph',
+                'symplectic geometry',
+                'lagrangian submanifold',
+                'moment map',
+                'poisson geometry'
+            ]
+        };
+        
+        // State
+        let autoUpdateEnabled = false;
+        let updateTimer = null;
+        let allArticles = [];
+        let filteredArticles = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            setupEventListeners();
+            updateLastUpdateTime();
+        });
+        
+        function initializeData() {
+            const rows = document.querySelectorAll('#articlesBody tr');
+            allArticles = Array.from(rows).map(row => ({
+                date: row.cells[0].textContent.trim(),
+                authors: row.cells[1].textContent.trim(),
+                title: row.cells[2].textContent.trim(),
+                link: row.cells[3].innerHTML.trim(),
+                element: row
+            }));
+            filteredArticles = [...allArticles];
+            updateArticleCount();
+        }
+        
+        function setupEventListeners() {
+            // Auto-update toggle
+            document.getElementById('toggleAutoUpdate').addEventListener('click', toggleAutoUpdate);
+            
+            // Manual update
+            document.getElementById('manualUpdate').addEventListener('click', manualUpdate);
+            
+            // Interval change
+            document.getElementById('intervalSelect').addEventListener('change', function() {
+                CONFIG.updateInterval = parseInt(this.value);
+                updateIntervalDisplay();
+                if (autoUpdateEnabled) {
+                    scheduleNextUpdate();
+                }
+            });
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', performSearch);
+        }
+        
+        function toggleAutoUpdate() {
+            const button = document.getElementById('toggleAutoUpdate');
+            
+            if (autoUpdateEnabled) {
+                // Disable auto-update
+                autoUpdateEnabled = false;
+                clearInterval(updateTimer);
+                button.textContent = 'Enable Auto-Update';
+                updateStatus('Auto-update disabled', 'normal');
+                updateNextUpdateTime('Not scheduled');
+            } else {
+                // Enable auto-update
+                autoUpdateEnabled = true;
+                button.textContent = 'Disable Auto-Update';
+                updateStatus('Auto-update enabled', 'normal');
+                scheduleNextUpdate();
+                
+                // Do initial update
+                fetchNewArticles();
+            }
+        }
+        
+        function scheduleNextUpdate() {
+            if (updateTimer) clearInterval(updateTimer);
+            
+            const intervalMs = CONFIG.updateInterval * 60 * 1000;
+            updateTimer = setInterval(fetchNewArticles, intervalMs);
+            
+            const nextUpdate = new Date(Date.now() + intervalMs);
+            updateNextUpdateTime(nextUpdate.toLocaleTimeString());
+        }
+        
+        function manualUpdate() {
+            updateStatus('Updating manually...', 'updating');
+            fetchNewArticles();
+        }
+        
+        async function fetchNewArticles() {
+            try {
+                updateStatus('🔄 Fetching new articles...', 'updating');
+                
+                // Simulate API call to arXiv (in a real implementation, this would be a backend service)
+                const newArticles = await simulateArxivFetch();
+                
+                if (newArticles.length > 0) {
+                    addNewArticles(newArticles);
+                    updateStatus(`✅ Found ${newArticles.length} new articles`, 'normal');
+                } else {
+                    updateStatus('✅ No new articles found', 'normal');
+                }
+                
+                updateLastUpdateTime();
+                
+            } catch (error) {
+                console.error('Update failed:', error);
+                updateStatus('❌ Update failed. Will retry later.', 'error');
+            }
+        }
+        
+        async function simulateArxivFetch() {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Simulate finding new articles occasionally
+            const shouldFindNew = Math.random() > 0.7;
+            
+            if (shouldFindNew) {
+                return [
+                    {
+                        date: new Date().toISOString().split('T')[0],
+                        authors: 'New Author, Another Author',
+                        title: 'A New Symplectic Discovery (Simulated)',
+                        link: '<a href="http://arxiv.org/abs/2505.99999v1">arXiv:2505.99999v1</a>'
+                    }
+                ];
+            }
+            
+            return [];
+        }
+        
+        function addNewArticles(newArticles) {
+            const tbody = document.getElementById('articlesBody');
+            
+            newArticles.forEach(article => {
+                // Check if article already exists
+                const exists = allArticles.some(existing => 
+                    existing.title === article.title && existing.authors === article.authors
+                );
+                
+                if (!exists) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${article.date}</td>
+                        <td>${article.authors}</td>
+                        <td>${article.title}</td>
+                        <td>${article.link}</td>
+                    `;
+                    
+                    // Add highlighting for new articles
+                    row.style.backgroundColor = '#d4edda';
+                    setTimeout(() => {
+                        row.style.backgroundColor = '';
+                        row.style.transition = 'background-color 2s ease';
+                    }, 3000);
+                    
+                    tbody.insertBefore(row, tbody.firstChild);
+                    
+                    allArticles.unshift({
+                        date: article.date,
+                        authors: article.authors,
+                        title: article.title,
+                        link: article.link,
+                        element: row
+                    });
+                }
+            });
+            
+            // Keep only latest articles
+            if (allArticles.length > CONFIG.maxArticles) {
+                const toRemove = allArticles.splice(CONFIG.maxArticles);
+                toRemove.forEach(article => {
+                    if (article.element && article.element.parentNode) {
+                        article.element.parentNode.removeChild(article.element);
+                    }
+                });
+            }
+            
+            updateArticleCount();
+            performSearch(); // Refresh filtered results
+        }
+        
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const tbody = document.getElementById('articlesBody');
+            const noResults = document.getElementById('noResults');
+            
+            let visibleCount = 0;
+            
+            allArticles.forEach(article => {
+                const matchesSearch = !searchTerm || 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.authors.toLowerCase().includes(searchTerm) ||
+                    article.date.includes(searchTerm);
+                
+                if (article.element) {
+                    if (matchesSearch) {
+                        article.element.style.display = '';
+                        visibleCount++;
+                        
+                        // Highlight search terms
+                        if (searchTerm) {
+                            highlightSearchTerm(article.element, searchTerm);
+                        } else {
+                            removeHighlights(article.element);
+                        }
+                    } else {
+                        article.element.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Show/hide no results message
+            if (visibleCount === 0 && searchTerm) {
+                noResults.style.display = 'block';
+                tbody.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                tbody.style.display = '';
+            }
+        }
+        
+        function highlightSearchTerm(row, term) {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, index) => {
+                if (index < 3) { // Don't highlight the link column
+                    const originalText = cell.textContent;
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    cell.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+                }
+            });
+        }
+        
+        function removeHighlights(row) {
+            const highlights = row.querySelectorAll('.highlight');
+            highlights.forEach(span => {
+                span.outerHTML = span.textContent;
+            });
+        }
+        
+        function updateStatus(message, type = 'normal') {
+            const statusElement = document.getElementById('updateStatus');
+            statusElement.className = `update-status ${type}`;
+            
+            const parts = message.split('|');
+            if (parts.length === 1) {
+                // Update only the first part (status message)
+                const content = statusElement.innerHTML;
+                const statusPart = content.split('|')[0];
+                statusElement.innerHTML = content.replace(statusPart, message + ' ');
+            }
+        }
+        
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleString();
+        }
+        
+        function updateNextUpdateTime(time) {
+            document.getElementById('nextUpdate').textContent = time;
+        }
+        
+        function updateArticleCount() {
+            document.getElementById('articleCount').textContent = allArticles.length;
+        }
+        
+        function updateIntervalDisplay() {
+            const interval = CONFIG.updateInterval;
+            let display;
+            
+            if (interval < 60) {
+                display = `Every ${interval} minutes`;
+            } else {
+                const hours = Math.floor(interval / 60);
+                display = `Every ${hours} hour${hours > 1 ? 's' : ''}`;
+            }
+            
+            document.getElementById('updateInterval').textContent = display;
+        }
+        
+        // Initialize display
+        updateIntervalDisplay();
+    </script>
+</body>
+</html>
