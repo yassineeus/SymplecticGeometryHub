@@ -251,6 +251,30 @@
             <span id="resultCount" style="padding: 8px; color: #586069; font-weight: bold;">Showing all articles</span>
         </div>
     </div>
+
+
+<!-- Ajout de l'en-tête du tableau qui manquait -->
+<table id="articlesTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Authors</th>
+            <th>Title</th>
+            <th>PDF</th>
+        </tr>
+    </thead>
+    <tbody id="articlesBody">
+        <!-- articles... -->
+    </tbody>
+</table>
+
+<!-- Ajout d'un message "aucun résultat" -->
+<div class="no-results" id="noResults">
+    <p>Aucun article trouvé correspondant à votre recherche.</p>
+    <p>Essayez de modifier vos critères de recherche.</p>
+</div>
+
+
     
     
         <tbody id="articlesBody">
@@ -2980,5 +3004,53 @@
     <td><a href="http://arxiv.org/pdf/2402.05814v2">PDF</a></td>
 </tr>
 <tr>
+    </table>
     
-              
+    <div class="no-results" id="noResults">
+        <p>Aucun article trouvé correspondant à votre recherche.</p>
+        <p>Essayez de modifier vos critères de recherche.</p>
+    </div>
+    
+    <script>
+        // Variables globales
+        let allArticles = [];
+        let filteredArticles = [];
+        
+        // Fonction de recherche en temps réel
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            filteredArticles = allArticles.filter(article => {
+                const matchesSearch = searchTerm === '' || 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.authors.toLowerCase().includes(searchTerm) ||
+                    article.date.includes(searchTerm);
+                
+                const matchesYear = yearFilter === '' || article.date.startsWith(yearFilter);
+                
+                return matchesSearch && matchesYear;
+            });
+            
+            displayArticles();
+            updateResultCount();
+        }
+        
+        // Fonction pour surligner les termes de recherche
+        function highlightSearchTerm(row, searchTerm) {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, index) => {
+                if (index < 3) {
+                    const content = cell.innerHTML;
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    cell.innerHTML = content.replace(regex, '<span class="highlight">$1</span>');
+                }
+            });
+        }
+        
+        // AJOUTEZ LE RESTE DU CODE ICI...
+    </script>
+    
+    <div class="footer">
+        <p>Powered by arXiv.org | Updated automatically every 30 minutes</p>
+    </div>              
