@@ -1,4 +1,15 @@
-# Symplectic Geometry Papers
+# ---
+layout: default
+---
+
+> Automatically updated on 2025.05.31
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href=#symplectic geometry>Symplectic geometry</a></li>
+  </ol>
+</details>
 
 | Publish Date | Title | Authors | PDF | Code |
 |--------------|-------|---------|-----|------|
