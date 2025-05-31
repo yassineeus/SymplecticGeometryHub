@@ -1,0 +1,44 @@
+name: Update CSV and Generate HTML
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Tous les jours à minuit
+  workflow_dispatch:  # Permet d'exécuter manuellement
+
+permissions:
+  contents: write  # 👈 AJOUTER CETTE LIGNE
+  pages: write     # Si vous utilisez GitHub Pages
+  id-token: write  # Si vous utilisez GitHub Pages
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # 👈 EXPLICITEMENT SPÉCIFIER LE TOKEN
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install pandas requests feedparser beautifulsoup4 lxml
+    
+    - name: Run script
+      run: python generate_tables.py
+    
+    - name: Configure git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+    
+    - name: Commit and push changes
+      run: |
+        git add .
+        git commit -m "Auto-update: $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
+        git push
