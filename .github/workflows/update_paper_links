@@ -1,0 +1,607 @@
+#!/usr/bin/env python3
+"""
+Script de mise à jour automatique pour les articles de géométrie symplectique
+Supporte la mise à jour des liens et la vérification des articles
+Created by Yassine Ait Mohamed
+"""
+
+import arxiv
+import datetime
+import json
+import os
+import time
+import requests
+import argparse
+from typing import List, Dict, Optional
+from urllib.parse import urlparse
+
+# Configuration
+SEARCH_QUERIES = [
+    '"symplectic geometry"',
+    '"symplectic manifold"',
+    '"symplectic structure"',
+    '"lagrangian submanifold"',
+    '"coisotropic submanifold"',
+    '"moment map"',
+    '"symplectic reduction"',
+    '"hamiltonian action"',
+    '"symplectic groupoid"',
+    '"Poisson geometry"',
+    '"Dirac structure"',
+    '"Marsden–Weinstein reduction"',
+    '"pre-symplectic geometry"',
+    '"shifted symplectic structure"',
+    '"derived symplectic geometry"',
+    '"symplectic foliation"',
+    '"symplectic Lie algebroid"',
+    '"Poisson sigma model"',
+    '"coisotropic brane"'
+]
+
+CATEGORIES = [
+    'math.SG',  # Symplectic Geometry
+    'math.DG',  # Differential Geometry  
+    'math.AG',  # Algebraic Geometry
+    'math-ph',  # Mathematical Physics
+    'math.QA'   # Quantum Algebra
+]
+
+MAX_ARTICLES = 50
+DELAY_BETWEEN_REQUESTS = 2
+
+def fetch_recent_articles(days_back: int = 30) -> List[Dict]:
+    """Récupère les articles récents depuis arXiv"""
+    print(f"🔍 Recherche d'articles des {days_back} derniers jours...")
+    
+    all_results = []
+    client = arxiv.Client(page_size=100, delay_seconds=DELAY_BETWEEN_REQUESTS)
+    
+    # Calcul des dates
+    end_date = datetime.datetime.now()
+    start_date = end_date - datetime.timedelta(days=days_back)
+    
+    for i, query_term in enumerate(SEARCH_QUERIES):
+        print(f"📖 Requête {i+1}/{len(SEARCH_QUERIES)}: {query_term}")
+        
+        # Construction de la requête
+        cat_query = " OR ".join([f"cat:{cat}" for cat in CATEGORIES])
+        query = f"({query_term}) AND ({cat_query})"
+        
+        search = arxiv.Search(
+            query=query,
+            max_results=200,
+            sort_by=arxiv.SortCriterion.SubmittedDate,
+            sort_order=arxiv.SortOrder.Descending
+        )
+        
+        try:
+            results = list(client.results(search))
+            # Filtrer par date
+            recent_results = [r for r in results if r.published >= start_date]
+            all_results.extend(recent_results)
+            print(f"   ✅ Trouvé {len(recent_results)} articles récents")
+            time.sleep(DELAY_BETWEEN_REQUESTS)
+            
+        except Exception as e:
+            print(f"   ❌ Erreur pour {query_term}: {e}")
+            continue
+    
+    # Suppression des doublons
+    unique_results = {}
+    for result in all_results:
+        unique_results[result.get_short_id()] = result
+    
+    # Tri par date (plus récent en premier)
+    sorted_results = sorted(
+        unique_results.values(), 
+        key=lambda x: x.published, 
+        reverse=True
+    )
+    
+    print(f"📊 Total: {len(sorted_results)} articles uniques trouvés")
+    return sorted_results[:MAX_ARTICLES]
+
+def verify_link(url: str, timeout: int = 10) -> Dict:
+    """Vérifie si un lien est accessible"""
+    try:
+        response = requests.head(url, timeout=timeout, allow_redirects=True)
+        return {
+            'url': url,
+            'status_code': response.status_code,
+            'accessible': response.status_code == 200,
+            'final_url': response.url,
+            'error': None
+        }
+    except requests.RequestException as e:
+        return {
+            'url': url,
+            'status_code': None,
+            'accessible': False,
+            'final_url': None,
+            'error': str(e)
+        }
+
+def update_paper_links(articles: List[Dict]) -> List[Dict]:
+    """Met à jour et vérifie les liens des articles"""
+    print("🔗 Mise à jour et vérification des liens...")
+    
+    updated_articles = []
+    link_log = {
+        'timestamp': datetime.datetime.now().isoformat(),
+        'total_checked': len(articles),
+        'accessible_links': 0,
+        'broken_links': 0,
+        'updated_links': 0,
+        'details': []
+    }
+    
+    for i, article in enumerate(articles):
+        print(f"🔍 Vérification {i+1}/{len(articles)}: {article['id']}")
+        
+        # Vérifier le lien principal arXiv
+        arxiv_url = article.get('url', '')
+        pdf_url = article.get('pdf_url', '')
+        
+        # Test du lien principal
+        main_link_result = verify_link(arxiv_url)
+        pdf_link_result = verify_link(pdf_url) if pdf_url else None
+        
+        # Mise à jour de l'article
+        updated_article = article.copy()
+        
+        # Si le lien principal est cassé, essayer de le reconstruire
+        if not main_link_result['accessible']:
+            print(f"   ⚠️ Lien cassé pour {article['id']}, tentative de reconstruction...")
+            
+            # Reconstruction de l'URL arXiv
+            new_arxiv_url = f"https://arxiv.org/abs/{article['id']}"
+            new_pdf_url = f"https://arxiv.org/pdf/{article['id']}.pdf"
+            
+            # Test des nouveaux liens
+            new_main_result = verify_link(new_arxiv_url)
+            new_pdf_result = verify_link(new_pdf_url)
+            
+            if new_main_result['accessible']:
+                updated_article['url'] = new_arxiv_url
+                updated_article['pdf_url'] = new_pdf_url
+                link_log['updated_links'] += 1
+                print(f"   ✅ Lien mis à jour pour {article['id']}")
+            else:
+                print(f"   ❌ Impossible de réparer le lien pour {article['id']}")
+        
+        # Compter les liens accessibles
+        if main_link_result['accessible'] or (not main_link_result['accessible'] and 'updated_links' in locals()):
+            link_log['accessible_links'] += 1
+        else:
+            link_log['broken_links'] += 1
+        
+        # Ajouter aux détails du log
+        link_log['details'].append({
+            'id': article['id'],
+            'title': article['title'][:50] + "...",
+            'original_url': arxiv_url,
+            'status': 'accessible' if main_link_result['accessible'] else 'broken',
+            'updated': 'url' in updated_article and updated_article['url'] != arxiv_url
+        })
+        
+        updated_articles.append(updated_article)
+        
+        # Pause pour éviter de surcharger les serveurs
+        time.sleep(0.5)
+    
+    # Sauvegarder le log de vérification
+    with open('paper_links_log.json', 'w', encoding='utf-8') as f:
+        json.dump(link_log, f, indent=2, ensure_ascii=False)
+    
+    print(f"🔗 Vérification terminée:")
+    print(f"   ✅ Liens accessibles: {link_log['accessible_links']}")
+    print(f"   ❌ Liens cassés: {link_log['broken_links']}")
+    print(f"   🔄 Liens mis à jour: {link_log['updated_links']}")
+    
+    return updated_articles
+
+def article_to_dict(article) -> Dict:
+    """Convertit un article arXiv en dictionnaire"""
+    return {
+        'id': article.get_short_id(),
+        'title': article.title.strip(),
+        'authors': [author.name for author in article.authors],
+        'authors_str': ', '.join([author.name for author in article.authors]),
+        'published': article.published.strftime('%Y-%m-%d'),
+        'summary': article.summary.replace('\n', ' ').strip(),
+        'categories': article.categories,
+        'url': article.entry_id,
+        'pdf_url': article.pdf_url
+    }
+
+def load_existing_articles() -> List[Dict]:
+    """Charge les articles existants depuis le backup JSON"""
+    if os.path.exists('articles_backup.json'):
+        try:
+            with open('articles_backup.json', 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                return data.get('articles', [])
+        except Exception as e:
+            print(f"⚠️ Erreur lecture backup: {e}")
+    return []
+
+def save_articles_backup(articles: List[Dict]):
+    """Sauvegarde les articles en JSON"""
+    backup_data = {
+        'last_update': datetime.datetime.now().isoformat(),
+        'total_articles': len(articles),
+        'articles': articles
+    }
+    
+    with open('articles_backup.json', 'w', encoding='utf-8') as f:
+        json.dump(backup_data, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Sauvegarde créée: {len(articles)} articles")
+
+def generate_html_page(articles: List[Dict]):
+    """Génère la page HTML avec les articles"""
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Génération du tableau HTML
+    table_rows = []
+    for article in articles:
+        authors = article['authors_str']
+        if len(authors) > 100:  # Limiter la longueur pour l'affichage
+            authors = authors[:97] + "..."
+            
+        title = article['title']
+        if len(title) > 150:
+            title = title[:147] + "..."
+            
+        row = f"""            <tr>
+                <td>{article['published']}</td>
+                <td>{authors}</td>
+                <td>{title}</td>
+                <td><a href="{article['url']}">arXiv:{article['id']}</a></td>
+            </tr>"""
+        table_rows.append(row)
+    
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection of Articles on Symplectic Geometry</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }}
+        
+        h1 {{
+            color: #24292e;
+            border-bottom: 1px solid #e1e4e8;
+            padding-bottom: 10px;
+        }}
+        
+        p {{
+            color: #586069;
+            margin-bottom: 16px;
+        }}
+        
+        .update-info {{
+            background-color: #f6f8fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0366d6;
+            font-size: 14px;
+        }}
+        
+        .search-box {{
+            margin: 20px 0;
+        }}
+        
+        .search-input {{
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #d0d7de;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }}
+        
+        .search-input:focus {{
+            border-color: #0366d6;
+        }}
+        
+        a {{
+            color: #0366d6;
+            text-decoration: none;
+        }}
+        
+        a:hover {{
+            text-decoration: underline;
+        }}
+        
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }}
+        
+        th, td {{
+            border: 1px solid #d0d7de;
+            padding: 8px 12px;
+            text-align: left;
+        }}
+        
+        th {{
+            background-color: #f6f8fa;
+            font-weight: 600;
+        }}
+        
+        tbody tr:nth-child(even) {{
+            background-color: #f6f8fa;
+        }}
+        
+        tbody tr:hover {{
+            background-color: #e6f3ff;
+        }}
+        
+        .highlight {{
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }}
+        
+        .no-results {{
+            text-align: center;
+            padding: 40px;
+            color: #586069;
+            font-style: italic;
+            display: none;
+        }}
+        
+        .footer {{
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            text-align: center;
+            color: #586069;
+            font-style: italic;
+        }}
+    </style>
+</head>
+<body>
+    <h1>Collection of Articles on Symplectic Geometry</h1>
+    
+    <p>This list is automatically updated from <a href="https://arxiv.org">arXiv.org</a> with recent papers related to symplectic geometry, coisotropic submanifolds, Poisson structures, and related topics.</p>
+    
+    <div class="update-info">
+        <strong>🤖 Auto-updated:</strong> {now} | 
+        <strong>📊 Total articles:</strong> {len(articles)} |
+        <strong>🔄 Updates:</strong> Daily via GitHub Actions | 
+        <strong>🔗 Links:</strong> Verified weekly
+    </div>
+    
+    <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search articles by title, authors, or date..." autocomplete="off">
+    </div>
+    
+    <table id="articlesTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Authors</th>
+                <th>Title</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody id="articlesBody">
+{chr(10).join(table_rows)}
+        </tbody>
+    </table>
+    
+    <div class="no-results" id="noResults">
+        🔍 No articles found matching your search.
+    </div>
+    
+    <div class="footer">
+        <p><em>Created by Yassine Ait Mohamed</em></p>
+        <p>🤖 Automatically updated daily | 🔗 Links verified weekly via GitHub Actions</p>
+    </div>
+
+    <script>
+        // Recherche simple
+        document.getElementById('searchInput').addEventListener('input', function() {{
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#articlesBody tr');
+            const noResults = document.getElementById('noResults');
+            let visibleRows = 0;
+            
+            rows.forEach(row => {{
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {{
+                    row.style.display = '';
+                    visibleRows++;
+                }} else {{
+                    row.style.display = 'none';
+                }}
+            }});
+            
+            if (visibleRows === 0 && searchTerm) {{
+                noResults.style.display = 'block';
+            }} else {{
+                noResults.style.display = 'none';
+            }}
+        }});
+    </script>
+</body>
+</html>"""
+    
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(html_content)
+    
+    print(f"📄 Page HTML générée avec {len(articles)} articles")
+
+def generate_readme(articles: List[Dict]):
+    """Génère le fichier README.md"""
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Prendre les 20 premiers articles pour le README
+    top_articles = articles[:20]
+    
+    readme_content = f"""# Collection of Articles on Symplectic Geometry
+
+This list is automatically updated from [arXiv.org](https://arxiv.org) with recent papers related to symplectic geometry, coisotropic submanifolds, Poisson structures, and related topics.
+
+**🤖 Last updated:** {now}  
+**📊 Total articles:** {len(articles)}  
+**🔄 Content updates:** Daily via GitHub Actions  
+**🔗 Link verification:** Weekly via GitHub Actions
+
+## Latest Articles
+
+| Date | Authors | Title | Link |
+|------|---------|-------|------|
+"""
+    
+    for article in top_articles:
+        authors = article['authors_str']
+        if len(authors) > 80:
+            authors = authors[:77] + "..."
+        
+        title = article['title'].replace('|', ' ')
+        if len(title) > 100:
+            title = title[:97] + "..."
+            
+        readme_content += f"| {article['published']} | {authors} | {title} | [arXiv:{article['id']}]({article['url']}) |\n"
+    
+    readme_content += f"""
+## 🔍 Browse All Articles
+
+Visit [our website](https://your-username.github.io/your-repo-name/) to browse all {len(articles)} articles with search functionality.
+
+## 📊 Statistics
+
+- **Search queries monitored:** {len(SEARCH_QUERIES)}
+- **Categories tracked:** {', '.join(CATEGORIES)}
+- **Content update frequency:** Daily at 6:00 UTC
+- **Link verification frequency:** Weekly on Mondays at 8:00 UTC
+- **Articles displayed:** Top {MAX_ARTICLES} most recent
+
+## 🔗 Link Integrity
+
+All arXiv links are automatically verified and updated weekly to ensure accessibility.
+
+---
+
+*Created by Yassine Ait Mohamed*
+
+This collection is automatically updated using GitHub Actions and arXiv API to track the latest research in symplectic geometry and related fields.
+"""
+    
+    with open('README.md', 'w', encoding='utf-8') as f:
+        f.write(readme_content)
+    
+    print(f"📋 README.md généré avec {len(top_articles)} articles")
+
+def main():
+    """Fonction principale"""
+    parser = argparse.ArgumentParser(description='Mise à jour des articles de géométrie symplectique')
+    parser.add_argument('--update_paper_links', action='store_true', 
+                       help='Met à jour et vérifie les liens des articles existants')
+    
+    args = parser.parse_args()
+    
+    if args.update_paper_links:
+        print("🔗 Mode: Mise à jour des liens uniquement")
+        print("=" * 60)
+        
+        try:
+            # Charger les articles existants
+            existing_articles = load_existing_articles()
+            
+            if not existing_articles:
+                print("⚠️ Aucun article existant trouvé")
+                return
+            
+            # Mettre à jour les liens
+            updated_articles = update_paper_links(existing_articles)
+            
+            # Générer les fichiers avec les liens mis à jour
+            save_articles_backup(updated_articles)
+            generate_html_page(updated_articles)
+            generate_readme(updated_articles)
+            
+            print("=" * 60)
+            print("✅ Mise à jour des liens terminée avec succès!")
+            
+        except Exception as e:
+            print(f"❌ Erreur pendant la mise à jour des liens: {e}")
+            raise
+    else:
+        print("🚀 Mode: Mise à jour complète des articles")
+        print("=" * 60)
+        
+        try:
+            # 1. Récupération des nouveaux articles
+            new_articles = fetch_recent_articles(days_back=30)
+            
+            if not new_articles:
+                print("⚠️ Aucun nouvel article trouvé")
+                return
+            
+            # 2. Chargement des articles existants
+            existing_articles = load_existing_articles()
+            existing_ids = set(article['id'] for article in existing_articles)
+            
+            # 3. Fusion avec les nouveaux articles (éviter les doublons)
+            all_articles = []
+            new_count = 0
+            
+            # Ajouter les nouveaux articles
+            for article_data in [article_to_dict(a) for a in new_articles]:
+                if article_data['id'] not in existing_ids:
+                    all_articles.append(article_data)
+                    new_count += 1
+                else:
+                    # Mettre à jour l'article existant
+                    for i, existing in enumerate(existing_articles):
+                        if existing['id'] == article_data['id']:
+                            existing_articles[i] = article_data
+                            break
+            
+            # Ajouter les articles existants
+            all_articles.extend(existing_articles)
+            
+            # Supprimer les doublons et trier
+            unique_articles = {}
+            for article in all_articles:
+                unique_articles[article['id']] = article
+            
+            final_articles = sorted(
+                unique_articles.values(),
+                key=lambda x: x['published'],
+                reverse=True
+            )[:MAX_ARTICLES]
+            
+            # 4. Génération des fichiers
+            save_articles_backup(final_articles)
+            generate_html_page(final_articles)
+            generate_readme(final_articles)
+            
+            print("=" * 60)
+            print(f"✅ Mise à jour terminée avec succès!")
+            print(f"📈 {new_count} nouveaux articles ajoutés")
+            print(f"📊 {len(final_articles)} articles au total")
+            
+        except Exception as e:
+            print(f"❌ Erreur pendant la mise à jour: {e}")
+            raise
+
+if __name__ == "__main__":
+    main()
