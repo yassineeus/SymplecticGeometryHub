@@ -1,0 +1,90 @@
+# Workflow pour mettre à jour automatiquement les papiers de géométrie symplectique
+name: Update Symplectic Geometry Papers Weekly
+
+# Contrôle quand le workflow s'exécute
+on:
+  # Permet d'exécuter manuellement depuis l'onglet Actions
+  workflow_dispatch:
+  
+  # Programmation automatique - tous les lundis à 8h00 UTC
+  schedule:
+    - cron: "0 8 * * 1"  # Lundi à 8h00
+  
+  # Optionnel: déclencher sur push (décommentez si nécessaire)
+  # push:
+  #   branches:
+  #     - main
+
+# Variables d'environnement
+env:
+  GITHUB_USER_NAME: votre-nom-utilisateur  # À remplacer par votre nom d'utilisateur GitHub
+  GITHUB_USER_EMAIL: votre-email@example.com  # À remplacer par votre email
+  
+# Jobs
+jobs:
+  update-papers:
+    name: Update Symplectic Papers
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Checkout du repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      # 2. Configuration de Python
+      - name: Set up Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      # 3. Installation des dépendances Python
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install arxiv
+          pip install requests
+          pip install pyyaml
+          pip install beautifulsoup4
+          
+      # 4. Exécution du script de mise à jour des papiers
+      - name: Run Symplectic Papers Update
+        run: |
+          python update_symplectic_papers.py
+          
+      # 5. Commit et push des fichiers mis à jour
+      - name: Commit and Push Updated Files
+        uses: github-actions-x/commit@v2.9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "🔄 Automatic update of symplectic geometry papers"
+          files: |
+            index.html
+            articles-data.js
+            README.md
+            data/symplectic-papers.json
+            data/symplectic-papers-daily.json
+          rebase: 'true'
+          name: ${{ env.GITHUB_USER_NAME }}
+          email: ${{ env.GITHUB_USER_EMAIL }}
+          
+      # 6. Optionnel: Créer une release avec les nouvelles données
+      - name: Create Release (Optional)
+        if: github.event_name == 'schedule'  # Seulement pour les mises à jour automatiques
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: weekly-update-${{ github.run_number }}
+          release_name: Weekly Papers Update ${{ github.run_number }}
+          body: |
+            🔄 Mise à jour automatique hebdomadaire des papiers de géométrie symplectique
+            
+            Nouveaux papiers ajoutés depuis arXiv.org :
+            - Géométrie symplectique
+            - Sous-variétés coisotropiques  
+            - Structures de Poisson
+            - Topologie symplectique
+            
+            Date de mise à jour: ${{ github.run_id }}
+          draft: false
+          prerelease: false
