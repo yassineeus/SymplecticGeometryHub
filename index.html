@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3015,10 +3016,10 @@
 <tr>
     </table>
     
-    
+   
   <div class="no-results" id="noResults">
-        <p>Aucun article trouvé correspondant à votre recherche.</p>
-        <p>Essayez de modifier vos critères de recherche.</p>
+        <p>🔍 No articles found matching your search.</p>
+        <p>Try modifying your search criteria.</p>
     </div>
 
     <script>
@@ -3030,38 +3031,101 @@
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            extractArticles();
+            console.log('DOM loaded, initializing...');
+            extractArticlesFromDOM();
             setupEventListeners();
             updateResultCount();
+            updateLastUpdateTime();
         });
 
-        function extractArticles() {
+        function extractArticlesFromDOM() {
             const rows = document.querySelectorAll('#articlesBody tr');
-            allArticles = Array.from(rows).map(row => {
+            console.log(`Found ${rows.length} article rows`);
+            
+            allArticles = Array.from(rows).map((row, index) => {
                 const cells = row.querySelectorAll('td');
-                return {
-                    date: cells[0].textContent.trim(),
-                    authors: cells[1].textContent.trim(),
-                    title: cells[2].textContent.trim(),
-                    pdf: cells[3].innerHTML.trim()
-                };
-            });
+                if (cells.length >= 4) {
+                    return {
+                        id: index,
+                        date: cells[0].textContent.trim(),
+                        authors: cells[1].textContent.trim(),
+                        title: cells[2].textContent.trim(),
+                        pdf: cells[3].innerHTML.trim(),
+                        element: row
+                    };
+                }
+                return null;
+            }).filter(article => article !== null);
+            
             filteredArticles = [...allArticles];
+            console.log(`Extracted ${allArticles.length} articles`);
         }
 
         function setupEventListeners() {
-            document.getElementById('searchInput').addEventListener('input', handleSearch);
-            document.getElementById('yearFilter').addEventListener('change', handleYearFilter);
-            document.getElementById('showTop10').addEventListener('click', showTop10);
-            document.getElementById('showAll').addEventListener('click', showAll);
-            document.getElementById('toggleAutoUpdate').addEventListener('click', toggleAutoUpdate);
-            document.getElementById('manualUpdate').addEventListener('click', manualUpdate);
-            document.getElementById('intervalSelect').addEventListener('change', updateIntervalSetting);
+            console.log('Setting up event listeners...');
+            
+            // Search input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+                console.log('Search input listener added');
+            }
+            
+            // Year filter
+            const yearFilter = document.getElementById('yearFilter');
+            if (yearFilter) {
+                yearFilter.addEventListener('change', handleSearch);
+                console.log('Year filter listener added');
+            }
+            
+            // Show top 10 button
+            const showTop10Btn = document.getElementById('showTop10');
+            if (showTop10Btn) {
+                showTop10Btn.addEventListener('click', function() {
+                    console.log('Show top 10 clicked');
+                    showTop10();
+                });
+                console.log('Show top 10 button listener added');
+            }
+            
+            // Show all button
+            const showAllBtn = document.getElementById('showAll');
+            if (showAllBtn) {
+                showAllBtn.addEventListener('click', function() {
+                    console.log('Show all clicked');
+                    showAll();
+                });
+                console.log('Show all button listener added');
+            }
+            
+            // Auto-update toggle
+            const toggleBtn = document.getElementById('toggleAutoUpdate');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleAutoUpdate);
+                console.log('Toggle auto-update listener added');
+            }
+            
+            // Manual update
+            const manualBtn = document.getElementById('manualUpdate');
+            if (manualBtn) {
+                manualBtn.addEventListener('click', manualUpdate);
+                console.log('Manual update listener added');
+            }
+            
+            // Interval select
+            const intervalSelect = document.getElementById('intervalSelect');
+            if (intervalSelect) {
+                intervalSelect.addEventListener('change', updateIntervalSetting);
+                console.log('Interval select listener added');
+            }
         }
 
         function handleSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            console.log('Handling search...');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const yearFilter = document.getElementById('yearFilter').value;
+            
+            console.log(`Search term: "${searchTerm}", Year filter: "${yearFilter}"`);
             
             filteredArticles = allArticles.filter(article => {
                 const matchesSearch = searchTerm === '' || 
@@ -3074,60 +3138,70 @@
                 return matchesSearch && matchesYear;
             });
             
-            displayArticles();
+            console.log(`Filtered to ${filteredArticles.length} articles`);
+            updateDisplay();
             updateResultCount();
         }
 
-        function handleYearFilter() {
-            handleSearch();
-        }
-
-        function displayArticles() {
+        function updateDisplay() {
             const tbody = document.getElementById('articlesBody');
             const noResults = document.getElementById('noResults');
             const table = document.getElementById('articlesTable');
             
-            if (!tbody || !table) return;
+            if (!tbody || !table) {
+                console.error('Required DOM elements not found');
+                return;
+            }
             
-            tbody.innerHTML = '';
+            // Hide all rows first
+            allArticles.forEach(article => {
+                if (article.element) {
+                    article.element.style.display = 'none';
+                }
+            });
             
             if (filteredArticles.length === 0) {
                 noResults.style.display = 'block';
-                table.style.display = 'none';
+                console.log('No results, showing no-results message');
             } else {
                 noResults.style.display = 'none';
-                table.style.display = 'table';
                 
-                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
                 
+                // Show filtered articles
                 filteredArticles.forEach(article => {
-                    const row = document.createElement('tr');
-                    
-                    // Créer les cellules
-                    const dateCell = document.createElement('td');
-                    const authorsCell = document.createElement('td');
-                    const titleCell = document.createElement('td');
-                    const pdfCell = document.createElement('td');
-                    
-                    // Remplir les cellules avec surlignage si nécessaire
-                    dateCell.innerHTML = highlightText(article.date, searchTerm);
-                    authorsCell.innerHTML = highlightText(article.authors, searchTerm);
-                    titleCell.innerHTML = highlightText(article.title, searchTerm);
-                    pdfCell.innerHTML = article.pdf;
-                    
-                    // Ajouter les cellules à la ligne
-                    row.appendChild(dateCell);
-                    row.appendChild(authorsCell);
-                    row.appendChild(titleCell);
-                    row.appendChild(pdfCell);
-                    
-                    tbody.appendChild(row);
+                    if (article.element) {
+                        article.element.style.display = 'table-row';
+                        
+                        // Apply highlighting if there's a search term
+                        if (searchTerm) {
+                            const cells = article.element.querySelectorAll('td');
+                            if (cells.length >= 3) {
+                                cells[0].innerHTML = highlightText(article.date, searchTerm);
+                                cells[1].innerHTML = highlightText(article.authors, searchTerm);
+                                cells[2].innerHTML = highlightText(article.title, searchTerm);
+                                // Don't highlight the PDF column
+                                cells[3].innerHTML = article.pdf;
+                            }
+                        } else {
+                            // Remove highlighting
+                            const cells = article.element.querySelectorAll('td');
+                            if (cells.length >= 3) {
+                                cells[0].textContent = article.date;
+                                cells[1].textContent = article.authors;
+                                cells[2].textContent = article.title;
+                                cells[3].innerHTML = article.pdf;
+                            }
+                        }
+                    }
                 });
+                
+                console.log(`Displayed ${filteredArticles.length} articles`);
             }
         }
 
         function highlightText(text, searchTerm) {
-            if (!searchTerm) return text;
+            if (!searchTerm || !text) return text;
             
             const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
@@ -3138,32 +3212,46 @@
         }
 
         function showTop10() {
-            filteredArticles = allArticles.slice(0, 10);
-            displayArticles();
-            updateResultCount();
+            console.log('Showing top 10 articles');
+            
+            // Clear filters
             document.getElementById('searchInput').value = '';
             document.getElementById('yearFilter').value = '';
+            
+            // Take first 10 articles
+            filteredArticles = allArticles.slice(0, 10);
+            updateDisplay();
+            updateResultCount();
         }
 
         function showAll() {
-            filteredArticles = [...allArticles];
-            displayArticles();
-            updateResultCount();
+            console.log('Showing all articles');
+            
+            // Clear filters
             document.getElementById('searchInput').value = '';
             document.getElementById('yearFilter').value = '';
+            
+            // Show all articles
+            filteredArticles = [...allArticles];
+            updateDisplay();
+            updateResultCount();
         }
 
         function updateResultCount() {
             const resultCount = document.getElementById('resultCount');
             const articleCount = document.getElementById('articleCount');
             
-            if (filteredArticles.length === allArticles.length) {
-                resultCount.textContent = 'Showing all articles';
-            } else {
-                resultCount.textContent = `Showing ${filteredArticles.length} of ${allArticles.length} articles`;
+            if (resultCount) {
+                if (filteredArticles.length === allArticles.length) {
+                    resultCount.textContent = 'Showing all articles';
+                } else {
+                    resultCount.textContent = `Showing ${filteredArticles.length} of ${allArticles.length} articles`;
+                }
             }
             
-            articleCount.textContent = allArticles.length;
+            if (articleCount) {
+                articleCount.textContent = allArticles.length;
+            }
         }
 
         function toggleAutoUpdate() {
@@ -3176,6 +3264,7 @@
                 button.textContent = 'Enable Auto-Update';
                 document.getElementById('nextUpdate').textContent = 'Not scheduled';
                 status.className = 'update-status';
+                console.log('Auto-update disabled');
             } else {
                 const interval = parseInt(document.getElementById('intervalSelect').value) * 60000;
                 updateInterval = setInterval(manualUpdate, interval);
@@ -3183,6 +3272,7 @@
                 button.textContent = 'Disable Auto-Update';
                 updateNextUpdateTime();
                 status.className = 'update-status updating';
+                console.log('Auto-update enabled');
             }
         }
 
@@ -3196,28 +3286,89 @@
 
         function updateIntervalSetting() {
             const newInterval = document.getElementById('intervalSelect').value;
-            document.getElementById('updateInterval').textContent = `Every ${newInterval} minutes`;
+            document.getElementById('updateInterval').textContent = 
+                newInterval < 60 ? `Every ${newInterval} minutes` : 
+                `Every ${Math.floor(newInterval / 60)} hour${Math.floor(newInterval / 60) > 1 ? 's' : ''}`;
             
             if (autoUpdateEnabled) {
-                toggleAutoUpdate(); // Désactive
-                toggleAutoUpdate(); // Réactive avec le nouvel intervalle
+                toggleAutoUpdate(); // Disable
+                toggleAutoUpdate(); // Re-enable with new interval
             }
         }
 
         function manualUpdate() {
+            console.log('Manual update triggered');
             const lastUpdate = document.getElementById('lastUpdate');
             const updateStatus = document.getElementById('updateStatus');
             
-            lastUpdate.textContent = new Date().toLocaleString();
+            updateLastUpdateTime();
             updateStatus.className = 'update-status';
             
             if (autoUpdateEnabled) {
                 updateNextUpdateTime();
             }
             
-            console.log('Update completed');
+            // Simulate adding a new article occasionally
+            if (Math.random() > 0.7) {
+                addSimulatedArticle();
+            }
+        }
+
+        function updateLastUpdateTime() {
+            const lastUpdate = document.getElementById('lastUpdate');
+            if (lastUpdate) {
+                lastUpdate.textContent = new Date().toLocaleString();
+            }
+        }
+
+        function addSimulatedArticle() {
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const randomId = Math.floor(Math.random() * 99999);
+            
+            const newArticle = {
+                id: allArticles.length,
+                date: dateStr,
+                authors: 'New Researcher, Co-Author Name',
+                title: `Recent Advances in Symplectic Topology (Simulated Article ${randomId})`,
+                pdf: `<a href="http://arxiv.org/pdf/2505.${randomId}v1">PDF</a>`,
+                element: null
+            };
+            
+            // Create new row
+            const tbody = document.getElementById('articlesBody');
+            const row = document.createElement('tr');
+            row.className = 'new-article';
+            row.innerHTML = `
+                <td>${newArticle.date}</td>
+                <td>${newArticle.authors}</td>
+                <td>${newArticle.title}</td>
+                <td>${newArticle.pdf}</td>
+            `;
+            
+            // Insert at top
+            tbody.insertBefore(row, tbody.firstChild);
+            newArticle.element = row;
+            
+            // Add to articles array
+            allArticles.unshift(newArticle);
+            
+            // Update filtered articles if showing all
+            if (filteredArticles.length === allArticles.length - 1) {
+                filteredArticles.unshift(newArticle);
+            }
+            
+            updateResultCount();
+            
+            // Remove highlight after 5 seconds
+            setTimeout(() => {
+                row.classList.remove('new-article');
+            }, 5000);
+            
+            console.log('Added simulated article');
         }
     </script>
 
 </body>
-</html>
+</html>         
+        
