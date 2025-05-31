@@ -1,1 +1,46 @@
+name: Update Symplectic Geometry Articles
 
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Tous les jours à minuit UTC
+  workflow_dispatch:      # Permet l'exécution manuelle
+
+permissions:
+  contents: write
+
+jobs:
+  update-articles:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: 📦 Install dependencies
+      run: |
+        pip install pandas requests feedparser beautifulsoup4 lxml
+    
+    - name: 🔄 Run CSV generator
+      run: python generate_tables.py
+    
+    - name: ⚙️ Configure Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action Bot"
+    
+    - name: 📤 Commit and push changes
+      run: |
+        git add .
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "🤖 Auto-update articles: $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
+        else
+          echo "No changes to commit"
+        fi
