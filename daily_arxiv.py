@@ -7,6 +7,8 @@ import logging
 import argparse
 import datetime
 import requests
+import time
+from dateutil.relativedelta import relativedelta
 
 logging.basicConfig(format='[%(asctime)s %(levelname)s] %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S',
@@ -62,11 +64,13 @@ def sort_papers(papers):
         output[key] = papers[key]
     return output    
 
-def get_daily_papers(topic, query="symplectic geometry", max_results=50):
+def get_daily_papers(topic, query="symplectic geometry", max_results=50, start_date=None, end_date=None):
     """
     @param topic: str
     @param query: str
     @param max_results: int
+    @param start_date: datetime.date or None
+    @param end_date: datetime.date or None
     @return paper_with_code: dict
     """
     content = dict() 
@@ -75,6 +79,13 @@ def get_daily_papers(topic, query="symplectic geometry", max_results=50):
     # Enhanced search for symplectic geometry with categories
     categories = "cat:math.SG OR cat:math.DG OR cat:math.AG OR cat:math-ph OR cat:math.QA"
     enhanced_query = f"({query}) AND ({categories})"
+    
+    # Add date filter if specified
+    if start_date and end_date:
+        start_str = start_date.strftime("%Y%m%d")
+        end_str = end_date.strftime("%Y%m%d")
+        enhanced_query += f" AND submittedDate:[{start_str} TO {end_str}]"
+        logging.info(f"Searching from {start_date} to {end_date}")
     
     search_engine = arxiv.Search(
         query=enhanced_query,
@@ -95,7 +106,7 @@ def get_daily_papers(topic, query="symplectic geometry", max_results=50):
         update_time = result.updated.date()
         comments = result.comment
 
-        logging.info(f"Time = {update_time} title = {paper_title} author = {paper_authors}")
+        logging.info(f"Time = {update_time} title = {paper_title[:50]}... author = {paper_authors[:30]}...")
 
         ver_pos = paper_id.find('v')
         if ver_pos == -1:
@@ -132,6 +143,64 @@ def get_daily_papers(topic, query="symplectic geometry", max_results=50):
     data = {topic: content}
     data_web = {topic: content_to_web}
     return data, data_web 
+
+def get_historical_papers(topic, query, start_year=1990, end_year=None, max_per_year=500):
+    """
+    Collect all papers from start_year to end_year
+    @param topic: str
+    @param query: str  
+    @param start_year: int
+    @param end_year: int or None (defaults to current year)
+    @param max_per_year: int
+    @return: dict, dict
+    """
+    if end_year is None:
+        end_year = datetime.datetime.now().year
+    
+    all_content = dict()
+    all_content_web = dict()
+    
+    logging.info(f"Starting historical collection from {start_year} to {end_year}")
+    
+    for year in range(start_year, end_year + 1):
+        logging.info(f"Processing year {year}...")
+        
+        # Define date range for the year
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+        
+        try:
+            data, data_web = get_daily_papers(
+                topic=topic, 
+                query=query, 
+                max_results=max_per_year,
+                start_date=start_date,
+                end_date=end_date
+            )
+            
+            # Merge results
+            for topic_key in data:
+                if topic_key in all_content:
+                    all_content[topic_key].update(data[topic_key])
+                    all_content_web[topic_key].update(data_web[topic_key])
+                else:
+                    all_content[topic_key] = data[topic_key]
+                    all_content_web[topic_key] = data_web[topic_key]
+            
+            logging.info(f"Year {year} completed. Found {len(data[topic])} papers.")
+            
+            # Add delay to respect arXiv rate limits
+            time.sleep(3)
+            
+        except Exception as e:
+            logging.error(f"Error processing year {year}: {e}")
+            # Continue with next year
+            continue
+    
+    total_papers = sum(len(content) for content in all_content.values())
+    logging.info(f"Historical collection completed. Total papers: {total_papers}")
+    
+    return all_content, all_content_web
 
 def update_paper_links(json_file):
     """
@@ -180,12 +249,19 @@ def update_json_file(filename, data_dict):
     '''
     daily update json file using data_dict
     '''
-    with open(filename, "r") as f:
-        content = f.read()
-        if not content:
-            m = {}
-        else:
-            m = json.loads(content)
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(filename) if os.path.dirname(filename) else '.', exist_ok=True)
+    
+    # Load existing data
+    if os.path.exists(filename):
+        with open(filename, "r") as f:
+            content = f.read()
+            if not content:
+                m = {}
+            else:
+                m = json.loads(content)
+    else:
+        m = {}
             
     json_data = m.copy() 
     
@@ -240,6 +316,9 @@ def json_to_md(filename, md_filename,
             data = {}
         else:
             data = json.loads(content)
+
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(md_filename) if os.path.dirname(md_filename) else '.', exist_ok=True)
 
     with open(md_filename, "w+") as f:
         pass
@@ -340,10 +419,31 @@ def demo(**config):
     publish_wechat = config['publish_wechat']
     show_badge = config['show_badge']
 
-    b_update = config['update_paper_links']
-    logging.info(f'Update Paper Link = {b_update}')
+    b_update = config.get('update_paper_links', False)
+    b_historical = config.get('historical_init', False)
+    start_year = config.get('start_year', 1990)
+    end_year = config.get('end_year', None)
     
-    if config['update_paper_links'] == False:
+    logging.info(f'Update Paper Link = {b_update}')
+    logging.info(f'Historical Init = {b_historical}')
+    
+    if b_historical:
+        logging.info(f"Starting HISTORICAL collection from {start_year}")
+        for topic, keyword in keywords.items():
+            logging.info(f"Historical collection for keyword: {topic}")
+            data, data_web = get_historical_papers(
+                topic=topic, 
+                query=keyword, 
+                start_year=start_year, 
+                end_year=end_year,
+                max_per_year=500
+            )
+            data_collector.append(data)
+            data_collector_web.append(data_web)
+            print("\n")
+        logging.info(f"HISTORICAL collection completed")
+        
+    elif not b_update:
         logging.info(f"GET daily symplectic geometry papers begin")
         for topic, keyword in keywords.items():
             logging.info(f"Keyword: {topic}")
@@ -356,7 +456,7 @@ def demo(**config):
     if publish_readme:
         json_file = config['json_readme_path']
         md_file = config['md_readme_path']
-        if config['update_paper_links']:
+        if config.get('update_paper_links', False):
             update_paper_links(json_file)
         else:    
             update_json_file(json_file, data_collector)
@@ -365,7 +465,7 @@ def demo(**config):
     if publish_gitpage:
         json_file = config['json_gitpage_path']
         md_file = config['md_gitpage_path']
-        if config['update_paper_links']:
+        if config.get('update_paper_links', False):
             update_paper_links(json_file)
         else:    
             update_json_file(json_file, data_collector)
@@ -374,7 +474,7 @@ def demo(**config):
     if publish_wechat:
         json_file = config['json_wechat_path']
         md_file = config['md_wechat_path']
-        if config['update_paper_links']:
+        if config.get('update_paper_links', False):
             update_paper_links(json_file)
         else:    
             update_json_file(json_file, data_collector_web)
@@ -385,8 +485,21 @@ if __name__ == "__main__":
     parser.add_argument('--config_path', type=str, default='config.yaml', 
                         help='configuration file path')
     parser.add_argument('--update_paper_links', default=False, action="store_true", 
-                        help='whether to update paper links etc.')                        
+                        help='whether to update paper links etc.')
+    parser.add_argument('--historical_init', default=False, action="store_true", 
+                        help='initialize with historical data from all years')
+    parser.add_argument('--start_year', type=int, default=1990, 
+                        help='start year for historical collection')
+    parser.add_argument('--end_year', type=int, default=None, 
+                        help='end year for historical collection (default: current year)')
+                        
     args = parser.parse_args()
     config = load_config(args.config_path)
-    config = {**config, 'update_paper_links': args.update_paper_links}
+    config = {
+        **config, 
+        'update_paper_links': args.update_paper_links,
+        'historical_init': args.historical_init,
+        'start_year': args.start_year,
+        'end_year': args.end_year
+    }
     demo(**config)
