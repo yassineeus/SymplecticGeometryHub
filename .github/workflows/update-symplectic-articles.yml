@@ -1,0 +1,75 @@
+# Workflow pour mise à jour automatique des articles de géométrie symplectique
+name: Update Symplectic Geometry Papers Daily
+
+# Contrôle quand le workflow s'exécute
+on:
+  # Permet d'exécuter manuellement depuis l'onglet Actions
+  workflow_dispatch:
+  
+  # Planification automatique - tous les jours à 6h00 UTC
+  schedule:
+    - cron: "0 6 * * *"  # Tous les jours à 6h00 UTC
+  
+  # Optionnel: déclencher sur push vers main (décommentez si besoin)
+  # push:
+  #   branches:
+  #     - main
+
+env:
+  GITHUB_USER_NAME: YassineAitMohamed  # Remplacez par votre nom d'utilisateur GitHub
+  GITHUB_USER_EMAIL: y.aitmohamed@yahoo.com  # Remplacez par votre email GitHub
+
+# Les jobs à exécuter
+jobs:
+  update-articles:
+    name: Update Symplectic Articles
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Checkout du code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      # 2. Configuration de Python
+      - name: Setup Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      # 3. Installation des dépendances
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install arxiv
+          pip install requests
+          pip install pyyaml
+          pip install pandas
+          pip install tqdm
+          
+      # 4. Exécution du script de mise à jour
+      - name: Run Symplectic Articles Update
+        run: |
+          python update_articles.py
+          
+      # 5. Commit et push des changements
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "🤖 Auto-update: New symplectic geometry articles from arXiv"
+          file_pattern: "index.html README.md articles_backup.json"
+          commit_user_name: ${{ env.GITHUB_USER_NAME }}
+          commit_user_email: ${{ env.GITHUB_USER_EMAIL }}
+          
+      # 6. Optionnel: Notification de succès
+      - name: Update Success Notification
+        if: success()
+        run: |
+          echo "✅ Symplectic geometry articles updated successfully!"
+          echo "📊 Check the updated index.html for new articles"
+          
+      # 7. Optionnel: Notification d'échec  
+      - name: Update Failed Notification
+        if: failure()
+        run: |
+          echo "❌ Failed to update symplectic articles"
+          echo "🔧 Check the logs for debugging information"
