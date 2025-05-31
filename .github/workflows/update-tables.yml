@@ -1,0 +1,34 @@
+name: Auto Update Tables
+
+on:
+  push:
+    paths:
+      - 'symplectic_geometry_articles.csv'
+      - 'generate_tables.py'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install pandas
+
+    - name: Generate tables
+      run: python generate_tables.py
+
+    - name: Commit updated files
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git add README.md index.html
+        git commit -m "Auto-update README and index.html from CSV" || echo "No changes to commit"
+        git push
