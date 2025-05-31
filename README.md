@@ -482,3 +482,192 @@
 | 2024-01-04 | Non-archimedean analytic continuation of unobstructedness | Hang Yuan | [PDF](http://arxiv.org/pdf/2401.02577v3) | - |
 | 2024-01-02 | On the Barcode Entropy of Reeb Flows | Erman Cineli, Viktor L. Ginzburg, Basak Z. Gurel, Marco Mazzucchelli | [PDF](http://arxiv.org/pdf/2401.01421v1) | - |
 | 2024-01-01 | Whittaker modules and hyperbolic Toda lattices | Limeng Xia | [PDF](http://arxiv.org/pdf/2401.00680v1) | - |
+| 2023-12-29 | Quasi-Lie bialgebroids, Dirac structures and deformations of Poisson quasi-Nijenhuis manifolds | Murilo do Nascimento Luiz, Igor Mencattini, Marco Pedroni | [PDF](http://arxiv.org/pdf/2312.17541v3) | - |
+| 2023-12-28 | Compatible almost complex structures on the Hard Lefschetz condition | Dexie Lin | [PDF](http://arxiv.org/pdf/2312.16948v5) | - |
+| 2023-12-25 | Symplectic reduction and lagrangian submanifolds in Gr$(1, n)$ | Nikolay A. Tyurin | [PDF](http://arxiv.org/pdf/2312.15660v3) | - |
+| 2023-12-24 | Symplectic embeddings of toric domains with boundary a lens space | Jonathan Trejos | [PDF](http://arxiv.org/pdf/2312.15374v3) | - |
+| 2023-12-22 | Generalised $T\bar{T}$-deformations of classical free particles | Benjamin Doyon, Friedrich Hübner, Takato Yoshimura | [PDF](http://arxiv.org/pdf/2312.14855v1) | - |
+| 2023-12-22 | Lagrangian Intersections and the spectral norm in convex-at-infinity symplectic manifolds | Habib Alizadeh, Marcelo S. Atallah, Dylan Cant | [PDF](http://arxiv.org/pdf/2312.14752v1) | - |
+| 2023-12-21 | Equivariant Lagrangian correspondence and a conjecture of Teleman | Siu-Cheong Lau, Nai-Chung Conan Leung, Yan-Lung Leon Li | [PDF](http://arxiv.org/pdf/2312.13926v6) | - |
+| 2023-12-21 | BV-refinement of the on-shell supersymmetry and localization | Andrey Losev, Vyacheslav Lysov | [PDF](http://arxiv.org/pdf/2312.13999v1) | - |
+| 2023-12-20 | Screwon spectral statistics and dispersion relation in the quantum Rajeev-Ranken model | Govind S. Krishnaswami, T. R. Vishnu | [PDF](http://arxiv.org/pdf/2312.13122v2) | - |
+| 2023-12-20 | On Symplectic Packing Problems in Higher Dimensions | Kyler Siegel, Yuan Yao | [PDF](http://arxiv.org/pdf/2312.13224v1) | - |
+| 2023-12-19 | On the integrability of hybrid Hamiltonian systems | Asier López-Gordón, Leonardo J. Colombo | [PDF](http://arxiv.org/pdf/2312.12152v1) | - |
+| 2023-12-15 | Semimartingale driven mechanics and reduction by symmetry for stochastic and dissipative dynamical systems | Oliver D. Street, So Takao | [PDF](http://arxiv.org/pdf/2312.09769v3) | - |
+| 2023-12-15 | A Lower Bound of the Hofer-Zehnder Capacity via Delzant Polytopes | Yichen Liu | [PDF](http://arxiv.org/pdf/2312.09526v2) | - |
+| 2023-12-15 | Position-momentum conditioning, relative entropy decomposition and convergence to equilibrium in stochastic Hamiltonian systems | Igor G. Vladimirov | [PDF](http://arxiv.org/pdf/2312.09475v1) | - |
+| 2023-12-14 | Shifted coisotropic structures for differentiable stacks | Maxence Mayrand | [PDF](http://arxiv.org/pdf/2312.09214v2) | - |
+| 2023-12-11 | Deformation quantization and perverse sheaves | Sam Gunningham, Pavel Safronov | [PDF](http://arxiv.org/pdf/2312.07595v2) | - |
+| 2023-12-10 | Tight Contact Structures on Contact Mapping Tori and their Folded Sums | M. Firat Arikan | [PDF](http://arxiv.org/pdf/2312.05823v2) | - |
+| 2023-12-09 | Poisson Geometric Formulation of Quantum Mechanics | Pritish Sinha, Ankit Yadav | [PDF](http://arxiv.org/pdf/2312.05615v2) | - |
+| 2023-12-09 | Poisson structures of some heavenly type dynamical systems | Yarema Prykarpatskyy | [PDF](http://arxiv.org/pdf/2312.05618v1) | - |
+| 2023-12-08 | Quasi-rectifiable Lie algebras for partial differential equations | A. M. Grundland, J. de Lucas | [PDF](http://arxiv.org/pdf/2312.05238v2) | - |
+| 2023-12-08 | Reflection Maps Associated with Involutions and Factorization Problems, and Their Poisson Geometry | Luen-Chau Li, Vincent Caudrelier | [PDF](http://arxiv.org/pdf/2312.05164v1) | - |
+| 2023-12-07 | Bow varieties as symplectic reductions of $T^*(G/P)$ | Yibo Ji | [PDF](http://arxiv.org/pdf/2312.04696v5) | - |
+| 2023-12-06 | Minimal slopes and bubbling for complex Hessian equations | Ved Datar, Ramesh Mete, Jian Song | [PDF](http://arxiv.org/pdf/2312.03370v1) | - |
+| 2023-12-06 | Properties of Gromov-Witten invariants defined via global Kuranishi charts | Amanda Hirschi | [PDF](http://arxiv.org/pdf/2312.03625v1) | - |
+| 2023-12-06 | Singular cohomology of symplectic quotients by circle actions and Kirwan surjectivity | Benjamin Delarue, Pablo Ramacher, Maximilian Schmitt | [PDF](http://arxiv.org/pdf/2312.03634v1) | - |
+| 2023-12-05 | Geometry of bundle-valued multisymplectic structures with Lie algebroids | Yuji Hirota, Noriaki Ikeda | [PDF](http://arxiv.org/pdf/2312.02499v1) | - |
+| 2023-12-05 | Shifted symplectic structures on derived Quot-stacks II -- Derived Quot-schemes as dg manifolds | Dennis Borisov, Ludmil Katzarkov, Artan Sheshmani | [PDF](http://arxiv.org/pdf/2312.02815v1) | - |
+| 2023-12-03 | On Some Local Geometry of Bi-Contact Structures | Taylor J. Klotz, George R. Wilkens | [PDF](http://arxiv.org/pdf/2312.01360v3) | - |
+| 2023-12-01 | Super Kähler structures on the complex Abelian Lie supergroups | Meng-Kiat Chuah, Fabio Gavarini | [PDF](http://arxiv.org/pdf/2312.00444v2) | - |
+| 2023-11-30 | Open Gromov-Witten theory for cohomologically incompressible Lagrangians | Sara B. Tukachinsky | [PDF](http://arxiv.org/pdf/2311.18511v1) | - |
+| 2023-11-30 | Extensible positive loops and vanishing of symplectic cohomology | Dylan Cant, Jakob Hedicke, Eric Kilgore | [PDF](http://arxiv.org/pdf/2311.18267v2) | - |
+| 2023-11-30 | Contact action functional, calculus of variation and canonical generating function of Legendrian submanifolds | Yong-Geun Oh, Seungook Yu | [PDF](http://arxiv.org/pdf/2311.18510v2) | - |
+| 2023-11-29 | Regularity for the Monge-AmpĂ¨re equation by doubling | Ravi Shankar, Yu Yuan | [PDF](http://arxiv.org/pdf/2311.17291v1) | - |
+| 2023-11-29 | Rabinowitz Floer homology for prequantization bundles and Floer Gysin sequence | Joonghyun Bae, Jungsoo Kang, Sungho Kim | [PDF](http://arxiv.org/pdf/2311.17866v2) | - |
+| 2023-11-29 | The Calabi-Yau Equation on Symplectic Manifolds | Qiang Tan, Hongyu Wang | [PDF](http://arxiv.org/pdf/2311.17610v1) | - |
+| 2023-11-25 | Topological complexity of monotone symplectic manifolds | Ryuma Orita | [PDF](http://arxiv.org/pdf/2311.14989v2) | - |
+| 2023-11-25 | An energy-momentum method for ordinary differential equations with an underlying $k$-polysymplectic manifold | Leonardo Colombo, Javier de Lucas, Xavier Rivas, Bartosz M. Zawora | [PDF](http://arxiv.org/pdf/2311.15035v1) | - |
+| 2023-11-22 | Moduli of K3 families over $\mathbb{P}^1$, cycle spaces of IHS period domains, and deformations of complex-hyperkähler metrics | Daniel Greb, Martin Schwald | [PDF](http://arxiv.org/pdf/2311.13420v2) | - |
+| 2023-11-15 | A Hodge-theoretic proof of Hwang's theorem on base manifolds of Lagrangian fibrations | Benjamin Bakker, Christian Schnell | [PDF](http://arxiv.org/pdf/2311.08977v1) | - |
+| 2023-11-14 | Coarsely Holomorphic Curves and Symplectic Topology | Spencer Cattalani | [PDF](http://arxiv.org/pdf/2311.08467v1) | - |
+| 2023-11-10 | Combinatorics of linear stability for Hamiltonian systems in arbitrary dimension | Agustin Moreno, Francesco Ruscelli | [PDF](http://arxiv.org/pdf/2311.06167v1) | - |
+| 2023-11-09 | Discrete Dynamics and Supergeometry | Subhobrata Chatterjee, Andrew Waldron, Cem Yetişmişoğlu | [PDF](http://arxiv.org/pdf/2311.05711v1) | - |
+| 2023-11-07 | Normal form of bimeromorphically contractible holomorphic Lagrangian submanifolds | Ekaterina Amerik, Misha Verbitsky | [PDF](http://arxiv.org/pdf/2311.04360v1) | - |
+| 2023-11-07 | Fukaya category on a symplectic manifold with a B-field | Haniya Azam, Catherine Cannizzo, Heather Lee, Chiu-Chu Melissa Liu | [PDF](http://arxiv.org/pdf/2311.04143v2) | - |
+| 2023-11-06 | Polygons of Newton-Okounkov type on irreducible holomorphic symplectic manifolds | Francesco Antonio Denisi | [PDF](http://arxiv.org/pdf/2311.03295v2) | - |
+| 2023-11-05 | Implicit Nonholonomic Mechanics with Collisions | Álvaro Rodríguez Abella, Leonardo Colombo | [PDF](http://arxiv.org/pdf/2311.02614v1) | - |
+| 2023-11-04 | Duistermaat-Heckman measures for Hamiltonian groupoid actions | Luka Zwaan | [PDF](http://arxiv.org/pdf/2311.02491v1) | - |
+| 2023-11-01 | A Moment Map for the Space of Maps to a Balanced Manifold | Dan Popovici, Luis Ugarte | [PDF](http://arxiv.org/pdf/2311.00485v1) | - |
+| 2023-10-31 | Gauge equivalence and transdimensional perturbation: point vortices | George W. Patrick | [PDF](http://arxiv.org/pdf/2311.00169v1) | - |
+| 2023-10-31 | Equivariant Lagrangian Floer theory on compact toric manifolds | Yao Xiao | [PDF](http://arxiv.org/pdf/2310.20202v1) | - |
+| 2023-10-27 | Regenerations and applications | Giovanni Mongardi, Gianluca Pacienza | [PDF](http://arxiv.org/pdf/2310.18248v1) | - |
+| 2023-10-24 | Spatial dynamics formulation of magnetohydrostatics | J. W. Burby, M. H. Updike | [PDF](http://arxiv.org/pdf/2310.16220v1) | - |
+| 2023-10-23 | The dressing field method for diffeomorphisms: a relational framework | Jordan T. Francois Andre | [PDF](http://arxiv.org/pdf/2310.14472v3) | - |
+| 2023-10-20 | Poisson structure and Integrability of a Hamiltonian flow for the inhomogeneous six-vertex model | Pete Rigas | [PDF](http://arxiv.org/pdf/2310.15181v3) | - |
+| 2023-10-19 | The moduli space of flat maximal space-like embeddings in pseudo-hyperbolic space | Nicholas Rungi, Andrea Tamburelli | [PDF](http://arxiv.org/pdf/2310.12596v1) | - |
+| 2023-10-17 | Local exotic tori | Joé Brendel | [PDF](http://arxiv.org/pdf/2310.11359v2) | - |
+| 2023-10-12 | $SG$-classes, Singular Symplectic Geometry and Order-preserving Isomorphisms | Alessandro Pietro Contini | [PDF](http://arxiv.org/pdf/2310.08428v1) | - |
+| 2023-10-04 | Positivity for toric Kac polynomials in higher depth | Tanguy Vernet | [PDF](http://arxiv.org/pdf/2310.02912v1) | - |
+| 2023-10-04 | Bifurcation of closed orbits of Hamiltonian systems with application to geodesics of the Schwarzschild metric | Alberto Boscaggin, Walter Dambrosio, Guglielmo Feltrin | [PDF](http://arxiv.org/pdf/2310.02615v1) | - |
+| 2023-10-03 | Symplectic structure, product structures and complex structures on Leibniz algebras | Rong Tang, Nanyan Xu, Yunhe Sheng | [PDF](http://arxiv.org/pdf/2310.01710v1) | - |
+| 2023-09-30 | Linear stability of the elliptic relative equilibria for the restricted N-body problem: two special cases | Jiashengliang Xie, Bowen Liu, Qinglong Zhou | [PDF](http://arxiv.org/pdf/2310.00286v2) | - |
+| 2023-09-29 | On particular integrability for (co)symplectic and (co)contact Hamiltonian systems | R. Azuaje, A. M. Escobar-Ruiz | [PDF](http://arxiv.org/pdf/2309.17356v3) | - |
+| 2023-09-25 | Lie Groupoids | Henrique Bursztyn, Matias del Hoyo | [PDF](http://arxiv.org/pdf/2309.14105v1) | - |
+| 2023-09-21 | Some observations on deformed Donaldson-Thomas connections | Kotaro Kawai | [PDF](http://arxiv.org/pdf/2309.11794v1) | - |
+| 2023-09-20 | Hamilton Lie algebroids over Dirac structures and sigma models | Noriaki Ikeda | [PDF](http://arxiv.org/pdf/2309.10996v1) | - |
+| 2023-09-18 | Entire solutions of two-convex Lagrangian mean curvature flows | Chung-Jun Tsai, Mao-Pei Tsui, Mu-Tao Wang | [PDF](http://arxiv.org/pdf/2309.09432v1) | - |
+| 2023-09-12 | On the symplectic structure over the moduli space of projective structures on a surface | Indranil Biswas | [PDF](http://arxiv.org/pdf/2309.06214v1) | - |
+| 2023-09-11 | Deformations of Lagrangian $NQ$-submanifolds | Miquel Cueca, Jonas Schnitzer | [PDF](http://arxiv.org/pdf/2309.05580v2) | - |
+| 2023-09-10 | Canonical coordinates for moduli spaces of rank two irregular connections on curves | Arata Komyo, Frank Loray, Masa-Hiko Saito, Szilard Szabo | [PDF](http://arxiv.org/pdf/2309.05012v2) | - |
+| 2023-09-09 | Symplectic Structure-Aware Hamiltonian (Graph) Embeddings | Jiaxu Liu, Xinping Yi, Tianle Zhang, Xiaowei Huang | [PDF](http://arxiv.org/pdf/2309.04885v4) | - |
+| 2023-09-05 | Smooth transformations and ruling out closed orbits in planar systems | Tiemo Pedergnana, Nicolas Noiray | [PDF](http://arxiv.org/pdf/2309.02513v4) | - |
+| 2023-09-04 | The HHMP decomposition of the permutohedron and degenerations of torus orbits in flag varieties | Carl Lian | [PDF](http://arxiv.org/pdf/2309.01747v4) | - |
+| 2023-09-01 | Quantitative characterization in contact Hamiltonian dynamics -- I | Danijel Djordjević, Igor Uljarević, Jun Zhang | [PDF](http://arxiv.org/pdf/2309.00527v1) | - |
+| 2023-08-30 | Symmetry Preservation in Hamiltonian Systems: Simulation and Learning | Miguel Vaquero, Jorge Cortés, David Martín de Diego | [PDF](http://arxiv.org/pdf/2308.16331v1) | - |
+| 2023-08-29 | Lie-Poisson Neural Networks (LPNets): Data-Based Computing of Hamiltonian Systems with Symmetries | Christopher Eldred, François Gay-Balmaz, Sofiia Huraka, Vakhtang Putkaradze | [PDF](http://arxiv.org/pdf/2308.15349v1) | - |
+| 2023-08-26 | Hamiltonian isotopies of relatively exact Lagrangians are orientation-preserving | Jack Smith | [PDF](http://arxiv.org/pdf/2401.03356v2) | - |
+| 2023-08-23 | Elliptic Stable Envelopes for Certain Non-Symplectic Varieties and Dynamical $R$-Matrices for Superspin Chains from the Bethe/Gauge Correspondence | Nafiz Ishtiaque, Seyed Faroogh Moosavian, Yehao Zhou | [PDF](http://arxiv.org/pdf/2308.12333v2) | - |
+| 2023-08-19 | mKdV-Related Flows for Legendrian Curves in the Pseudohermitian 3-Sphere | Annalisa Calini, Thomas Ivey, Emilio Musso | [PDF](http://arxiv.org/pdf/2308.10125v2) | - |
+| 2023-08-15 | A review on coisotropic reduction in Symplectic, Cosymplectic, Contact and Co-contact Hamiltonian systems | Manuel de León, Rubén Izquierdo-López | [PDF](http://arxiv.org/pdf/2308.07637v3) | - |
+| 2023-08-09 | Aspherical Lagrangian submanifolds, Audin's conjecture and cyclic dilations | Yin Li | [PDF](http://arxiv.org/pdf/2308.05086v4) | - |
+| 2023-08-08 | Derived symplectic geometry | Damien Calaque | [PDF](http://arxiv.org/pdf/2308.04210v3) | - |
+| 2023-08-07 | On global attraction to solitons for 3D Maxwell-Lorentz equations | E. A. Kopylova | [PDF](http://arxiv.org/pdf/2308.03611v4) | - |
+| 2023-08-03 | On non-displaceable Lagrangian submanifolds in two-step flag varieties | Yoosik Kim | [PDF](http://arxiv.org/pdf/2308.01636v1) | - |
+| 2023-08-02 | Contact formalism for dissipative mechanical systems on Lie algebroids | Alexandre Anahory Simoes, Leonardo Colombo, Manuel de Leon, Modesto Salgado, Silvia Souto | [PDF](http://arxiv.org/pdf/2308.00990v1) | - |
+| 2023-07-27 | A Kodaira type conjecture on almost complex 4 manifolds | Dexie Lin | [PDF](http://arxiv.org/pdf/2307.14690v5) | - |
+| 2023-07-27 | Boundary structure of the standard model coupled to gravity | Giovanni Canepa, Alberto S. Cattaneo, Filippo Fila-Robattino, Manuel Tecchiolli | [PDF](http://arxiv.org/pdf/2307.14955v1) | - |
+| 2023-07-27 | Integrable scattering theory with higher derivative Hamiltonians | Andreas Fring, Bethan Turner | [PDF](http://arxiv.org/pdf/2307.15210v1) | - |
+| 2023-07-25 | Totally geodesic Lagrangian submanifolds of the pseudo-nearly KĂ¤hler $\mathrm{SL}(2,\mathbb{R})\times\mathrm{SL}(2,\mathbb{R})$ | Mateo Anarella, Joeri Van der Veken | [PDF](http://arxiv.org/pdf/2307.13389v2) | - |
+| 2023-07-18 | Nonlinear feedback, double bracket dissipation and port control of Lie-Poisson systems | Simon Hochgerner | [PDF](http://arxiv.org/pdf/2307.09235v1) | - |
+| 2023-07-16 | Minimal surfaces and Colding-Minicozzi entropy in complex hyperbolic space | Jacob Bernstein, Arunima Bhattacharya | [PDF](http://arxiv.org/pdf/2307.08128v1) | - |
+| 2023-07-13 | Wonderful varieties with a view towards Poisson geometry | Ana Balibanu | [PDF](http://arxiv.org/pdf/2307.06663v1) | - |
+| 2023-07-12 | Hamiltonian stochastic Lie systems and applications | E. Fernández-Saiz, J. de Lucas, X. Rivas, M. Zajac | [PDF](http://arxiv.org/pdf/2307.06232v2) | - |
+| 2023-07-10 | Phase space for gravity with boundaries | Alberto S. Cattaneo | [PDF](http://arxiv.org/pdf/2307.04666v2) | - |
+| 2023-07-09 | Kirillov structures and reduction of Hamiltonian systems by scaling and standard symmetries | A. Bravetti, S. Grillo, J. C. Marrero, E. Padron | [PDF](http://arxiv.org/pdf/2307.04177v3) | - |
+| 2023-07-05 | The unbounded Lagrangian spectral norm and wrapped Floer cohomology | Wenmin Gong | [PDF](http://arxiv.org/pdf/2307.02290v3) | - |
+| 2023-06-30 | Isomorphisms of Symplectic Torus Quotients | Hans-Christian Herbig, Gerald W. Schwarz, Christopher Seaton | [PDF](http://arxiv.org/pdf/2306.17349v1) | - |
+| 2023-06-30 | Shifted Contact Structures on Differentiable Stacks | Antonio Maglio, Alfonso G. Tortorella, Luca Vitagliano | [PDF](http://arxiv.org/pdf/2306.17661v2) | - |
+| 2023-06-27 | Torus-equivariantly embedded toric manifolds associated to affine subspaces | Kentaro Yamaguchi | [PDF](http://arxiv.org/pdf/2306.15312v3) | - |
+| 2023-06-26 | Cuplength estimates for time-periodic measures of Hamiltonian systems with diffusion | Oliver Fabert | [PDF](http://arxiv.org/pdf/2306.14819v2) | - |
+| 2023-06-26 | Scaling symmetries and canonoid transformations in Hamiltonian systems | R. Azuaje, A. Bravetti | [PDF](http://arxiv.org/pdf/2306.15108v1) | - |
+| 2023-06-21 | Symbolic integration on planar differential foliations | Thierry Combot | [PDF](http://arxiv.org/pdf/2306.12573v1) | - |
+| 2023-06-20 | Kodaira-Spencer classes and geometry of canonical curves | Igor Reider | [PDF](http://arxiv.org/pdf/2306.11442v1) | - |
+| 2023-06-16 | An equivariant Reeb-Beltrami correspondence and the Kepler-Euler flow | Josep Fontana-McNally, Eva Miranda, Daniel Peralta-Salas | [PDF](http://arxiv.org/pdf/2306.09898v2) | - |
+| 2023-06-14 | On Darboux theorems for geometric structures induced by closed forms | Xavier Gràcia, Javier de Lucas, Xavier Rivas, Narciso Román-Roy | [PDF](http://arxiv.org/pdf/2306.08556v2) | - |
+| 2023-06-12 | On the Cauchy problem for the Fadaray tensor on globally hyperbolic manifolds with timelike boundary | Nicoló Drago, Nicolas Ginoux, Simone Murro | [PDF](http://arxiv.org/pdf/2306.06896v2) | - |
+| 2023-06-07 | Bifurcations of Riemann Ellipsoids | Fahimeh Mokhtari, Jesús F. Palacián, Patricia Yanguas | [PDF](http://arxiv.org/pdf/2306.04258v2) | - |
+| 2023-06-07 | Reverse isoperimetric inequalities for Lagrangian intersection Floer theory | Jean-Philippe ChassĂŠ, Jeff Hicks, Yoon Jae Nick Nho | [PDF](http://arxiv.org/pdf/2306.04761v1) | - |
+| 2023-06-03 | BV Algebras with Applications to Lie Bialgebras and Poisson Cohomology | Marco A. Farinati, A. Patricia Jancsa | [PDF](http://arxiv.org/pdf/2306.02004v1) | - |
+| 2023-06-02 | Graded geometry and generalized reduction | Henrique Bursztyn, Alberto S. Cattaneo, Rajan Amit Mehta, Marco Zambon | [PDF](http://arxiv.org/pdf/2306.01508v2) | - |
+| 2023-06-01 | The Equivariant Spectral Flow and Bifurcation for Functionals with Symmetries -- Part I | Marek Izydorek, Joanna Janczewska, Maciej Starostka, Nils Waterstraat | [PDF](http://arxiv.org/pdf/2306.01170v1) | - |
+| 2023-05-28 | On a remark by Alan Weinstein | Iakovos Androulidakis | [PDF](http://arxiv.org/pdf/2305.17759v1) | - |
+| 2023-05-24 | Finite reservoirs and irreversibility corrections to Hamiltonian systems statistics | Matteo Colangeli, Antonio Di Francesco, Lamberto Rondoni | [PDF](http://arxiv.org/pdf/2305.14922v1) | - |
+| 2023-05-24 | Symplectic model reduction of Hamiltonian systems using data-driven quadratic manifolds | Harsh Sharma, Hongliang Mu, Patrick Buchfink, Rudy Geelen, Silke Glas, Boris Kramer | [PDF](http://arxiv.org/pdf/2305.15490v2) | - |
+| 2023-05-19 | Bordism classes of loops and Floer's equation in cotangent bundles | Filip Broćić, Dylan Cant | [PDF](http://arxiv.org/pdf/2305.11783v1) | - |
+| 2023-05-17 | On knot types of clean Lagrangian intersections in $T^*\mathbb{R}^3$ | Yukihiro Okamoto | [PDF](http://arxiv.org/pdf/2305.09912v7) | - |
+| 2023-05-17 | Volume functionals on pseudoconvex hypersurfaces | Simon Donaldson, Fabian Lehmann | [PDF](http://arxiv.org/pdf/2305.09932v1) | - |
+| 2023-05-11 | Partial separability and symplectic-Haantjes manifolds | Daniel Reyes, Piergiulio Tempesta, Giorgio Tondo | [PDF](http://arxiv.org/pdf/2305.06844v4) | - |
+| 2023-05-10 | On the derivation of new non-classical hydrodynamic equations for Hamiltonian particle systems | Raffaele Esposito, Rossana Marra | [PDF](http://arxiv.org/pdf/2305.06304v1) | - |
+| 2023-05-09 | Convolution for quiver varieties via cup product on a Morse complex | Graeme Wilkin | [PDF](http://arxiv.org/pdf/2305.05545v1) | - |
+| 2023-05-07 | Direct Poisson neural networks: Learning non-symplectic mechanical systems | Martin Šípka, Michal Pavelka, Oğul Esen, Miroslav Grmela | [PDF](http://arxiv.org/pdf/2305.05540v1) | - |
+| 2023-05-05 | Generalized Geometry of 2D Incompressible Fluid Flows | Radek Suchánek | [PDF](http://arxiv.org/pdf/2305.03580v1) | - |
+| 2023-05-05 | Introduction to contact complete integrability | Senne Ignoul | [PDF](http://arxiv.org/pdf/2305.03553v1) | - |
+| 2023-05-04 | Courant-Nijenhuis algebroids | Henrique Bursztyn, Thiago Drummond, Clarice Netto | [PDF](http://arxiv.org/pdf/2305.03131v1) | - |
+| 2023-05-02 | On the symplectic geometry of $A_k$ singularities | Nikolay Martynchuk, San Vũ Ngoc | [PDF](http://arxiv.org/pdf/2305.01814v3) | - |
+| 2023-05-02 | Persistence K-theory | Paul Biran, Octav Cornea, Jun Zhang | [PDF](http://arxiv.org/pdf/2305.01370v2) | - |
+| 2023-04-30 | Segre embedding and biharmonicity | Hiba Bibi, Dorel Fetcu, Cezar Oniciuc | [PDF](http://arxiv.org/pdf/2305.00409v1) | - |
+| 2023-04-28 | Generalized Euler angles for a unitary control of the Hamiltonian system | Seungjin Lee, Kyunghyun Baek, Jeongho Bang | [PDF](http://arxiv.org/pdf/2304.14624v1) | - |
+| 2023-04-25 | On particular integrability in classical mechanics | A. M. Escobar-Ruiz, R. Azuaje | [PDF](http://arxiv.org/pdf/2304.12581v2) | - |
+| 2023-04-24 | Stability of fixed points of Dirac structures | Karandeep Jandu Singh, Marco Zambon | [PDF](http://arxiv.org/pdf/2304.12103v2) | - |
+| 2023-04-24 | Tuning the separability in noncommutative space | Pinaki Patra | [PDF](http://arxiv.org/pdf/2304.13035v2) | - |
+| 2023-04-21 | Equivariant Fukaya categories at singular values | Yanki Lekili, Ed Segal | [PDF](http://arxiv.org/pdf/2304.10969v1) | - |
+| 2023-04-20 | Derivation of Painlevé type system with $D_4^{(1)}$ affine Weyl group symmetry in a self-similarity limit | H. Aratyn, J. F. Gomes, G. V. Lobo, A. H. Zimerman | [PDF](http://arxiv.org/pdf/2304.10035v2) | - |
+| 2023-04-19 | Hamiltonian dynamics on the symplectic extended phase space for autonomous and non-autonomous systems | Jürgen Struckmeier | [PDF](http://arxiv.org/pdf/2304.09633v1) | - |
+| 2023-04-18 | Exact solutions and superposition rules for Hamiltonian systems generalizing time-dependent SIS epidemic models with stochastic fluctuations | Rutwig Campoamor-Stursberg, Eduardo Fernandez-Saiz, Francisco J. Herranz | [PDF](http://arxiv.org/pdf/2304.08843v2) | - |
+| 2023-04-15 | Local H-Principles for Partial Holomorphic Relations | Luis Giraldo, Guillermo Sánchez Arellano | [PDF](http://arxiv.org/pdf/2304.07618v3) | - |
+| 2023-04-13 | Construction of solutions of analogs of the Schrodinger time equations corresponding to the Hamiltonian system $H^{2+2+1}$ | V. A. Pavlenko | [PDF](http://arxiv.org/pdf/2304.07631v1) | - |
+| 2023-04-11 | Complex Dirac structures with constant real index on flag manifolds | Cristian Ortiz, Carlos Varea | [PDF](http://arxiv.org/pdf/2304.05158v2) | - |
+| 2023-04-10 | Liouville integrable binomial Hamiltonian system | Mustafa Mullahasanoglu | [PDF](http://arxiv.org/pdf/2304.04500v1) | - |
+| 2023-04-07 | Hamiltonian Lie algebroids over Poisson manifolds | Christian Blohmann, Stefano Ronchi, Alan Weinstein | [PDF](http://arxiv.org/pdf/2304.03503v3) | - |
+| 2023-04-03 | On the well-posed variational principle in degenerate point particle systems using embeddings of the symplectic manifold | Kyosuke Tomonari | [PDF](http://arxiv.org/pdf/2304.00877v3) | - |
+| 2023-04-03 | The universal structure of moment maps in complex geometry | Ruadhaí Dervan, Michael Hallam | [PDF](http://arxiv.org/pdf/2304.01149v2) | - |
+| 2023-04-01 | Relational Composition of Physical Systems: A Categorical Approach | Owen Lynch | [PDF](http://arxiv.org/pdf/2310.06088v1) | - |
+| 2023-03-30 | Balanced loss-gain induced chaos in a periodic Toda lattice | Puspendu Roy, Pijush K. Ghosh | [PDF](http://arxiv.org/pdf/2303.17639v1) | - |
+| 2023-03-28 | Numerical Methods in Poisson Geometry and their Application to Mechanics | Oscar Cosserat, Camille Laurent-Gengoux, Vladimir Salnikov | [PDF](http://arxiv.org/pdf/2303.15883v1) | - |
+| 2023-03-25 | Integrability and trajectory confinement in $\mathcal{PT}$-symmetric waveguide arrays | I V Barashenkov, Frank Smuts, Alexander Chernyavsky | [PDF](http://arxiv.org/pdf/2303.14493v1) | - |
+| 2023-03-23 | Extremal Black Holes as Relativistic Systems with Kepler Dynamics | Dijs de Neeling, Diederik Roest, Marcello Seri, Holger Waalkens | [PDF](http://arxiv.org/pdf/2303.13291v2) | - |
+| 2023-03-22 | Classification of orbit closures in the variety of 4-dimensional symplectic Lie algebras | Edison Alberto Fernández-Culma, Nadina Elizabeth Rojas | [PDF](http://arxiv.org/pdf/2303.12508v1) | - |
+| 2023-03-19 | Reconstructing real algebraic maps locally like moment-maps with prescribed images and compositions with the canonical projections to the $1$-dimensional real affine space | Naoki Kitazawa | [PDF](http://arxiv.org/pdf/2303.10723v8) | - |
+| 2023-03-16 | Pseudo-Holomorphic Hamiltonian Systems | Luiz Frederic Wagner | [PDF](http://arxiv.org/pdf/2303.09480v1) | - |
+| 2023-03-15 | Notes on the $L_\infty$-approach to local gauge field theories | Maxim Grigoriev, Dmitry Rudinsky | [PDF](http://arxiv.org/pdf/2303.08990v2) | - |
+| 2023-03-14 | Discrete gradient methods for irreversible port-Hamiltonian systems | Alexandre Anahory Simoes, David Martín de Diego, Bernhard Maschke | [PDF](http://arxiv.org/pdf/2303.08034v1) | - |
+| 2023-03-14 | Generalized complex structure on certain principal torus bundles | Debjit Pal, Mainak Poddar | [PDF](http://arxiv.org/pdf/2303.07835v2) | - |
+| 2023-03-13 | Study of ideal gases in curved spacetimes | Luis Aragón-Muñoz, Hernando Quevedo | [PDF](http://arxiv.org/pdf/2303.06934v1) | - |
+| 2023-03-11 | Dynamics of the infinite discrete nonlinear Schrödinger equation | Aleksis Vuoksenmaa | [PDF](http://arxiv.org/pdf/2303.06325v1) | - |
+| 2023-03-09 | A Formal Equivalence of Deformation Quantization and Geometric Quantization (of Higher Groupoids) and Non-Perturbative Sigma Models | Joshua Lackman | [PDF](http://arxiv.org/pdf/2303.05494v1) | - |
+| 2023-03-07 | Stratified Vector Bundles: Examples and Constructions | Ethan Ross | [PDF](http://arxiv.org/pdf/2303.04200v3) | - |
+| 2023-03-06 | Null Hamiltonian Yang-Mills theory: Soft symmetries and memory as superselection | Aldo Riello, Michele Schiavina | [PDF](http://arxiv.org/pdf/2303.03531v4) | - |
+| 2023-02-26 | Integrable Systems Arising from Separation of Variables on $S^{3}$ | Diana M. H. Nguyen, Sean R. Dawson, Holger R. Dullin | [PDF](http://arxiv.org/pdf/2302.13270v1) | - |
+| 2023-02-23 | Linking the ADM formulation to other Hamiltonian formulations of general relativity | Merced Montesinos, Jorge Romero | [PDF](http://arxiv.org/pdf/2302.12273v1) | - |
+| 2023-02-23 | Liouville-Arnold theorem for homogeneous symplectic and contact Hamiltonian systems | Leonardo Colombo, Manuel de LeÃ³n, Manuel Lainz, Asier LÃ³pez-GordÃ³n | [PDF](http://arxiv.org/pdf/2302.12061v4) | - |
+| 2023-02-22 | Monge-Ampere Geometry and Vortices | Lewis Napper, Ian Roulstone, Vladimir Rubtsov, Martin Wolf | [PDF](http://arxiv.org/pdf/2302.11604v2) | - |
+| 2023-02-20 | Family of Gaussian wavepacket dynamics methods from the perspective of a nonlinear Schrödinger equation | Jiří J. L. Vaníček | [PDF](http://arxiv.org/pdf/2302.10221v2) | - |
+| 2023-02-20 | A Riemann-Roch formula for singular reductions by circle actions | Benjamin Delarue, Louis Ioos, Pablo Ramacher | [PDF](http://arxiv.org/pdf/2302.09894v2) | - |
+| 2023-02-19 | Symmetric spaces as adjoint orbits and their geometries | Leonardo F. Cavenaghi, Carolina Garcia, Lino Grama, Luiz San Martin | [PDF](http://arxiv.org/pdf/2302.09638v3) | - |
+| 2023-02-16 | Compatible $E$-Differential Forms on Lie Algebroids over (Pre-)Multisymplectic Manifolds | Noriaki Ikeda | [PDF](http://arxiv.org/pdf/2302.08193v4) | - |
+| 2023-02-15 | Geometric Phases of Nonlinear Elastic $N$-Rotors via Cartan's Moving Frames | Francesco Fedele, Arash Yavari | [PDF](http://arxiv.org/pdf/2302.07441v3) | - |
+| 2023-02-15 | Fukaya category of infinite-type surfaces | Jaeyoung Choi, Yong-Geun Oh | [PDF](http://arxiv.org/pdf/2302.07488v1) | - |
+| 2023-02-14 | Kähler structures for holomorphic submersions | Chi Li | [PDF](http://arxiv.org/pdf/2302.07220v1) | - |
+| 2023-02-14 | The Riemannian and symplectic geometry of the space of generalized Kähler structures | Vestislav Apostolov, Jeffrey Streets, Yury Ustinovskiy | [PDF](http://arxiv.org/pdf/2302.07314v2) | - |
+| 2023-02-12 | Cosymplectic geometry, reductions, and energy-momentum methods with applications | J. de Lucas, A. Maskalaniec, B. M. Zawora | [PDF](http://arxiv.org/pdf/2302.05827v2) | - |
+| 2023-02-08 | Derived Symplectic Reduction and L-Equivariant Geometry | Albin Grataloup | [PDF](http://arxiv.org/pdf/2302.04036v1) | - |
+| 2023-02-06 | Mean Curvature Flows of Two-Convex Lagrangians | Chung-Jun Tsai, Mao-Pei Tsui, Mu-Tao Wang | [PDF](http://arxiv.org/pdf/2302.02512v2) | - |
+| 2023-02-05 | Weak $(p,k)$-Dirac manifolds | Yanhui Bi, Zhixiong Chen | [PDF](http://arxiv.org/pdf/2302.01933v2) | - |
+| 2023-02-05 | Abelianization and the Duistermaat-Heckman theorem | Peter Crooks, Jonathan Weitsman | [PDF](http://arxiv.org/pdf/2302.02421v1) | - |
+| 2023-02-04 | Normal forms for principal Poisson Hamiltonian spaces | Pedro Frejlich, Ioan Marcut | [PDF](http://arxiv.org/pdf/2302.02062v1) | - |
+| 2023-02-01 | Hamiltonian Classification of toric fibres and symmetric probes | Joé Brendel | [PDF](http://arxiv.org/pdf/2302.00334v1) | - |
+| 2023-01-29 | The Poisson Geometry of Plancherel Formulas for Triangular Groups | Nicholas M. Ercolani | [PDF](http://arxiv.org/pdf/2301.12544v1) | - |
+| 2023-01-28 | The moment map for the variety of associative algebras | Hui Zhang, Zaili Yan | [PDF](http://arxiv.org/pdf/2301.12142v1) | - |
+| 2023-01-27 | The weak Lie 2-algebra of multiplicative forms on a quasi-Poisson groupoid | Zhuo Chen, Honglei Lang, Zhangju Liu | [PDF](http://arxiv.org/pdf/2302.01294v2) | - |
+| 2023-01-25 | A moment map for the variety of Jordan algebras | Claudio Gorodski, Iryna Kashuba, María Eugenia Martin | [PDF](http://arxiv.org/pdf/2301.10806v2) | - |
+| 2023-01-19 | Harmonic metrics for the Hull-Strominger system and stability | Mario Garcia-Fernandez, Raul Gonzalez Molina | [PDF](http://arxiv.org/pdf/2301.08236v1) | - |
+| 2023-01-17 | Remarks on asymptotic isometric embeddings of conic transforms for torus actions | Andrea Galasso | [PDF](http://arxiv.org/pdf/2301.06912v3) | - |
+| 2023-01-13 | Minimal $δ(2)$-ideal Lagrangian submanifolds and the Quaternionic projective space | Kristof Dekimpe, Joeri Van der Veken, Luc Vrancken | [PDF](http://arxiv.org/pdf/2301.05594v1) | - |
+| 2023-01-12 | Complete characterization of nontrivial local conservation laws and nonexistence of local Hamiltonian structures for generalized Infeld--Rowlands equation | Jakub Vašíček | [PDF](http://arxiv.org/pdf/2301.05189v1) | - |
+| 2023-01-04 | On the Existence of Symplectic Barriers | Pazit Haim-Kislev, Richard Hind, Yaron Ostrover | [PDF](http://arxiv.org/pdf/2301.01822v2) | - |
+| 2023-01-03 | The derived moduli stack of logarithmic flat connections | Francis Bischoff | [PDF](http://arxiv.org/pdf/2301.00962v1) | - |
+| 2023-01-03 | Geometric quantizations of mixed polarizations on KĂ¤hler manifolds with T-symmetry | Naichung Conan Leung, Dan Wang | [PDF](http://arxiv.org/pdf/2301.01011v1) | - |
+| 2023-01-01 | On the $A_{\infty}$-Category of a Holomorphic Moment Map | Ahsan Z. Khan | [PDF](http://arxiv.org/pdf/2301.00343v1) | - |
+
