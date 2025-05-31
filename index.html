@@ -207,15 +207,19 @@
     </div>
     
     <table id="articlesTable">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Authors</th>
-                <th>Title</th>
-                <th>Link</th>
-            </tr>
-        </thead>
-    
+       <thead>
+    <tr>
+        <th onclick="sortTable(0)" style="cursor: pointer;">Date ↕️</th>
+        <th onclick="sortTable(1)" style="cursor: pointer;">Authors ↕️</th>
+        <th onclick="sortTable(2)" style="cursor: pointer;">Title ↕️</th>
+        <th onclick="sortTable(3)" style="cursor: pointer;">Link ↕️</th>
+    </tr>
+</thead>
+<!-- Les données du tableau seront automatiquement converties ici -->
+
+
+
+        
 | Publish Date | Title | Authors | PDF | Code |
 |--------------|-------|---------|-----|------|
 | 2025-05-15 | Cosymplectic Chern--Hamilton conjecture | Søren Dyhr, Ángel González-Prieto, Eva Miranda, Daniel Peralta-Salas | [PDF](http://arxiv.org/pdf/2505.10379v1) | - |
@@ -893,7 +897,49 @@
     
     <div class="footer">
     <p>🤖 Auto-updating page with live arXiv integration</p>
+
+    
 </div>
+
+// Fonction de tri pour le tableau
+let sortDirection = [1, 1, 1, 1]; // 1 = croissant, -1 = décroissant
+
+function sortTable(columnIndex) {
+    const tbody = document.getElementById('articlesBody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    const sortedRows = rows.sort((a, b) => {
+        const aValue = a.cells[columnIndex].textContent.trim();
+        const bValue = b.cells[columnIndex].textContent.trim();
+        
+        // Pour les dates, conversion en format comparable
+        if (columnIndex === 0) {
+            return (new Date(aValue) - new Date(bValue)) * sortDirection[columnIndex];
+        }
+        
+        // Pour le texte, tri alphabétique
+        return aValue.localeCompare(bValue) * sortDirection[columnIndex];
+    });
+    
+    // Vider le tbody et remettre les lignes triées
+    tbody.innerHTML = '';
+    sortedRows.forEach(row => tbody.appendChild(row));
+    
+    // Inverser la direction pour le prochain clic
+    sortDirection[columnIndex] *= -1;
+    
+    // Mettre à jour la data pour la recherche
+    allArticles = Array.from(tbody.querySelectorAll('tr')).map((row, index) => ({
+        id: `article-${index}`,
+        date: row.cells[0].textContent.trim(),
+        authors: row.cells[1].textContent.trim(),
+        title: row.cells[2].textContent.trim(),
+        link: row.cells[3].innerHTML.trim(),
+        element: row
+    }));
+}
+
+        
     <script>
         // Configuration
         const CONFIG = {
