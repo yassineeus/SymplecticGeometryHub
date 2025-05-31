@@ -165,6 +165,16 @@
             background: #6c757d;
             cursor: not-allowed;
         }
+        
+        .new-article {
+            background-color: #d4edda !important;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -254,11 +264,11 @@
             updateInterval: 30, // minutes
             maxArticles: 50,
             searchQueries: [
-                'cat:math.SG OR cat:math.DG OR cat:math.AG OR cat:math-ph',
                 'symplectic geometry',
-                'lagrangian submanifold',
+                'lagrangian submanifold', 
                 'moment map',
-                'poisson geometry'
+                'poisson geometry',
+                'hamiltonian mechanics'
             ]
         };
         
@@ -277,7 +287,8 @@
         
         function initializeData() {
             const rows = document.querySelectorAll('#articlesBody tr');
-            allArticles = Array.from(rows).map(row => ({
+            allArticles = Array.from(rows).map((row, index) => ({
+                id: `article-${index}`,
                 date: row.cells[0].textContent.trim(),
                 authors: row.cells[1].textContent.trim(),
                 title: row.cells[2].textContent.trim(),
@@ -314,15 +325,15 @@
             if (autoUpdateEnabled) {
                 // Disable auto-update
                 autoUpdateEnabled = false;
-                clearInterval(updateTimer);
+                if (updateTimer) clearInterval(updateTimer);
                 button.textContent = 'Enable Auto-Update';
-                updateStatus('Auto-update disabled', 'normal');
+                updateStatus('Auto-update disabled');
                 updateNextUpdateTime('Not scheduled');
             } else {
                 // Enable auto-update
                 autoUpdateEnabled = true;
                 button.textContent = 'Disable Auto-Update';
-                updateStatus('Auto-update enabled', 'normal');
+                updateStatus('Auto-update enabled');
                 scheduleNextUpdate();
                 
                 // Do initial update
@@ -349,14 +360,14 @@
             try {
                 updateStatus('🔄 Fetching new articles...', 'updating');
                 
-                // Simulate API call to arXiv (in a real implementation, this would be a backend service)
+                // Simulate arXiv API call
                 const newArticles = await simulateArxivFetch();
                 
                 if (newArticles.length > 0) {
                     addNewArticles(newArticles);
-                    updateStatus(`✅ Found ${newArticles.length} new articles`, 'normal');
+                    updateStatus(`✅ Found ${newArticles.length} new articles`);
                 } else {
-                    updateStatus('✅ No new articles found', 'normal');
+                    updateStatus('✅ No new articles found');
                 }
                 
                 updateLastUpdateTime();
@@ -369,18 +380,22 @@
         
         async function simulateArxivFetch() {
             // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // Simulate finding new articles occasionally
+            // Simulate finding new articles occasionally (30% chance)
             const shouldFindNew = Math.random() > 0.7;
             
             if (shouldFindNew) {
+                const now = new Date();
+                const dateStr = now.toISOString().split('T')[0];
+                const randomId = Math.floor(Math.random() * 99999);
+                
                 return [
                     {
-                        date: new Date().toISOString().split('T')[0],
-                        authors: 'New Author, Another Author',
-                        title: 'A New Symplectic Discovery (Simulated)',
-                        link: '<a href="http://arxiv.org/abs/2505.99999v1">arXiv:2505.99999v1</a>'
+                        date: dateStr,
+                        authors: 'New Researcher, Co-Author Name',
+                        title: `Recent Advances in Symplectic Topology (Simulated Article ${randomId})`,
+                        link: `<a href="http://arxiv.org/abs/2505.${randomId}v1">arXiv:2505.${randomId}v1</a>`
                     }
                 ];
             }
@@ -390,15 +405,19 @@
         
         function addNewArticles(newArticles) {
             const tbody = document.getElementById('articlesBody');
+            let addedCount = 0;
             
             newArticles.forEach(article => {
                 // Check if article already exists
                 const exists = allArticles.some(existing => 
-                    existing.title === article.title && existing.authors === article.authors
+                    existing.title === article.title || 
+                    existing.authors === article.authors
                 );
                 
                 if (!exists) {
+                    // Create new row
                     const row = document.createElement('tr');
+                    row.className = 'new-article';
                     row.innerHTML = `
                         <td>${article.date}</td>
                         <td>${article.authors}</td>
@@ -406,26 +425,30 @@
                         <td>${article.link}</td>
                     `;
                     
-                    // Add highlighting for new articles
-                    row.style.backgroundColor = '#d4edda';
-                    setTimeout(() => {
-                        row.style.backgroundColor = '';
-                        row.style.transition = 'background-color 2s ease';
-                    }, 3000);
-                    
+                    // Insert at the top of the table
                     tbody.insertBefore(row, tbody.firstChild);
                     
-                    allArticles.unshift({
+                    // Add to articles array
+                    const newArticleObj = {
+                        id: `article-new-${Date.now()}-${addedCount}`,
                         date: article.date,
                         authors: article.authors,
                         title: article.title,
                         link: article.link,
                         element: row
-                    });
+                    };
+                    
+                    allArticles.unshift(newArticleObj);
+                    addedCount++;
+                    
+                    // Remove highlight after 5 seconds
+                    setTimeout(() => {
+                        row.classList.remove('new-article');
+                    }, 5000);
                 }
             });
             
-            // Keep only latest articles
+            // Keep only latest articles (remove oldest if too many)
             if (allArticles.length > CONFIG.maxArticles) {
                 const toRemove = allArticles.splice(CONFIG.maxArticles);
                 toRemove.forEach(article => {
@@ -436,11 +459,16 @@
             }
             
             updateArticleCount();
-            performSearch(); // Refresh filtered results
+            
+            // Refresh search if active
+            const searchTerm = document.getElementById('searchInput').value;
+            if (searchTerm) {
+                performSearch();
+            }
         }
         
         function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const tbody = document.getElementById('articlesBody');
             const noResults = document.getElementById('noResults');
             
@@ -484,7 +512,7 @@
             cells.forEach((cell, index) => {
                 if (index < 3) { // Don't highlight the link column
                     const originalText = cell.textContent;
-                    const regex = new RegExp(`(${term})`, 'gi');
+                    const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
                     cell.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
                 }
             });
@@ -497,30 +525,45 @@
             });
         }
         
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
         function updateStatus(message, type = 'normal') {
             const statusElement = document.getElementById('updateStatus');
             statusElement.className = `update-status ${type}`;
             
-            const parts = message.split('|');
-            if (parts.length === 1) {
-                // Update only the first part (status message)
-                const content = statusElement.innerHTML;
-                const statusPart = content.split('|')[0];
-                statusElement.innerHTML = content.replace(statusPart, message + ' ');
+            // Update just the status part, keep the rest
+            const currentText = statusElement.innerHTML;
+            const parts = currentText.split('|');
+            
+            if (parts.length >= 3) {
+                const newText = `${message} | ${parts[1]} | ${parts[2]}`;
+                statusElement.innerHTML = newText;
             }
         }
         
         function updateLastUpdateTime() {
             const now = new Date();
-            document.getElementById('lastUpdate').textContent = now.toLocaleString();
+            const timeString = now.toLocaleString();
+            const lastUpdateSpan = document.getElementById('lastUpdate');
+            if (lastUpdateSpan) {
+                lastUpdateSpan.textContent = timeString;
+            }
         }
         
         function updateNextUpdateTime(time) {
-            document.getElementById('nextUpdate').textContent = time;
+            const nextUpdateSpan = document.getElementById('nextUpdate');
+            if (nextUpdateSpan) {
+                nextUpdateSpan.textContent = time;
+            }
         }
         
         function updateArticleCount() {
-            document.getElementById('articleCount').textContent = allArticles.length;
+            const countSpan = document.getElementById('articleCount');
+            if (countSpan) {
+                countSpan.textContent = allArticles.length;
+            }
         }
         
         function updateIntervalDisplay() {
@@ -534,7 +577,10 @@
                 display = `Every ${hours} hour${hours > 1 ? 's' : ''}`;
             }
             
-            document.getElementById('updateInterval').textContent = display;
+            const intervalSpan = document.getElementById('updateInterval');
+            if (intervalSpan) {
+                intervalSpan.textContent = display;
+            }
         }
         
         // Initialize display
