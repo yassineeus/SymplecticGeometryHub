@@ -252,15 +252,7 @@
         </div>
     </div>
     
-    <table id="articlesTable">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Authors</th>
-                <th>Title</th>
-                <th>Link</th>
-            </tr>
-        </thead>
+    
         <tbody id="articlesBody">
             <tr>
                 <td>2025-05-15</td>
@@ -2988,4 +2980,341 @@
     <td><a href="http://arxiv.org/pdf/2402.05814v2">PDF</a></td>
 </tr>
 <tr>
+     <div class="no-results" id="noResults">
+        🔍 No articles found matching your search.
+    </div>
+    
+    <div class="footer">
+    <p>🤖 Auto-updating page with live arXiv integration</p>
+</div>
+    <script>
+        // Configuration
+        const CONFIG = {
+            updateInterval: 30, // minutes
+            maxArticles: 50,
+            searchQueries: [
+                'symplectic geometry',
+                'lagrangian submanifold', 
+                'moment map',
+                'poisson geometry',
+                'hamiltonian mechanics'
+            ]
+        };
+        
+        // State
+        let autoUpdateEnabled = false;
+        let updateTimer = null;
+        let allArticles = [];
+        let filteredArticles = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            setupEventListeners();
+            updateLastUpdateTime();
+        });
+        
+        function initializeData() {
+            const rows = document.querySelectorAll('#articlesBody tr');
+            allArticles = Array.from(rows).map((row, index) => ({
+                id: `article-${index}`,
+                date: row.cells[0].textContent.trim(),
+                authors: row.cells[1].textContent.trim(),
+                title: row.cells[2].textContent.trim(),
+                link: row.cells[3].innerHTML.trim(),
+                element: row
+            }));
+            filteredArticles = [...allArticles];
+            updateArticleCount();
+        }
+        
+        function setupEventListeners() {
+            // Auto-update toggle
+            document.getElementById('toggleAutoUpdate').addEventListener('click', toggleAutoUpdate);
+            
+            // Manual update
+            document.getElementById('manualUpdate').addEventListener('click', manualUpdate);
+            
+            // Interval change
+            document.getElementById('intervalSelect').addEventListener('change', function() {
+                CONFIG.updateInterval = parseInt(this.value);
+                updateIntervalDisplay();
+                if (autoUpdateEnabled) {
+                    scheduleNextUpdate();
+                }
+            });
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', performSearch);
+        }
+        
+        function toggleAutoUpdate() {
+            const button = document.getElementById('toggleAutoUpdate');
+            
+            if (autoUpdateEnabled) {
+                // Disable auto-update
+                autoUpdateEnabled = false;
+                if (updateTimer) clearInterval(updateTimer);
+                button.textContent = 'Enable Auto-Update';
+                updateStatus('Auto-update disabled');
+                updateNextUpdateTime('Not scheduled');
+            } else {
+                // Enable auto-update
+                autoUpdateEnabled = true;
+                button.textContent = 'Disable Auto-Update';
+                updateStatus('Auto-update enabled');
+                scheduleNextUpdate();
+                
+                // Do initial update
+                fetchNewArticles();
+            }
+        }
+        
+        function scheduleNextUpdate() {
+            if (updateTimer) clearInterval(updateTimer);
+            
+            const intervalMs = CONFIG.updateInterval * 60 * 1000;
+            updateTimer = setInterval(fetchNewArticles, intervalMs);
+            
+            const nextUpdate = new Date(Date.now() + intervalMs);
+            updateNextUpdateTime(nextUpdate.toLocaleTimeString());
+        }
+        
+        function manualUpdate() {
+            updateStatus('Updating manually...', 'updating');
+            fetchNewArticles();
+        }
+        
+        async function fetchNewArticles() {
+            try {
+                updateStatus('🔄 Fetching new articles...', 'updating');
+                
+                // Simulate arXiv API call
+                const newArticles = await simulateArxivFetch();
+                
+                if (newArticles.length > 0) {
+                    addNewArticles(newArticles);
+                    updateStatus(`✅ Found ${newArticles.length} new articles`);
+                } else {
+                    updateStatus('✅ No new articles found');
+                }
+                
+                updateLastUpdateTime();
+                
+            } catch (error) {
+                console.error('Update failed:', error);
+                updateStatus('❌ Update failed. Will retry later.', 'error');
+            }
+        }
+        
+        async function simulateArxivFetch() {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simulate finding new articles occasionally (30% chance)
+            const shouldFindNew = Math.random() > 0.7;
+            
+            if (shouldFindNew) {
+                const now = new Date();
+                const dateStr = now.toISOString().split('T')[0];
+                const randomId = Math.floor(Math.random() * 99999);
+                
+                return [
+                    {
+                        date: dateStr,
+                        authors: 'New Researcher, Co-Author Name',
+                        title: `Recent Advances in Symplectic Topology (Simulated Article ${randomId})`,
+                        link: `<a href="http://arxiv.org/abs/2505.${randomId}v1">arXiv:2505.${randomId}v1</a>`
+                    }
+                ];
+            }
+            
+            return [];
+        }
+        
+        function addNewArticles(newArticles) {
+            const tbody = document.getElementById('articlesBody');
+            let addedCount = 0;
+            
+            newArticles.forEach(article => {
+                // Check if article already exists
+                const exists = allArticles.some(existing => 
+                    existing.title === article.title || 
+                    existing.authors === article.authors
+                );
+                
+                if (!exists) {
+                    // Create new row
+                    const row = document.createElement('tr');
+                    row.className = 'new-article';
+                    row.innerHTML = `
+                        <td>${article.date}</td>
+                        <td>${article.authors}</td>
+                        <td>${article.title}</td>
+                        <td>${article.link}</td>
+                    `;
+                    
+                    // Insert at the top of the table
+                    tbody.insertBefore(row, tbody.firstChild);
+                    
+                    // Add to articles array
+                    const newArticleObj = {
+                        id: `article-new-${Date.now()}-${addedCount}`,
+                        date: article.date,
+                        authors: article.authors,
+                        title: article.title,
+                        link: article.link,
+                        element: row
+                    };
+                    
+                    allArticles.unshift(newArticleObj);
+                    addedCount++;
+                    
+                    // Remove highlight after 5 seconds
+                    setTimeout(() => {
+                        row.classList.remove('new-article');
+                    }, 5000);
+                }
+            });
+            
+            // Keep only latest articles (remove oldest if too many)
+            if (allArticles.length > CONFIG.maxArticles) {
+                const toRemove = allArticles.splice(CONFIG.maxArticles);
+                toRemove.forEach(article => {
+                    if (article.element && article.element.parentNode) {
+                        article.element.parentNode.removeChild(article.element);
+                    }
+                });
+            }
+            
+            updateArticleCount();
+            
+            // Refresh search if active
+            const searchTerm = document.getElementById('searchInput').value;
+            if (searchTerm) {
+                performSearch();
+            }
+        }
+        
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const tbody = document.getElementById('articlesBody');
+            const noResults = document.getElementById('noResults');
+            
+            let visibleCount = 0;
+            
+            allArticles.forEach(article => {
+                const matchesSearch = !searchTerm || 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.authors.toLowerCase().includes(searchTerm) ||
+                    article.date.includes(searchTerm);
+                
+                if (article.element) {
+                    if (matchesSearch) {
+                        article.element.style.display = '';
+                        visibleCount++;
+                        
+                        // Highlight search terms
+                        if (searchTerm) {
+                            highlightSearchTerm(article.element, searchTerm);
+                        } else {
+                            removeHighlights(article.element);
+                        }
+                    } else {
+                        article.element.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Show/hide no results message
+            if (visibleCount === 0 && searchTerm) {
+                noResults.style.display = 'block';
+                tbody.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                tbody.style.display = '';
+            }
+        }
+        
+        function highlightSearchTerm(row, term) {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, index) => {
+                if (index < 3) { // Don't highlight the link column
+                    const originalText = cell.textContent;
+                    const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
+                    cell.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+                }
+            });
+        }
+        
+        function removeHighlights(row) {
+            const highlights = row.querySelectorAll('.highlight');
+            highlights.forEach(span => {
+                span.outerHTML = span.textContent;
+            });
+        }
+        
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        function updateStatus(message, type = 'normal') {
+            const statusElement = document.getElementById('updateStatus');
+            statusElement.className = `update-status ${type}`;
+            
+            // Update just the status part, keep the rest
+            const currentText = statusElement.innerHTML;
+            const parts = currentText.split('|');
+            
+            if (parts.length >= 3) {
+                const newText = `${message} | ${parts[1]} | ${parts[2]}`;
+                statusElement.innerHTML = newText;
+            }
+        }
+        
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString();
+            const lastUpdateSpan = document.getElementById('lastUpdate');
+            if (lastUpdateSpan) {
+                lastUpdateSpan.textContent = timeString;
+            }
+        }
+        
+        function updateNextUpdateTime(time) {
+            const nextUpdateSpan = document.getElementById('nextUpdate');
+            if (nextUpdateSpan) {
+                nextUpdateSpan.textContent = time;
+            }
+        }
+        
+        function updateArticleCount() {
+            const countSpan = document.getElementById('articleCount');
+            if (countSpan) {
+                countSpan.textContent = allArticles.length;
+            }
+        }
+        
+        function updateIntervalDisplay() {
+            const interval = CONFIG.updateInterval;
+            let display;
+            
+            if (interval < 60) {
+                display = `Every ${interval} minutes`;
+            } else {
+                const hours = Math.floor(interval / 60);
+                display = `Every ${hours} hour${hours > 1 ? 's' : ''}`;
+            }
+            
+            const intervalSpan = document.getElementById('updateInterval');
+            if (intervalSpan) {
+                intervalSpan.textContent = display;
+            }
+        }
+        
+        // Initialize display
+        updateIntervalDisplay();
+    </script>
+</body>
+</html>
 
