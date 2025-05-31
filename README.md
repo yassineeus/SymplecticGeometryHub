@@ -1,4 +1,4 @@
-# Collection of Articles on Symplectic Geometry
+# SymplecticGeometryHub
 
 > Automatically updated on 2025.05.31
 
