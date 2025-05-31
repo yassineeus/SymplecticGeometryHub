@@ -3016,8 +3016,7 @@
     </table>
     
     
-    
-    <div class="no-results" id="noResults">
+  <div class="no-results" id="noResults">
         <p>Aucun article trouvé correspondant à votre recherche.</p>
         <p>Essayez de modifier vos critères de recherche.</p>
     </div>
@@ -3041,11 +3040,10 @@
             allArticles = Array.from(rows).map(row => {
                 const cells = row.querySelectorAll('td');
                 return {
-                    element: row,
                     date: cells[0].textContent.trim(),
                     authors: cells[1].textContent.trim(),
                     title: cells[2].textContent.trim(),
-                    pdf: cells[3].innerHTML
+                    pdf: cells[3].innerHTML.trim()
                 };
             });
             filteredArticles = [...allArticles];
@@ -3089,7 +3087,7 @@
             const noResults = document.getElementById('noResults');
             const table = document.getElementById('articlesTable');
             
-            if (!tbody || !table) return; // Protection si le tableau n'existe pas encore
+            if (!tbody || !table) return;
             
             tbody.innerHTML = '';
             
@@ -3100,26 +3098,43 @@
                 noResults.style.display = 'none';
                 table.style.display = 'table';
                 
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                
                 filteredArticles.forEach(article => {
-                    const row = article.element.cloneNode(true);
-                    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-                    if (searchTerm) {
-                        highlightSearchTerm(row, searchTerm);
-                    }
+                    const row = document.createElement('tr');
+                    
+                    // Créer les cellules
+                    const dateCell = document.createElement('td');
+                    const authorsCell = document.createElement('td');
+                    const titleCell = document.createElement('td');
+                    const pdfCell = document.createElement('td');
+                    
+                    // Remplir les cellules avec surlignage si nécessaire
+                    dateCell.innerHTML = highlightText(article.date, searchTerm);
+                    authorsCell.innerHTML = highlightText(article.authors, searchTerm);
+                    titleCell.innerHTML = highlightText(article.title, searchTerm);
+                    pdfCell.innerHTML = article.pdf;
+                    
+                    // Ajouter les cellules à la ligne
+                    row.appendChild(dateCell);
+                    row.appendChild(authorsCell);
+                    row.appendChild(titleCell);
+                    row.appendChild(pdfCell);
+                    
                     tbody.appendChild(row);
                 });
             }
         }
 
-        function highlightSearchTerm(row, searchTerm) {
-            const cells = row.querySelectorAll('td');
-            cells.forEach((cell, index) => {
-                if (index < 3) {
-                    const content = cell.innerHTML;
-                    const regex = new RegExp(`(${searchTerm})`, 'gi');
-                    cell.innerHTML = content.replace(regex, '<span class="highlight">$1</span>');
-                }
-            });
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            
+            const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
         function showTop10() {
