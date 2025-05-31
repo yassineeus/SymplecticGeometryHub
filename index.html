@@ -1,0 +1,3229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SymplecticGeometryHub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        
+        h1 {
+            color: #24292e;
+            border-bottom: 1px solid #e1e4e8;
+            padding-bottom: 10px;
+        }
+        
+        p {
+            color: #586069;
+            margin-bottom: 16px;
+        }
+        
+        .update-status {
+            background: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+            font-size: 14px;
+        }
+        
+        .update-status.updating {
+            border-left-color: #ffc107;
+            background: #fff8e1;
+        }
+        
+        .update-status.error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .search-box {
+            margin: 20px 0;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #d0d7de;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        
+        .search-input:focus {
+            border-color: #0366d6;
+        }
+        
+        .filter-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-controls select {
+            padding: 8px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 4px;
+            background: white;
+            font-size: 14px;
+        }
+        
+        .filter-controls button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .filter-controls button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        #showTop10 {
+            background: #28a745;
+            color: white;
+        }
+
+        #showAll {
+            background: #6c757d;
+            color: white;
+        }
+        
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            border: 1px solid #d0d7de;
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        
+        th {
+            background-color: #f6f8fa;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tbody tr:hover {
+            background-color: #e6f3ff;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #586069;
+            font-style: italic;
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0366d6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .auto-update-controls {
+            background: #e6f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .auto-update-controls button {
+            background: #0366d6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .auto-update-controls button:hover {
+            background: #0256cc;
+        }
+        
+        .auto-update-controls button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .new-article {
+            background-color: #d4edda !important;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .auto-update-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-controls > * {
+                margin-bottom: 5px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>SymplecticGeometryHub</h1>
+    
+    <p>This list is automatically updated from <a href="https://arxiv.org">arXiv.org</a> with recent papers related to symplectic geometry, coisotropic submanifolds, Poisson structures, and related topics.</p>
+    
+    <div class="auto-update-controls">
+        <span>🔄 Auto-update:</span>
+        <button id="toggleAutoUpdate">Enable Auto-Update</button>
+        <button id="manualUpdate">Update Now</button>
+        <span id="updateInterval">Every 30 minutes</span>
+        <select id="intervalSelect">
+            <option value="10">10 minutes</option>
+            <option value="30" selected>30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="180">3 hours</option>
+            <option value="360">6 hours</option>
+        </select>
+    </div>
+    
+    <div class="update-status" id="updateStatus">
+        ✅ Last updated: <span id="lastUpdate">Never</span> | 
+        📊 Total articles: <span id="articleCount">730</span> |
+        ⏰ Next update: <span id="nextUpdate">Not scheduled</span>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search articles by title, authors, or date..." autocomplete="off">
+        <div class="filter-controls">
+            <select id="yearFilter">
+                <option value="">All years</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+            </select>
+            <button id="showTop10">Show Latest 10</button>
+            <button id="showAll">Show All</button>
+            <span id="resultCount">Showing all articles</span>
+        </div>
+    </div>
+    
+    
+<!-- Ajout de l'en-tête du tableau qui manquait -->
+<table id="articlesTable">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Authors</th>
+            <th>Title</th>
+            <th>PDF</th>
+        </tr>
+    </thead>
+    <tbody id="articlesBody">
+        <!-- articles... -->
+    </tbody>
+</table>
+
+<!-- Ajout d'un message "aucun résultat" -->
+<div class="no-results" id="noResults">
+    <p>Aucun article trouvé correspondant à votre recherche.</p>
+    <p>Essayez de modifier vos critères de recherche.</p>
+</div>
+
+
+    
+    
+        <tbody id="articlesBody">
+            <tr>
+                <td>2025-05-15</td>
+                <td>Søren Dyhr, Ángel González-Prieto, Eva Miranda, Daniel Peralta-Salas</td>
+                <td>Cosymplectic Chern--Hamilton conjecture</td>
+                <td><a href="http://arxiv.org/pdf/2505.10379v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-15</td>
+                <td>Thorgal Hinault, Changzheng Li, Tony Yue YU, Chi Zhang, Shaowu Zhang</td>
+                <td>Unfolding of equivariant F-bundles and application to the mirror symmetry of flag varieties</td>
+                <td><a href="http://arxiv.org/pdf/2505.09950v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-14</td>
+                <td>Shengzhen Ning</td>
+                <td>Cohomologous symplectic forms with different Gromov widths</td>
+                <td><a href="http://arxiv.org/pdf/2505.09550v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-14</td>
+                <td>Janina Bernardy</td>
+                <td>Homotopy reduction of multisymplectic structures in Lagrangian field theory</td>
+                <td><a href="http://arxiv.org/pdf/2505.09492v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-14</td>
+                <td>Omid Makhmali, David Sykes</td>
+                <td>Pre-Kähler structures and finite-nondegeneracy</td>
+                <td><a href="http://arxiv.org/pdf/2505.09467v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-13</td>
+                <td>Daniel Kaplan, Travis Schedler</td>
+                <td>Nonprojective crepant resolutions of quiver varieties</td>
+                <td><a href="http://arxiv.org/pdf/2505.08624v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-13</td>
+                <td>Keqin Liu</td>
+                <td>Zero Divisor Manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2505.08147v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-12</td>
+                <td>Luis Crespo, Álvaro Pelayo</td>
+                <td>Rigidity and flexibility in $p$-adic symplectic geometry</td>
+                <td><a href="http://arxiv.org/pdf/2505.07663v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-12</td>
+                <td>Ashton Lewis, Zachary Ojakli, Ina Petkova, Benjamin Shapiro</td>
+                <td>Double-point enhanced GRID invariants and Lagrangian cobordisms</td>
+                <td><a href="http://arxiv.org/pdf/2505.07599v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-12</td>
+                <td>Alejandro Vicente</td>
+                <td>The strong Viterbo conjecture and various flavours of duality in Lagrangian products</td>
+                <td><a href="http://arxiv.org/pdf/2505.07572v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-12</td>
+                <td>Jacopo Stoppa</td>
+                <td>Nakai-Moishezon criteria and the toric Thomas-Yau conjecture</td>
+                <td><a href="http://arxiv.org/pdf/2505.07228v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-11</td>
+                <td>Peter Heinzner, Christian Zöller</td>
+                <td>A structure theorem along fibers of extreme points of the momentum polytope</td>
+                <td><a href="http://arxiv.org/pdf/2505.07006v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-11</td>
+                <td>Marco Bertola, Dmitry Korotkin, Jordi Pillet</td>
+                <td>New systems of log-canonical coordinates on $SL(2)$ character varieties of compact Riemann surfaces</td>
+                <td><a href="http://arxiv.org/pdf/2505.06830v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-09</td>
+                <td>Boris M. Elfimov, Alexey A. Sharapov</td>
+                <td>A note on quantum Hamiltonian reduction and anomalies</td>
+                <td><a href="http://arxiv.org/pdf/2505.05779v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-09</td>
+                <td>María Barbero-Liñán, Juan Manuel López Medel, David Martín de Diego</td>
+                <td>Discretization of Dirac systems and port-Hamiltonian systems: the role of the constraint algorithm</td>
+                <td><a href="http://arxiv.org/pdf/2505.06024v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-08</td>
+                <td>J. de Lucas, X. Rivas, S. Vilarino, B. M. Zawora</td>
+                <td>Marsden--Meyer--Weinstein reduction for $k$-contact field theories</td>
+                <td><a href="http://arxiv.org/pdf/2505.05462v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-08</td>
+                <td>Jishnu Bose, Harold Williams</td>
+                <td>Contact isotopies in the coherent-constructible correspondence</td>
+                <td><a href="http://arxiv.org/pdf/2505.05012v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-08</td>
+                <td>Hanna Haeussler, Seongchan Kim</td>
+                <td>On invariants of families of lemniscate motions in the two-center problem</td>
+                <td><a href="http://arxiv.org/pdf/2505.05052v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-07</td>
+                <td>John B. Etnyre, Burak Ozbagci, Bülent Tosun</td>
+                <td>Complementary legs and symplectic rational balls</td>
+                <td><a href="http://arxiv.org/pdf/2505.04513v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-06</td>
+                <td>Gregory Taroyan</td>
+                <td>De Rham Theory in Derived Differential Geometry</td>
+                <td><a href="http://arxiv.org/pdf/2505.03978v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-06</td>
+                <td>Paul-Emile Paradan, Nicolas Ressayre</td>
+                <td>HKKN-stratifications in a non-compact framework</td>
+                <td><a href="http://arxiv.org/pdf/2505.03259v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-05</td>
+                <td>Julio Sampietro Christ</td>
+                <td>Equivariant Floer homology is isomorphic to reduced Floer homology</td>
+                <td><a href="http://arxiv.org/pdf/2505.02647v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-05</td>
+                <td>Zelin Jia</td>
+                <td>Symplectic Geometry of Higgs Moduli and the Hilbert Scheme of Points</td>
+                <td><a href="http://arxiv.org/pdf/2505.02334v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-05</td>
+                <td>Johanna Bimmermann</td>
+                <td>Maximal Weinstein neighborhoods of symmetric R-spaces and their symplectic capacities</td>
+                <td><a href="http://arxiv.org/pdf/2505.02731v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-05</td>
+                <td>John Miller</td>
+                <td>Filtered Topology and Persistence in Stable Homotopy</td>
+                <td><a href="http://arxiv.org/pdf/2505.02772v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-02</td>
+                <td>Guillem Cazassus</td>
+                <td>The Morse complex is an $\infty$-functor</td>
+                <td><a href="http://arxiv.org/pdf/2505.01362v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-02</td>
+                <td>Ana Carolina Mançur</td>
+                <td>Manin triples on multiplicative Courant algebroids</td>
+                <td><a href="http://arxiv.org/pdf/2505.01276v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-01</td>
+                <td>Kazushi Ueda</td>
+                <td>On the Fukaya categories of projective hypersurfaces of general type</td>
+                <td><a href="http://arxiv.org/pdf/2505.00910v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-01</td>
+                <td>Thomas G. Mertens, Qi-Feng Wu</td>
+                <td>Minimal Factorization of Chern-Simons Theory -- Gravitational Anyonic Edge Modes</td>
+                <td><a href="http://arxiv.org/pdf/2505.00501v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-01</td>
+                <td>Elise LePage, Vivek Shende</td>
+                <td>Aganagic's invariant is Khovanov homology</td>
+                <td><a href="http://arxiv.org/pdf/2505.00327v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-05-01</td>
+                <td>Yukihiro Okamoto</td>
+                <td>A topological constraint on clean Lagrangian intersections from $\mathbb{Q}$-valued augmentations</td>
+                <td><a href="http://arxiv.org/pdf/2505.00330v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-30</td>
+                <td>Yuze Sun</td>
+                <td>Functoriality of toric coherent-constructible correspondence</td>
+                <td><a href="http://arxiv.org/pdf/2504.21483v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-30</td>
+                <td>Kenta Hashizume, Masafumi Hattori</td>
+                <td>K-moduli of quasimaps and quasi-projectivity of moduli of K-stable Calabi-Yau fibrations over curves</td>
+                <td><a href="http://arxiv.org/pdf/2504.21519v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-29</td>
+                <td>Salammbo Connolly</td>
+                <td>Continuation maps for the Morse fundamental group</td>
+                <td><a href="http://arxiv.org/pdf/2504.20803v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-29</td>
+                <td>Kaoru Ono</td>
+                <td>Sign Convention for $A_{\infty}$-Operations in Bott-Morse Case</td>
+                <td><a href="http://arxiv.org/pdf/2504.20489v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Hans-Christian Herbig, Daniel Herden, Harper Kolehmainen, Christopher Seaton</td>
+                <td>The partial derivative of ratios of Schur polynomials</td>
+                <td><a href="http://arxiv.org/pdf/2504.19466v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Florian Buck, Kai Zehmisch</td>
+                <td>Connected sums of Brieskorn contact $5$-spheres</td>
+                <td><a href="http://arxiv.org/pdf/2504.19857v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Young-Hoon Kiem, Hyeonjun Park</td>
+                <td>Cosection localization via shifted symplectic geometry</td>
+                <td><a href="http://arxiv.org/pdf/2504.19542v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Jonathan Weitsman</td>
+                <td>Lattice points in polytope boundaries and formal geometric quantization of singular Calabi Yau hypersurfaces in toric varieties</td>
+                <td><a href="http://arxiv.org/pdf/2504.19775v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>B. Erdelyi, J. Hoefkens, M. Berz</td>
+                <td>Rigorous lower bounds for the domains of definition of extended generating functions</td>
+                <td><a href="http://arxiv.org/pdf/2504.19993v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Alice Barbora Tumpach</td>
+                <td>Hyperkaehler Marriage of the two sphere with the hyperbolic space</td>
+                <td><a href="http://arxiv.org/pdf/2504.19945v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Alice Barbora Tumpach</td>
+                <td>Infinite-dimensional Siegel disc as symplectic and Kaehler quotient</td>
+                <td><a href="http://arxiv.org/pdf/2504.19931v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-28</td>
+                <td>Giancarlo Urzúa, Juan Pablo Zúñiga</td>
+                <td>Wahl singularities in degenerations of del Pezzo surfaces</td>
+                <td><a href="http://arxiv.org/pdf/2504.19929v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-27</td>
+                <td>Michael Hutchings</td>
+                <td>Reeb orbits frequently intersecting a symplectic surface</td>
+                <td><a href="http://arxiv.org/pdf/2504.19332v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-27</td>
+                <td>Eita Haibara</td>
+                <td>Some memos on Stable Symplectic Structured Space II: Symplectic motives</td>
+                <td><a href="http://arxiv.org/pdf/2504.19220v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-26</td>
+                <td>Katarzyna Grabowska, Michalina Borczyńska, Joanna Majsak, Tomasz Sobczak</td>
+                <td>Dirac structures in nonholonomic mechanics</td>
+                <td><a href="http://arxiv.org/pdf/2504.18853v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-24</td>
+                <td>Teng Fei</td>
+                <td>$\mathcal{F}$-harmonic 3-forms and the Type IIA flow on 6-dimensional symplectic Lie algebras</td>
+                <td><a href="http://arxiv.org/pdf/2504.17870v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-24</td>
+                <td>Silvester Borsboom, Sebastian De Haro</td>
+                <td>Global Gauge Symmetry Breaking in the Abelian Higgs Mechanism</td>
+                <td><a href="http://arxiv.org/pdf/2504.17483v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-23</td>
+                <td>Yong-Geun Oh</td>
+                <td>Foliation de Rham cohomology of generic Reeb foliations</td>
+                <td><a href="http://arxiv.org/pdf/2504.16453v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-23</td>
+                <td>Frédéric Bourgeois</td>
+                <td>Contact homology of contact manifolds and its applications</td>
+                <td><a href="http://arxiv.org/pdf/2504.16540v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-23</td>
+                <td>Pinsard Morel Lucas</td>
+                <td>Local Existence Of The Symplectic Gradient Flow On The Hyperkähler Four-dimensional Flat Torus</td>
+                <td><a href="http://arxiv.org/pdf/2504.16494v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-23</td>
+                <td>Yong-Geun Oh, Yasha Savelyev</td>
+                <td>Strict contactomorphisms are scarce</td>
+                <td><a href="http://arxiv.org/pdf/2504.16458v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-22</td>
+                <td>Verónica Errasti Díez, Jordi Gaset Rifà, Manuel Lainz</td>
+                <td>Symplectic approach to global stability</td>
+                <td><a href="http://arxiv.org/pdf/2504.16169v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-22</td>
+                <td>Sushmita Venugopalan, Chris Woodward</td>
+                <td>Splitting the diagonal for broken maps</td>
+                <td><a href="http://arxiv.org/pdf/2504.15583v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-21</td>
+                <td>Filip Broćić, Dylan Cant</td>
+                <td>Parametric Gromov width of Liouville domains</td>
+                <td><a href="http://arxiv.org/pdf/2504.15207v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-18</td>
+                <td>Patrick Gioia, San Vu Ngoc</td>
+                <td>Accurate semiclassical analysis of light propagation on tilted hyperplanes</td>
+                <td><a href="http://arxiv.org/pdf/2504.13485v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-17</td>
+                <td>Thomas Basile, Athanasios Chatzistavrakidis, Sylvain Lavau</td>
+                <td>Supersymmetric Poisson and Poisson-supersymmetric sigma models</td>
+                <td><a href="http://arxiv.org/pdf/2504.13114v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-17</td>
+                <td>Shah Faisal</td>
+                <td>Extremal Lagrangian tori in toric domains</td>
+                <td><a href="http://arxiv.org/pdf/2504.13076v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-17</td>
+                <td>John B. Etnyre</td>
+                <td>Tight and overtwisted contact structures</td>
+                <td><a href="http://arxiv.org/pdf/2504.13096v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-16</td>
+                <td>Igor Uljarević</td>
+                <td>A survey on orderability and contact non-squeezing</td>
+                <td><a href="http://arxiv.org/pdf/2504.12061v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-15</td>
+                <td>Spencer Cattalani</td>
+                <td>Symplectic Non-hyperbolicity</td>
+                <td><a href="http://arxiv.org/pdf/2504.10790v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-14</td>
+                <td>Eita Haibara, Shelly Miyano</td>
+                <td>Some memos on Stable Symplectic Structured Space</td>
+                <td><a href="http://arxiv.org/pdf/2504.09968v4">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-14</td>
+                <td>Jonghyeon Ahn</td>
+                <td>Comparison of symplectic capacities</td>
+                <td><a href="http://arxiv.org/pdf/2504.10431v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-14</td>
+                <td>Aritra Ghosh, Anindya Ghose-Choudhury, Partha Guha</td>
+                <td>On novel Hamiltonian descriptions of some three-dimensional non-conservative systems</td>
+                <td><a href="http://arxiv.org/pdf/2504.10729v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-14</td>
+                <td>Peter Crooks, Maxence Mayrand</td>
+                <td>Grothendieck-Springer resolutions and TQFTs</td>
+                <td><a href="http://arxiv.org/pdf/2504.10285v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-12</td>
+                <td>Daniel Álvarez</td>
+                <td>Morita equivalences, moduli spaces and flag varieties</td>
+                <td><a href="http://arxiv.org/pdf/2504.09293v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-12</td>
+                <td>Zuyi Zhang</td>
+                <td>Uniqueness of holomorphic quilts lifted from holomorphic bigons on surfaces</td>
+                <td><a href="http://arxiv.org/pdf/2504.09284v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-12</td>
+                <td>Gary Guth, Ciprian Manolescu</td>
+                <td>Real Heegaard Floer Homology</td>
+                <td><a href="http://arxiv.org/pdf/2504.09034v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-10</td>
+                <td>Roger Casals, Yoon Jae Nho</td>
+                <td>Spectral Networks and Betti Lagrangians</td>
+                <td><a href="http://arxiv.org/pdf/2504.08144v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-09</td>
+                <td>Alfonso Sorrentino, Lin Wang</td>
+                <td>On the Destruction of Invariant Lagrangian Graphs for Conformal Symplectic Twist Maps</td>
+                <td><a href="http://arxiv.org/pdf/2504.06773v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-09</td>
+                <td>Nathan Réguer</td>
+                <td>Semiclassical concentration estimates for Berezin-Toeplitz quasimodes for regular energies</td>
+                <td><a href="http://arxiv.org/pdf/2504.06648v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-08</td>
+                <td>Abdelhak Abouqateb, Charif Bourzik</td>
+                <td>Invariant Poisson Structures on Homogeneous Manifolds: Algebraic Characterization, Symplectic Foliation, and Contravariant Connections</td>
+                <td><a href="http://arxiv.org/pdf/2504.06472v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-08</td>
+                <td>Richard Durran, Aubrey Truman</td>
+                <td>NQG III -- Two-Centre Problems, Whirlpool Galaxy and Toy Neutron Stars</td>
+                <td><a href="http://arxiv.org/pdf/2504.06030v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-08</td>
+                <td>Marius Crainic, Rui Loja Fernandes, David Martínez Torres</td>
+                <td>Poisson Manifolds of Compact Types</td>
+                <td><a href="http://arxiv.org/pdf/2504.06447v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-08</td>
+                <td>Eugenio Bellini</td>
+                <td>Contact embeddings of 3-dimensional contact groups</td>
+                <td><a href="http://arxiv.org/pdf/2504.06085v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-08</td>
+                <td>Prerak Deep, Dheeraj Kulkarni</td>
+                <td>On Contact Round Surgeries on $(\mathbb{S}^3,ξ_{st})$ and Their Diagrams</td>
+                <td><a href="http://arxiv.org/pdf/2504.06074v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-07</td>
+                <td>Marc Kegel, Monika Yadav</td>
+                <td>Contact surgery numbers of projective spaces</td>
+                <td><a href="http://arxiv.org/pdf/2504.05032v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-07</td>
+                <td>Andrea Piccirilli</td>
+                <td>Geometric quantization of generalized Hirzebruch fibrations</td>
+                <td><a href="http://arxiv.org/pdf/2504.04975v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-03</td>
+                <td>Josh Katz</td>
+                <td>Polarization algebras and the geometry of commuting varieties</td>
+                <td><a href="http://arxiv.org/pdf/2504.03034v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-03</td>
+                <td>Sasa Kresic-Juric, Concepcion Muriel, Adrian Ruiz</td>
+                <td>Solvable Structures for Hamiltonian Systems</td>
+                <td><a href="http://arxiv.org/pdf/2504.02189v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-02</td>
+                <td>Holger Dullin, Richard Montgomery</td>
+                <td>The N-Body Problem on Coadjoint Orbits</td>
+                <td><a href="http://arxiv.org/pdf/2504.01272v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-02</td>
+                <td>Honghao Jing</td>
+                <td>On SYZ mirrors of Hirzebruch surfaces</td>
+                <td><a href="http://arxiv.org/pdf/2504.01889v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-01</td>
+                <td>V. M. Jiménez, M. De León</td>
+                <td>The contact Eden bracket and the evolution of observables</td>
+                <td><a href="http://arxiv.org/pdf/2504.00997v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-01</td>
+                <td>S. Ivashkovych</td>
+                <td>Positivity of intersections of two analytic disks at their common boundary point</td>
+                <td><a href="http://arxiv.org/pdf/2504.00805v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-01</td>
+                <td>Alix Deleporte, Yohann Le Floch</td>
+                <td>Regular Bohr-Sommerfeld rules for non-self-adjoint Berezin--Toeplitz operators and complex Lagrangian states</td>
+                <td><a href="http://arxiv.org/pdf/2504.00965v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-01</td>
+                <td>Indranil Biswas, Michi-aki Inaba, Arata Komyo, Masa-Hiko Saito</td>
+                <td>Moduli spaces of framed logarithmic and parabolic connections on a Riemann surface</td>
+                <td><a href="http://arxiv.org/pdf/2504.00931v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-04-01</td>
+                <td>Efstratios Stratoglou, Alexandre Anahory Simoes, Anthony Bloch, Leonardo Colombo</td>
+                <td>Virtual nonlinear nonholonomic constraints from a symplectic point of view</td>
+                <td><a href="http://arxiv.org/pdf/2504.00866v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-31</td>
+                <td>Peter Crooks, Xiang Gao, Mitchell Pound, Casen Thompson</td>
+                <td>Some incarnations of Hamiltonian reduction in symplectic geometry and geometric representation theory</td>
+                <td><a href="http://arxiv.org/pdf/2503.23636v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-31</td>
+                <td>Antonio Maglio</td>
+                <td>PhD Thesis: Shifted Contact Structures on Differentiable Stacks</td>
+                <td><a href="http://arxiv.org/pdf/2503.24238v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-30</td>
+                <td>Shaoyun Bai, Jae Hee Lee</td>
+                <td>3D mirror symmetry in positive characteristic</td>
+                <td><a href="http://arxiv.org/pdf/2503.23590v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-30</td>
+                <td>Friedrich Bauermeister</td>
+                <td>Topological consequences of null-geodesic refocusing and applications to $Z^x$ manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2503.23565v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-30</td>
+                <td>Vasanth Pidaparthy</td>
+                <td>Moduli of special Lagrangians with boundary, I: Unobstructed Deformations</td>
+                <td><a href="http://arxiv.org/pdf/2503.23525v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-28</td>
+                <td>Maxim van den Berg, Matthias Christandl, Vladimir Lysikov, Harold Nieuwboer, Michael Walter, Jeroen Zuiddam</td>
+                <td>Explicit non-free tensors</td>
+                <td><a href="http://arxiv.org/pdf/2503.22650v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-28</td>
+                <td>Leonardo Colombo, María Emma Eyrea Irazú, María Eugenia García, Asier López-Gordón, Marcela Zuccalli</td>
+                <td>Reduction of hybrid Hamiltonian systems with non-equivariant momentum maps</td>
+                <td><a href="http://arxiv.org/pdf/2503.22290v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-28</td>
+                <td>Maxim van den Berg, Matthias Christandl, Vladimir Lysikov, Harold Nieuwboer, Michael Walter, Jeroen Zuiddam</td>
+                <td>The moment polytope of matrix multiplication is not maximal</td>
+                <td><a href="http://arxiv.org/pdf/2503.22633v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-27</td>
+                <td>Loïc Bramley, Lotte Hollands, Subrabalan Murugesan</td>
+                <td>Les Houches lectures on non-perturbative Seiberg-Witten geometry</td>
+                <td><a href="http://arxiv.org/pdf/2503.21742v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-27</td>
+                <td>Andreas Fring, Takano Taira, Bethan Turner</td>
+                <td>Quantisations of exactly solvable ghostly models</td>
+                <td><a href="http://arxiv.org/pdf/2503.21447v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-26</td>
+                <td>James Pascaleff, Nicolò Sibilla</td>
+                <td>Speculations on higher Fukaya categories</td>
+                <td><a href="http://arxiv.org/pdf/2503.20906v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-26</td>
+                <td>Haniya Azam, Catherine Cannizzo, Heather Lee, Chiu-Chu Melissa Liu</td>
+                <td>Global SYZ mirror symmetry and homological mirror symmetry for principally polarized abelian varieties</td>
+                <td><a href="http://arxiv.org/pdf/2503.20948v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-26</td>
+                <td>Rutwig Campoamor-Stursberg, Oscar Carballal, Francisco J. Herranz</td>
+                <td>Contact Lie systems on Riemannian and Lorentzian spaces: from scaling symmetries to curvature-dependent reductions</td>
+                <td><a href="http://arxiv.org/pdf/2503.20558v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-26</td>
+                <td>John Miller</td>
+                <td>Idempotent Completion of Persistence Categories</td>
+                <td><a href="http://arxiv.org/pdf/2503.20603v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-26</td>
+                <td>Kerr Maxwell</td>
+                <td>Structured Gaussians From Geometric Quantisation</td>
+                <td><a href="http://arxiv.org/pdf/2503.20775v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-24</td>
+                <td>Igor Uljarević, Jun Zhang</td>
+                <td>Contact quasi-states and their applications</td>
+                <td><a href="http://arxiv.org/pdf/2503.18750v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-22</td>
+                <td>Benjamin Zhou</td>
+                <td>Higher genus Gromov-Witten invariants from projective bundles on smooth log Calabi-Yau pairs</td>
+                <td><a href="http://arxiv.org/pdf/2503.17713v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-20</td>
+                <td>Yoshinori Namikawa, Yuji Odaka</td>
+                <td>Canonical torus action on symplectic singularities</td>
+                <td><a href="http://arxiv.org/pdf/2503.15791v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-20</td>
+                <td>Tatsuki Kuwagaki, Bingyu Zhang</td>
+                <td>Almost mathematics, Persistence module, and Tamarkin category</td>
+                <td><a href="http://arxiv.org/pdf/2503.15933v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-20</td>
+                <td>Elizabeth Gasparim</td>
+                <td>Intrinsic Mirrors for Minimal Adjoint Orbit (ICM G&T 2022)</td>
+                <td><a href="http://arxiv.org/pdf/2503.16231v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-20</td>
+                <td>Nikolas Adaloglou, Johannes Hauber</td>
+                <td>Pinwheels in symplectic rational and ruled surfaces and non-squeezing of rational homology balls</td>
+                <td><a href="http://arxiv.org/pdf/2503.16250v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-20</td>
+                <td>Elizabeth Gasparim</td>
+                <td>Some contributions of Edoardo Ballico to Moduli spaces and their applications</td>
+                <td><a href="http://arxiv.org/pdf/2503.16657v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-19</td>
+                <td>Qi Feng, Jun Zhang</td>
+                <td>Spectrally-large scale geometry via set-heaviness</td>
+                <td><a href="http://arxiv.org/pdf/2503.14961v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-19</td>
+                <td>Stefan Haller, Cornelia Vizman</td>
+                <td>Nonlinear Grassmannians: plain, decorated, augmented</td>
+                <td><a href="http://arxiv.org/pdf/2503.15363v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-18</td>
+                <td>Hidemasa Suzuki</td>
+                <td>Explicit correspondences between gradient trees in $\mathbb{R}$ and holomorphic disks in $T^{*}\mathbb{R}$</td>
+                <td><a href="http://arxiv.org/pdf/2503.14080v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-18</td>
+                <td>Giacomo Nanni</td>
+                <td>Monodromy of Nikulin orbifolds</td>
+                <td><a href="http://arxiv.org/pdf/2503.14441v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-17</td>
+                <td>Aliakbar Daemi, Christopher Scaduto</td>
+                <td>The mapping class group action on the odd character variety is faithful</td>
+                <td><a href="http://arxiv.org/pdf/2503.13350v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-17</td>
+                <td>Levin Maier</td>
+                <td>On Mañé's critical value for the two-component Hunter-Saxton system and a infnite dimensional magnetic Hopf-Rinow theorem</td>
+                <td><a href="http://arxiv.org/pdf/2503.12901v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-16</td>
+                <td>Vicente Muñoz, Juan Rojo</td>
+                <td>Constructions of symplectic surfaces in symplectic 4-manifolds with transversal intersections</td>
+                <td><a href="http://arxiv.org/pdf/2503.12428v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-15</td>
+                <td>Teng Fei</td>
+                <td>The degeneration of Calabi-Yau 3-folds via 3-forms and the SYZ conjecture</td>
+                <td><a href="http://arxiv.org/pdf/2503.11992v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-14</td>
+                <td>Mikhail Shkolnikov</td>
+                <td>Planar tropical caustics: trivalency and convexity</td>
+                <td><a href="http://arxiv.org/pdf/2503.11137v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-14</td>
+                <td>Pingyuan Wei, Qiao Huang, Jinqiao Duan</td>
+                <td>The stochastic Hamilton-Jacobi-Bellman equation on Jacobi structures</td>
+                <td><a href="http://arxiv.org/pdf/2503.11171v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-14</td>
+                <td>Eduard Tulchinskii, Daria Voronkova, Ilya Trofimov, Evgeny Burnaev, Serguei Barannikov</td>
+                <td>RTD-Lite: Scalable Topological Analysis for Comparing Weighted Graphs in Learning Tasks</td>
+                <td><a href="http://arxiv.org/pdf/2503.11910v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-13</td>
+                <td>S. Tchuiaga, P. Bikorimana</td>
+                <td>Fragmentation and Simplicity in Groups</td>
+                <td><a href="http://arxiv.org/pdf/2503.10224v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-13</td>
+                <td>Morimichi Kawasaki, Mitsuaki Kimura, Shuhei Maruyama, Takahiro Matsushita, Masato Mimura</td>
+                <td>Flux homomorphism and bilinear form constructed from Shelukhin's quasimorphism</td>
+                <td><a href="http://arxiv.org/pdf/2503.10283v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-13</td>
+                <td>Joshua Lackman</td>
+                <td>A Simple Description of the Hyperkähler Structure of the Cotangent Bundle of Projective Space via Quantization</td>
+                <td><a href="http://arxiv.org/pdf/2503.10570v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-13</td>
+                <td>Mollie S. Jagoe Brown, Arthemy V. Kiselev</td>
+                <td>Kontsevich graphs act on Nambu--Poisson brackets, IV. Resilience of the graph calculus in the dimensional shift $d\mapsto d+1$</td>
+                <td><a href="http://arxiv.org/pdf/2503.10916v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-13</td>
+                <td>Mollie S. Jagoe Brown, Arthemy V. Kiselev</td>
+                <td>Kontsevich graphs act on Nambu--Poisson brackets, V. Implementation</td>
+                <td><a href="http://arxiv.org/pdf/2503.10926v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-12</td>
+                <td>Daniel Alvarez-Gavela, Tim Large, Abigail Ward</td>
+                <td>On arborealization, Maslov data, and lack thereof</td>
+                <td><a href="http://arxiv.org/pdf/2503.09783v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-12</td>
+                <td>Morimichi Kawasaki, Mitsuaki Kimura, Shuhei Maruyama, Takahiro Matsushita, Masato Mimura</td>
+                <td>Non-extendablity of Shelukhin's quasimorphism and non-triviality of Reznikov's class</td>
+                <td><a href="http://arxiv.org/pdf/2503.09455v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-12</td>
+                <td>Urs Frauenfelder</td>
+                <td>Periodic orbits in time-dependent planar Stark-Zeeman systems</td>
+                <td><a href="http://arxiv.org/pdf/2503.09209v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-11</td>
+                <td>Yohsuke Imagi</td>
+                <td>Remarks on the Gluing Theorems for Compact Special Lagrangian Submanifolds with Isolated Conical Singularities</td>
+                <td><a href="http://arxiv.org/pdf/2503.08150v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-11</td>
+                <td>Erol Barut, Viktor L. Ginzburg</td>
+                <td>Barcode growth for toric-integrable Hamiltonian systems</td>
+                <td><a href="http://arxiv.org/pdf/2503.08922v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-11</td>
+                <td>Dmitri Bykov, Andrew Kuzovchikov</td>
+                <td>Isotropic embeddings of coadjoint orbits and magnetic geodesic flows</td>
+                <td><a href="http://arxiv.org/pdf/2503.08646v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-10</td>
+                <td>Ko Honda, Roman Krutowski, Yin Tian, Tianyu Yuan</td>
+                <td>Morse theory of loop spaces and Hecke algebras</td>
+                <td><a href="http://arxiv.org/pdf/2503.07543v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-10</td>
+                <td>Yasha Savelyev</td>
+                <td>Quantum Maslov classes</td>
+                <td><a href="http://arxiv.org/pdf/2503.07441v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-10</td>
+                <td>Andy Chia, Wai-Keong Mok, Leong-Chuan Kwek, Changsuk Noh</td>
+                <td>Quantization of nonlinear non-Hamiltonian systems</td>
+                <td><a href="http://arxiv.org/pdf/2503.06939v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-09</td>
+                <td>ChunYin Hau</td>
+                <td>Continuous and Discrete Asymptotic Behaviours of the J-function of a Fano Manifold</td>
+                <td><a href="http://arxiv.org/pdf/2503.06570v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-07</td>
+                <td>Weimin Chen</td>
+                <td>Small symplectic $4$-manifolds via contact gluing and some applications</td>
+                <td><a href="http://arxiv.org/pdf/2503.05932v3">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-07</td>
+                <td>Anton Alekseev, Arkady Berenstein, Anfisa Gurenkova, Yanpeng Li</td>
+                <td>Multiple Horn problems for planar networks and invertible matrices</td>
+                <td><a href="http://arxiv.org/pdf/2503.05277v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-07</td>
+                <td>Joel Fine, Weiyong He, Chengjian Yao</td>
+                <td>Hypersymplectic structures invariant under an effective circle action</td>
+                <td><a href="http://arxiv.org/pdf/2503.05272v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-07</td>
+                <td>Paul Hacking, Ailsa Keating</td>
+                <td>Homological mirror symmetry for projective K3 surfaces</td>
+                <td><a href="http://arxiv.org/pdf/2503.05680v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-07</td>
+                <td>Honglei Lang, Zhangju Liu</td>
+                <td>Poisson homogeneous spaces of Poisson 2-groups</td>
+                <td><a href="http://arxiv.org/pdf/2503.05080v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-07</td>
+                <td>Jiang-Hua Lu, Mykola Matviichuk</td>
+                <td>Deformations of T-log-symplectic log-canonical Poisson structures and symmetric Poisson CGL extensions</td>
+                <td><a href="http://arxiv.org/pdf/2503.05644v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-06</td>
+                <td>Yuhan Sun, Igor Uljarevic, Umut Varolgunes</td>
+                <td>Contact big fiber theorems</td>
+                <td><a href="http://arxiv.org/pdf/2503.04277v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-06</td>
+                <td>Adrien Busnot Laurent, Oscar Cosserat</td>
+                <td>Butcher series for Hamiltonian Poisson integrators through symplectic groupoids</td>
+                <td><a href="http://arxiv.org/pdf/2503.05000v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-06</td>
+                <td>Ali Naseri Sadr</td>
+                <td>Periodic Inscription of Isosceles Trapezoids</td>
+                <td><a href="http://arxiv.org/pdf/2503.04077v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-05</td>
+                <td>Leonid Ryvkin</td>
+                <td>Darboux type theorems in multisymplectic geometry</td>
+                <td><a href="http://arxiv.org/pdf/2503.03672v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-05</td>
+                <td>C. Grotta-Ragazzo, Lei Liu, Pedro A. S. Salomão</td>
+                <td>Non-resonant Hopf Links Near a Hamiltonian Equilibrium Point</td>
+                <td><a href="http://arxiv.org/pdf/2503.03226v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-04</td>
+                <td>Peter Albers, Gabriele Benedetti, Levin Maier</td>
+                <td>The Hopf-Rinow theorem and the Mañé critical value for magnetic geodesics on odd-dimensional spheres</td>
+                <td><a href="http://arxiv.org/pdf/2503.02406v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-03-01</td>
+                <td>Paul Seidel</td>
+                <td>P-adic splittings of the quantum connection</td>
+                <td><a href="http://arxiv.org/pdf/2503.00500v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-28</td>
+                <td>Gert Heckman</td>
+                <td>Exercises on the Kepler ellipses through a fixed point in space, after Otto Laporte</td>
+                <td><a href="http://arxiv.org/pdf/2502.21222v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-28</td>
+                <td>Thomas Massoni</td>
+                <td>A symplectic viewpoint on Anosov flows</td>
+                <td><a href="http://arxiv.org/pdf/2503.00123v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-27</td>
+                <td>Takumi Arai</td>
+                <td>Guillermou-Kashiwara-Schapira kernels of geodesic flows</td>
+                <td><a href="http://arxiv.org/pdf/2502.19978v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-26</td>
+                <td>Tim Gräfnitz, Helge Ruddat, Eric Zaslow, Benjamin Zhou</td>
+                <td>Enumerative Geometry of Quantum Periods</td>
+                <td><a href="http://arxiv.org/pdf/2502.19408v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-25</td>
+                <td>Eva Miranda, Pablo Nicolás</td>
+                <td>Which singular tangent bundles are isomorphic?</td>
+                <td><a href="http://arxiv.org/pdf/2502.18602v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-25</td>
+                <td>Chiara Esposito, Ryszard Nest, Jonas Schnitzer, Boris Tsygan</td>
+                <td>Quantization of the Momentum Map via $\frak{g}$-adapted Formalities</td>
+                <td><a href="http://arxiv.org/pdf/2502.18295v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-24</td>
+                <td>Leonardo Colombo, Manuel de León, María Emma Eyrea Irazú, Asier López-Gordón</td>
+                <td>Homogeneous bi-Hamiltonian structures and integrable contact systems</td>
+                <td><a href="http://arxiv.org/pdf/2502.17269v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-23</td>
+                <td>Jeff Hicks</td>
+                <td>Rigidity and Realizability for Tropical Curves in Dimension 3</td>
+                <td><a href="http://arxiv.org/pdf/2502.16582v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-21</td>
+                <td>Daigo Ito</td>
+                <td>Polarizations on a triangulated category</td>
+                <td><a href="http://arxiv.org/pdf/2502.15621v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-21</td>
+                <td>John Etnyre, Youlin Li, Bülent Tosun</td>
+                <td>Knotted solid tori in contact manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2502.15165v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-20</td>
+                <td>Axel Husin</td>
+                <td>Maslov class of exact Lagrangians and cylindrical handles</td>
+                <td><a href="http://arxiv.org/pdf/2502.14750v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-19</td>
+                <td>María Barbero Liñán, Juan Carlos Marrero, David Martín de Diego</td>
+                <td>Retraction maps: A seed of geometric integrators. Part II: Symmetry and reduction</td>
+                <td><a href="http://arxiv.org/pdf/2502.14152v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-19</td>
+                <td>Sekh Kiran Ajij, Ritwik Chakraborty, Balarka Sen</td>
+                <td>Contact domination</td>
+                <td><a href="http://arxiv.org/pdf/2502.13927v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-17</td>
+                <td>Chi Li, Zhengyi Zhou</td>
+                <td>Minimal log discrepancy and orbifold curves</td>
+                <td><a href="http://arxiv.org/pdf/2502.11847v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-17</td>
+                <td>Erman Cineli, Sobhan Seyfaddini, Shira Tanny</td>
+                <td>Ergodic closing lemmas and invariant Lagrangians</td>
+                <td><a href="http://arxiv.org/pdf/2502.11566v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-16</td>
+                <td>Cheuk Yu Mak, Sobhan Seyfaddini, Ivan Smith</td>
+                <td>Orbifold Floer theory for global quotients and Hamiltonian dynamics</td>
+                <td><a href="http://arxiv.org/pdf/2502.11290v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-13</td>
+                <td>Dadi Ni, Kaichuan Qi</td>
+                <td>Hyperkähler structures on leaves of hyper-Lie Poisson manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2502.08979v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-12</td>
+                <td>Yefeng Shen, Mark Shoemaker</td>
+                <td>Quantum spectrum and Gamma structure for standard flips</td>
+                <td><a href="http://arxiv.org/pdf/2502.08762v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-10</td>
+                <td>Baohua Fu, Jie Liu</td>
+                <td>The affine closure of cotangent bundles of horospherical spaces</td>
+                <td><a href="http://arxiv.org/pdf/2502.06383v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-10</td>
+                <td>Ivan F. Kobtsev, Elena A. Kudryavtseva</td>
+                <td>Bifurcations of magnetic geodesic flows on surfaces of revolution</td>
+                <td><a href="http://arxiv.org/pdf/2502.06977v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-10</td>
+                <td>Nicolas Grunder, Baptiste Serraille</td>
+                <td>A non-autonomous Hamiltonian diffeomorphism with roots of all orders</td>
+                <td><a href="http://arxiv.org/pdf/2502.06467v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-10</td>
+                <td>Veronica Pasquarella</td>
+                <td>Advancements in Functorial Homological Mirror Symmetry</td>
+                <td><a href="http://arxiv.org/pdf/2502.06951v3">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-06</td>
+                <td>A. V. Tsiganov</td>
+                <td>Multisymplectic structure of nonintegrable Henon-Heiles system</td>
+                <td><a href="http://arxiv.org/pdf/2502.03786v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-06</td>
+                <td>Tatsuki Kuwagaki, Takahiro Saito</td>
+                <td>Hodge microsheaves on cotangent bundles and plumbings</td>
+                <td><a href="http://arxiv.org/pdf/2502.04148v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-05</td>
+                <td>Bozidar Jovanovic</td>
+                <td>Contact line bundles, foliations, and integrability</td>
+                <td><a href="http://arxiv.org/pdf/2502.02935v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-05</td>
+                <td>Luiz Frederic Wagner</td>
+                <td>Pseudo-Holomorphic Hamiltonian Systems and Kähler Duality of Complex Coadjoint Orbits</td>
+                <td><a href="http://arxiv.org/pdf/2502.03310v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-03</td>
+                <td>Hisashi Kasuya, Dan Popovici, Luis Ugarte</td>
+                <td>Higher-Degree Holomorphic Contact Structures</td>
+                <td><a href="http://arxiv.org/pdf/2502.01447v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-03</td>
+                <td>Ekaterina Amerik, Serge Cantat</td>
+                <td>Parabolic automorphisms of hyperk{ä}hler manifolds: Orbits and Betti maps</td>
+                <td><a href="http://arxiv.org/pdf/2502.01149v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-02-01</td>
+                <td>Stéphane Tchuiaga</td>
+                <td>A Remark On Hofer-like Geometry</td>
+                <td><a href="http://arxiv.org/pdf/2502.00437v5">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-30</td>
+                <td>Cesare Tronci, David Martínez-Crespo, François Gay-Balmaz</td>
+                <td>Entropy functionals and equilibrium states in mixed quantum-classical dynamics</td>
+                <td><a href="http://arxiv.org/pdf/2501.18587v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-29</td>
+                <td>François Gay-Balmaz, Álvaro Rodríguez Abella, Hiroaki Yoshimura</td>
+                <td>Infinite-dimensional Lagrange-Dirac systems with boundary energy flow I: Foundations</td>
+                <td><a href="http://arxiv.org/pdf/2501.17551v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-28</td>
+                <td>Alberto S. Cattaneo, Shuhan Jiang</td>
+                <td>Equivariant localization in Batalin-Vilkovisky formalism</td>
+                <td><a href="http://arxiv.org/pdf/2501.17082v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-24</td>
+                <td>Tian-Jun Li, Shengzhen Ning</td>
+                <td>Symplectic log Kodaira dimension $-\infty$, affine-ruledness and unicuspidal rational curves</td>
+                <td><a href="http://arxiv.org/pdf/2501.14668v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-22</td>
+                <td>Francesca Lusetti, Adriano Tomassini</td>
+                <td>Hard Lefschetz Condition on symplectic non-Kähler solvmanifolds</td>
+                <td><a href="http://arxiv.org/pdf/2501.13179v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-22</td>
+                <td>Alexia Corradini</td>
+                <td>Algebraic Lagrangian cobordisms, flux and the Lagrangian Ceresa cycle</td>
+                <td><a href="http://arxiv.org/pdf/2501.12850v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-20</td>
+                <td>Yusaku Tiba</td>
+                <td>Polarizations and Convergences of holomorphic sections on the tangent bundle of a Bohr-Sommerfeld Lagrangian submanifold</td>
+                <td><a href="http://arxiv.org/pdf/2501.11254v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-15</td>
+                <td>Johan Asplund, Yin Li</td>
+                <td>Persistence of unknottedness of clean Lagrangian intersections</td>
+                <td><a href="http://arxiv.org/pdf/2501.09110v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-14</td>
+                <td>Charlotte Kirchhoff-Lukat, Marco Zambon</td>
+                <td>Moduli spaces of spacefilling branes in symplectic 4-manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2501.07926v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-13</td>
+                <td>Miguel Rodríguez-Olmos</td>
+                <td>Bifurcations of MacLaurin spheroids. A Hamiltonian perspective</td>
+                <td><a href="http://arxiv.org/pdf/2501.07153v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-09</td>
+                <td>Joshua Lackman</td>
+                <td>Quantization of Holomorphic Symplectic Manifolds: Analytic Continuation of Path Integrals and Coherent States</td>
+                <td><a href="http://arxiv.org/pdf/2501.05428v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-08</td>
+                <td>Aleksandra Marinkovic</td>
+                <td>On the existence of Hamiltonian 4-manifolds with a contact type boundary</td>
+                <td><a href="http://arxiv.org/pdf/2501.04458v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2025-01-08</td>
+                <td>Amanda Hirschi, Kai Hugtenburg</td>
+                <td>An open-closed Deligne-Mumford field theory associated to a Lagrangian submanifold</td>
+                <td><a href="http://arxiv.org/pdf/2501.04687v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-30</td>
+                <td>Georgios Dimitroglou Rizell</td>
+                <td>On weakly exact Lagrangians in Liouville bi-fillings</td>
+                <td><a href="http://arxiv.org/pdf/2412.20941v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-30</td>
+                <td>Dmitri I. Panyushev</td>
+                <td>Nilpotent orbits and their secant varieties</td>
+                <td><a href="http://arxiv.org/pdf/2412.20809v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-30</td>
+                <td>Sergei G. Ovchinnikov</td>
+                <td>All toric Kahler surfaces with twistor 2-forms</td>
+                <td><a href="http://arxiv.org/pdf/2412.21114v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-29</td>
+                <td>Katarzyna Grabowska, Janusz Grabowski</td>
+                <td>The regularity and products in contact geometry</td>
+                <td><a href="http://arxiv.org/pdf/2412.20491v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-28</td>
+                <td>Jordi Frias, Maxim Grigoriev</td>
+                <td>Consistent deformations in the presymplectic BV-AKSZ approach</td>
+                <td><a href="http://arxiv.org/pdf/2412.20293v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-28</td>
+                <td>Naoki Kimura, Tomoya Nakamura</td>
+                <td>Jacobi-Koszul-Vinberg structures on Jacobi-left-symmetric algebroids</td>
+                <td><a href="http://arxiv.org/pdf/2412.20103v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-27</td>
+                <td>Andreas Vollmer</td>
+                <td>On dual-projectively equivalent connections associated to second order superintegrable systems</td>
+                <td><a href="http://arxiv.org/pdf/2412.19739v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-26</td>
+                <td>Hyun-Seok Do, Yong-Geun Oh</td>
+                <td>Thermodynamic reduction of contact dynamics</td>
+                <td><a href="http://arxiv.org/pdf/2412.19319v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-26</td>
+                <td>François Gay-Balmaz, Meng Wu</td>
+                <td>Variational integrators for stochastic Hamiltonian systems on Lie groups: properties and convergence</td>
+                <td><a href="http://arxiv.org/pdf/2412.19368v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-24</td>
+                <td>Christopher Kuo, Harold Williams</td>
+                <td>Tropical Lagrangian coamoebae and free resolutions</td>
+                <td><a href="http://arxiv.org/pdf/2412.18071v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-24</td>
+                <td>Shah Faisal</td>
+                <td>A proof of Gromov's non-squeezing theorem</td>
+                <td><a href="http://arxiv.org/pdf/2412.18462v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-22</td>
+                <td>José M. Mourão, João P. Nunes, Augusto Pereira, Dan Wang</td>
+                <td>A new look at unitarity in quantization commutes with reduction for toric manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2412.17157v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-22</td>
+                <td>Hui Li</td>
+                <td>Revisit Hamiltonian $S^1$-manifolds of dimension 6 with 4 fixed points</td>
+                <td><a href="http://arxiv.org/pdf/2412.17873v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-21</td>
+                <td>Katarzyna Grabowska, Janusz Grabowski, Rouzbeh Mohseni</td>
+                <td>Sasaki structures on general contact manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2412.16697v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-20</td>
+                <td>Han Lou</td>
+                <td>On Lagrangian Tori in $S^2\times S^2$</td>
+                <td><a href="http://arxiv.org/pdf/2412.16356v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-20</td>
+                <td>Pedro Frejlich, David Martínez Torres</td>
+                <td>Dirac products and concurring Dirac structures</td>
+                <td><a href="http://arxiv.org/pdf/2412.16342v2">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-19</td>
+                <td>Alice C. Quillen, Abobakar Sediq Miakhel</td>
+                <td>Quantum chaos on the separatrix of the periodically perturbed Harper model</td>
+                <td><a href="http://arxiv.org/pdf/2412.14926v3">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-18</td>
+                <td>Ronen Brilleslijper, Oliver Fabert</td>
+                <td>Generalizing symplectic topology from 1 to 2 dimensions</td>
+                <td><a href="http://arxiv.org/pdf/2412.16223v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-15</td>
+                <td>Francesco Fassò, Nicola Sansonetto</td>
+                <td>Symplectization of certain Hamiltonian systems in fibered almost-symplectic manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2412.11265v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-11</td>
+                <td>Ivan G. Avramidi, Roberto Niardi</td>
+                <td>Geometric Deformation of Quantum Mechanics</td>
+                <td><a href="http://arxiv.org/pdf/2412.08007v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-09</td>
+                <td>Nikos Georgiou, Brendan Guilfoyle</td>
+                <td>Minimal surfaces in the Riemannian product of surfaces</td>
+                <td><a href="http://arxiv.org/pdf/2412.06618v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-06</td>
+                <td>Lisa Jeffrey, Matthew Koban, Steven Rayan</td>
+                <td>Nakajima quiver bundles</td>
+                <td><a href="http://arxiv.org/pdf/2412.05457v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-06</td>
+                <td>Shuhei Yonehara</td>
+                <td>Godbillon-Vey classes of regular Jacobi manifolds</td>
+                <td><a href="http://arxiv.org/pdf/2412.05257v1">PDF</a></td>
+            </tr>
+            <tr>
+                <td>2024-12-05</td>
+                <td>Eric Kilgore</td>
+                <td>Legendrian non-squeezing via microsheaves</td>
+                <td><a href="http://arxiv.org/pdf/2412.03823v1">PDF</a></td>
+            </tr>
+            <tr>
+               <tr>
+    <td>2024-12-05</td>
+    <td>Eric Kilgore</td>
+    <td>Legendrian non-squeezing via microsheaves</td>
+    <td><a href="http://arxiv.org/pdf/2412.03823v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-12-05</td>
+    <td>May Sela, Jake P. Solomon</td>
+    <td>Numerical invariants of normed matrix factorizations</td>
+    <td><a href="http://arxiv.org/pdf/2412.04437v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-12-05</td>
+    <td>Mohammed Abouzaid, Shaoyun Bai</td>
+    <td>Bordism and resolution of singularities</td>
+    <td><a href="http://arxiv.org/pdf/2412.04451v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-12-04</td>
+    <td>Anxo Biasi, Patrick Gérard</td>
+    <td>Energy cascades and condensation via coherent dynamics in Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2412.03663v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-12-02</td>
+    <td>Rudra R. Kamat, Hemant K. Mishra</td>
+    <td>Simultaneous symplectic reduction of quadratic forms into normal forms</td>
+    <td><a href="http://arxiv.org/pdf/2412.01492v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-12-01</td>
+    <td>Morimichi Kawasaki, Mitsuaki Kimura, Hiroki Kodama, Yoshifumi Matsuda, Takahiro Matsushita, Ryuma Orita</td>
+    <td>Relative simplicity of the universal coverings of transformation groups and Tsuboi's metric</td>
+    <td><a href="http://arxiv.org/pdf/2412.00839v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-29</td>
+    <td>Jakob Hedicke, Egor Shelukhin</td>
+    <td>Non-orderability and the contact Hofer norm</td>
+    <td><a href="http://arxiv.org/pdf/2411.19887v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-29</td>
+    <td>L. Asselle, M. Starostka</td>
+    <td>On the degenerate Arnold conjecture on $\mathbb T^{2m}\times \mathbb C\mathbb P^n$</td>
+    <td><a href="http://arxiv.org/pdf/2411.19636v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-28</td>
+    <td>Nathan Duignan, Naoki Sato</td>
+    <td>Generalizing Hamiltonian Mechanics with Closed Differential Forms</td>
+    <td><a href="http://arxiv.org/pdf/2411.18837v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-27</td>
+    <td>David Li-Bland, Eckhard Meinrenken</td>
+    <td>On the integration of Manin pairs</td>
+    <td><a href="http://arxiv.org/pdf/2411.17988v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-26</td>
+    <td>Romy Marie Merkel</td>
+    <td>Deformations of calibrated subbundles in noncompact manifolds of special holonomy via twisting by special sections</td>
+    <td><a href="http://arxiv.org/pdf/2411.17648v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-26</td>
+    <td>S. Tchuiaga, A. Ndiaye, C. Khoule, R. A. M. Mohameden</td>
+    <td>Geometric structures on Weil bundles: Canonical differential-geometric constructions</td>
+    <td><a href="http://arxiv.org/pdf/2411.17212v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-26</td>
+    <td>Konstantinos Efstathiou, Sonja Hohloch, Pedro Santos</td>
+    <td>On the affine invariant of hypersemitoric systems</td>
+    <td><a href="http://arxiv.org/pdf/2411.17509v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-25</td>
+    <td>Ghorbanali Haghighatdoost, Rezvaneh Ayoubi</td>
+    <td>A note on integrabiliy of Hamiltonian systems on the co-adjoint Lie groupoids</td>
+    <td><a href="http://arxiv.org/pdf/2411.16631v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-25</td>
+    <td>Álvaro Muñiz-Brea</td>
+    <td>Fourier transforms and a filtration on the Lagrangian cobordism group of tori</td>
+    <td><a href="http://arxiv.org/pdf/2411.16543v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-22</td>
+    <td>Mohamad Rabah</td>
+    <td>Fukaya Algebra over $\mathbb{Z}$: I</td>
+    <td><a href="http://arxiv.org/pdf/2411.14657v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-19</td>
+    <td>Ivan Contreras, Diego Martinez, Nicolas Martinez, Diego Rodriguez</td>
+    <td>Symplectic Geometry, Poisson Geometry, and Beyond</td>
+    <td><a href="http://arxiv.org/pdf/2411.12551v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-18</td>
+    <td>I. Gutierrez-Sagredo, D. Iglesias Ponte, J. C. Marrero, E. Padrón</td>
+    <td>Mechanical presymplectic structures and Marsden-Weinstein reduction of time-dependent Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2411.11997v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-15</td>
+    <td>Mark Hamilton, Yael Karshon, Takahiko Yoshida</td>
+    <td>Integral-integral affine geometry, geometric quantization, and Riemann-Roch</td>
+    <td><a href="http://arxiv.org/pdf/2411.10348v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-15</td>
+    <td>Carole Madengko, Stephane Tchuiaga, Franck Houenou</td>
+    <td>On Banyaga's conjecture on the group of symplectic homeomorphisms</td>
+    <td><a href="http://arxiv.org/pdf/2411.10568v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-15</td>
+    <td>Yohann Bouilly, Gianluca Faraco, Arnaud Maret</td>
+    <td>Mapping class group orbit closures for Deroin-Tholozan representations</td>
+    <td><a href="http://arxiv.org/pdf/2411.10269v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-14</td>
+    <td>Linyu Peng, Hiroaki Yoshimura</td>
+    <td>Discrete Dirac structures and discrete Lagrange--Dirac dynamical systems in mechanics</td>
+    <td><a href="http://arxiv.org/pdf/2411.09530v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-13</td>
+    <td>Stéphane Druel, Jorge Vitório Pereira, Brent Pym, Frédéric Touzet</td>
+    <td>Numerically flat foliations and holomorphic Poisson geometry</td>
+    <td><a href="http://arxiv.org/pdf/2411.08806v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-13</td>
+    <td>Raymond Brummelhuis</td>
+    <td>Conditional expectations in Quantum Mechanics and causal interpretations: the Bohm momentum as a best predictor</td>
+    <td><a href="http://arxiv.org/pdf/2411.08532v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-12</td>
+    <td>Sebastian Haney</td>
+    <td>Open enumerative mirror symmetry for lines in the mirror quintic</td>
+    <td><a href="http://arxiv.org/pdf/2411.07894v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-11</td>
+    <td>Jeremy Nugent, Andreas Vollmer</td>
+    <td>A necessary and sufficient condition for a second-order superintegrable system with $(n+1)$-parameter potential to extend to a non-degenerate second-order superintegrable system</td>
+    <td><a href="http://arxiv.org/pdf/2411.06994v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-10</td>
+    <td>Andreas Vollmer</td>
+    <td>Manifolds with a commutative and associative product structure that encodes superintegrable Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2411.06418v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-08</td>
+    <td>Pierre Bieliavsky, Maxime Willaert</td>
+    <td>Symplectic structures preserved by geodesic symmetries</td>
+    <td><a href="http://arxiv.org/pdf/2411.05702v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-06</td>
+    <td>Wenjun Niu</td>
+    <td>Quantum Groups and Symplectic Reductions</td>
+    <td><a href="http://arxiv.org/pdf/2411.04195v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-11-01</td>
+    <td>Andreas Vollmer</td>
+    <td>Second-order superintegrable systems and Weylian geometry</td>
+    <td><a href="http://arxiv.org/pdf/2411.00569v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-30</td>
+    <td>Giovanni Canepa, Michele Schiavina</td>
+    <td>Double BFV quantisation of 3d Gravity</td>
+    <td><a href="http://arxiv.org/pdf/2410.23184v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-30</td>
+    <td>Yoshifumi Nakata, Yuki Takeuchi, Martin Kliesch, Andrew Darmawan</td>
+    <td>On computational complexity of unitary and state design properties</td>
+    <td><a href="http://arxiv.org/pdf/2410.23353v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-30</td>
+    <td>Federico Zadra, Marcello Seri</td>
+    <td>Characterization of symmetries of contact Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2410.23490v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-29</td>
+    <td>I. K. Kozlov</td>
+    <td>Local bi-integrability of bi-Hamiltonian systems, Part II: Real smooth case</td>
+    <td><a href="http://arxiv.org/pdf/2410.21642v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-29</td>
+    <td>Gilles Abramovici</td>
+    <td>Bloch classification surface for three-band systems</td>
+    <td><a href="http://arxiv.org/pdf/2410.22251v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-28</td>
+    <td>Yoshihiro Sugimoto</td>
+    <td>Homological Lagrangian monodromy and Wang exact sequence</td>
+    <td><a href="http://arxiv.org/pdf/2410.20677v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-28</td>
+    <td>Yuhan Sun</td>
+    <td>Spectral diameter of negatively monotone manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2410.21416v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-27</td>
+    <td>Anna Fino, Gueo Grantcharov</td>
+    <td>On the type of generalized hypercomplex structures</td>
+    <td><a href="http://arxiv.org/pdf/2410.20422v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-27</td>
+    <td>I. K. Kozlov</td>
+    <td>Local bi-integrability of bi-Hamiltonian systems via bi-Poisson reduction</td>
+    <td><a href="http://arxiv.org/pdf/2410.20574v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-23</td>
+    <td>Shih-Kai Chiu, Yu-Shen Lin</td>
+    <td>Special Lagrangian submanifolds in K3-fibered Calabi-Yau 3-folds</td>
+    <td><a href="http://arxiv.org/pdf/2410.17662v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-22</td>
+    <td>Hyunmoon Kim</td>
+    <td>Simultaneous linear symplectic reduction and orbit fibrations</td>
+    <td><a href="http://arxiv.org/pdf/2410.16869v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-22</td>
+    <td>Alexander F. Ritter, Filip Živanović</td>
+    <td>Filtrations on equivariant quantum cohomology and Hilbert-Poincaré series</td>
+    <td><a href="http://arxiv.org/pdf/2410.17237v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-21</td>
+    <td>Luya Wang</td>
+    <td>A note on a nontrivial connected component of the space of symplectic structures</td>
+    <td><a href="http://arxiv.org/pdf/2410.16216v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-20</td>
+    <td>Abraham Bobadilla Osses, Mauricio Godoy Molina</td>
+    <td>Left-invariant distributions and metric Hamiltonians on ${\rm SL}(n,{\mathbb R})$ induced by its Killing form</td>
+    <td><a href="http://arxiv.org/pdf/2410.15478v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-16</td>
+    <td>Panagiotis Dimakis, Sebastian Schulz</td>
+    <td>On a conjecture of Simpson</td>
+    <td><a href="http://arxiv.org/pdf/2410.12945v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-15</td>
+    <td>Naichung Conan Leung, Qin Li, Ziming Nikolas Ma</td>
+    <td>Symmetry in Deformation quantization and Geometric quantization</td>
+    <td><a href="http://arxiv.org/pdf/2410.11311v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-14</td>
+    <td>I. K. Kozlov</td>
+    <td>Integrability of bi-Hamiltonian systems using Casimir functions and characteristic polynomials</td>
+    <td><a href="http://arxiv.org/pdf/2410.11032v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-14</td>
+    <td>Ana Balibanu</td>
+    <td>An analogue of Whittaker reduction for group-valued moment maps</td>
+    <td><a href="http://arxiv.org/pdf/2410.10785v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-13</td>
+    <td>Jacques Ding, Hudson A. Loughlin, Vivishek Sudhir</td>
+    <td>Quantum Linear Time-Translation-Invariant Systems: Conjugate Symplectic Structure, Uncertainty Bounds, and Tomography</td>
+    <td><a href="http://arxiv.org/pdf/2410.09976v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-10</td>
+    <td>Aritra Ghosh</td>
+    <td>Invariant measures for some dissipative systems from the Jacobi last multiplier</td>
+    <td><a href="http://arxiv.org/pdf/2410.08167v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-09</td>
+    <td>Vladimir Glazatov, Vsevolod Sakbaev</td>
+    <td>On the extension of singular linear infinite-dimensional Hamiltonian flows</td>
+    <td><a href="http://arxiv.org/pdf/2410.06749v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-09</td>
+    <td>Robert Cardona, Fabio Gironella</td>
+    <td>Fillability obstructions for high-dimensional confoliations</td>
+    <td><a href="http://arxiv.org/pdf/2410.06918v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-08</td>
+    <td>Shuhei Yonehara</td>
+    <td>Mikami-Weinstein type theorem for cosymplectic groupoid actions</td>
+    <td><a href="http://arxiv.org/pdf/2410.05846v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-08</td>
+    <td>Daniel Pomerleano, Constantin Teleman</td>
+    <td>Integral Kirwan Surjectivity</td>
+    <td><a href="http://arxiv.org/pdf/2410.06197v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-08</td>
+    <td>Dirk Lebiedz, Johannes Poppe</td>
+    <td>Sensitivities in complex-time flows: phase transitions, Hamiltonian structure and differential geometry</td>
+    <td><a href="http://arxiv.org/pdf/2410.06018v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-08</td>
+    <td>Manuel de León, Rubén Izquierdo-López</td>
+    <td>Graded Poisson and Graded Dirac structures</td>
+    <td><a href="http://arxiv.org/pdf/2410.06034v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-07</td>
+    <td>Maxim Braverman</td>
+    <td>Background Cohomology and Symplectic Reduction</td>
+    <td><a href="http://arxiv.org/pdf/2410.05532v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-06</td>
+    <td>Aritra Ghosh, E. Harikumar</td>
+    <td>Hamiltonian thermodynamics on symplectic manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2410.04622v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-06</td>
+    <td>Yaniv Ganor</td>
+    <td>Poisson Bracket Invariants and Wrapped Floer Homology</td>
+    <td><a href="http://arxiv.org/pdf/2410.04572v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-05</td>
+    <td>Marcelo S. Atallah, Jean-Philippe Chassé, Rémi Leclercq, Egor Shelukhin</td>
+    <td>Weinstein exactness of nearby Lagrangians: towards the Lagrangian $C^{0}$ flux conjecture</td>
+    <td><a href="http://arxiv.org/pdf/2410.04158v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-04</td>
+    <td>Ki Fung Chan, Naichung Conan Leung</td>
+    <td>3d Mirror Symmetry is Mirror Symmetry</td>
+    <td><a href="http://arxiv.org/pdf/2410.03611v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-04</td>
+    <td>Dylan Cant</td>
+    <td>Remarks on eternal classes in symplectic cohomology</td>
+    <td><a href="http://arxiv.org/pdf/2410.03914v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-04</td>
+    <td>Andrea Galasso</td>
+    <td>Strict quantization for compact pseudo-Kähler manifolds and group actions</td>
+    <td><a href="http://arxiv.org/pdf/2410.03322v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-03</td>
+    <td>Joshua Lackman</td>
+    <td>On an Axiomatization of Path Integral Quantization and its Equivalence to Berezin's Quantization</td>
+    <td><a href="http://arxiv.org/pdf/2410.02739v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-03</td>
+    <td>Matias del Hoyo, Cristian Ortiz, Fernando Studzinski</td>
+    <td>On the cohomology of differentiable stacks</td>
+    <td><a href="http://arxiv.org/pdf/2410.02570v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-03</td>
+    <td>Brian K. Tran, Melvin Leok</td>
+    <td>Variational Principles for Hamiltonian Systems</td>
+    <td><a href="http://arxiv.org/pdf/2410.02960v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-10-02</td>
+    <td>Jonghyeon Ahn</td>
+    <td>$S^1$-equivariant relative symplectic cohomology and relative symplectic capacities</td>
+    <td><a href="http://arxiv.org/pdf/2410.01977v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-29</td>
+    <td>Zuyi Zhang</td>
+    <td>Construction of holomorphic quilts in Cartesian product of closed surfaces</td>
+    <td><a href="http://arxiv.org/pdf/2409.19744v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-27</td>
+    <td>Aritra Ghosh, Akash Sinha, Bijan Bagchi</td>
+    <td>First integrals of some two-dimensional integrable Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2409.19116v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-23</td>
+    <td>Dominique Rathel-Fournier</td>
+    <td>On cobordism groups of Lagrangian immersions</td>
+    <td><a href="http://arxiv.org/pdf/2409.14651v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-21</td>
+    <td>Dylan Cant, Jun Zhang</td>
+    <td>On the spectral capacity of submanifolds</td>
+    <td><a href="http://arxiv.org/pdf/2409.14142v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-20</td>
+    <td>Fernand Pelletier, Patrick Cabau</td>
+    <td>Partial Dirac structures in infinite dimension</td>
+    <td><a href="http://arxiv.org/pdf/2409.13497v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-18</td>
+    <td>Athanasios C. Tzemos, George Contopoulos</td>
+    <td>A comparison between classical and Bohmian quantum chaos</td>
+    <td><a href="http://arxiv.org/pdf/2409.12056v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-12</td>
+    <td>Peter Albers, Ana Chavez Caliz, Serge Tabachnikov</td>
+    <td>Outer symplectic billiards</td>
+    <td><a href="http://arxiv.org/pdf/2409.07990v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-12</td>
+    <td>Vivek Shende</td>
+    <td>Toric mirror monodromies and Lagrangian spheres</td>
+    <td><a href="http://arxiv.org/pdf/2409.08261v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-12</td>
+    <td>Sangwook Lee</td>
+    <td>Kodaira-Spencer maps for elliptic orbispheres as isomorphisms of Frobenius algebras</td>
+    <td><a href="http://arxiv.org/pdf/2409.07814v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-12</td>
+    <td>Jack Smith</td>
+    <td>Quantum cohomology and Fukaya summands from monotone Lagrangian tori</td>
+    <td><a href="http://arxiv.org/pdf/2409.07922v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-11</td>
+    <td>Krishnendu Gongopadhyay, Tathagata Nayak</td>
+    <td>On Character Variety of Anosov Representations</td>
+    <td><a href="http://arxiv.org/pdf/2409.07316v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-10</td>
+    <td>Hiraku Nakajima</td>
+    <td>S-dual of Hamiltonian $\mathbf G$ spaces and relative Langlands duality</td>
+    <td><a href="http://arxiv.org/pdf/2409.06303v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-09</td>
+    <td>Tobias Diez, Gerd Rudolph</td>
+    <td>Symplectic Reduction in Infinite Dimensions</td>
+    <td><a href="http://arxiv.org/pdf/2409.05829v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-05</td>
+    <td>Zihong Chen</td>
+    <td>On the exponential type conjecture</td>
+    <td><a href="http://arxiv.org/pdf/2409.03922v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-09-03</td>
+    <td>Nicholas Wilkins</td>
+    <td>A survey of equivariant operations on quantum cohomology for symplectic manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2409.01743v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-28</td>
+    <td>Amir Babak Aazami</td>
+    <td>The Eisenhart Lift and Hamiltonian Systems</td>
+    <td><a href="http://arxiv.org/pdf/2408.16139v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-28</td>
+    <td>Lucien Hennecart</td>
+    <td>Cohomological integrality for symmetric quotient stacks</td>
+    <td><a href="http://arxiv.org/pdf/2408.15786v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-27</td>
+    <td>Giovanni Rastelli, Manuele Santoprete</td>
+    <td>Relative Equilibria for Scaling Symmetries and Central Configurations</td>
+    <td><a href="http://arxiv.org/pdf/2408.15191v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-27</td>
+    <td>N. K. Smolentsev, K. V. Chernova</td>
+    <td>On left-invariant semi-Kähler structures on six-dimensional nilpotent nonsymplectic Lie groups</td>
+    <td><a href="http://arxiv.org/pdf/2408.14733v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-27</td>
+    <td>Georgios Dimitroglou Rizell, Jonathan David Evans</td>
+    <td>Lagrangian Surplusection Phenomena</td>
+    <td><a href="http://arxiv.org/pdf/2408.14883v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-26</td>
+    <td>Ivan Gutierrez-Sagredo, David Iglesias Ponte, Juan Carlos Marrero, Edith Padrón</td>
+    <td>Unimodularity and invariant volume forms for Hamiltonian dynamics on coisotropic Poisson homogeneous spaces</td>
+    <td><a href="http://arxiv.org/pdf/2408.14091v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-21</td>
+    <td>D. Y. Zhong, G. Q. Wang</td>
+    <td>Least Constraint and Contact Dynamics of Stochastic Vector Bundles</td>
+    <td><a href="http://arxiv.org/pdf/2408.11575v5">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-21</td>
+    <td>Peter Crooks, Maxence Mayrand</td>
+    <td>Scheme-theoretic coisotropic reduction</td>
+    <td><a href="http://arxiv.org/pdf/2408.11932v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-16</td>
+    <td>Daniel Pomerleano, Paul Seidel</td>
+    <td>Symplectic cohomology relative to a smooth anticanonical divisor</td>
+    <td><a href="http://arxiv.org/pdf/2408.09039v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-13</td>
+    <td>Lu Li</td>
+    <td>High-order Structure-preserving Methods for Damped Hamiltonian System</td>
+    <td><a href="http://arxiv.org/pdf/2408.06613v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-12</td>
+    <td>Michael Hallam, Abdellah Lahdili</td>
+    <td>The weighted Hermite--Einstein equation</td>
+    <td><a href="http://arxiv.org/pdf/2408.06267v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-08</td>
+    <td>Libor Snobl</td>
+    <td>On the incompleteness of the classification of quadratically integrable Hamiltonian systems in the three-dimensional Euclidean space</td>
+    <td><a href="http://arxiv.org/pdf/2408.04457v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-06</td>
+    <td>Indranil Biswas, Dimitri Markushevich</td>
+    <td>Symplectic moduli space of 1-dimensional sheaves on Poisson surfaces</td>
+    <td><a href="http://arxiv.org/pdf/2408.02955v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-06</td>
+    <td>Yoshinori Namikawa</td>
+    <td>Towards a characterization of toric hyperkähler varieties among symplectic singularities</td>
+    <td><a href="http://arxiv.org/pdf/2408.03012v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-06</td>
+    <td>Theodore D. Drivas, Daniil Glukhovskiy, Boris Khesin</td>
+    <td>Pensive billiards, point vortices, and pucks</td>
+    <td><a href="http://arxiv.org/pdf/2408.03279v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-08-02</td>
+    <td>Andronikos Paliathanasis</td>
+    <td>Geometric Linearization for Constraint Hamiltonian Systems</td>
+    <td><a href="http://arxiv.org/pdf/2408.01020v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-29</td>
+    <td>Martin Bauer, Sadashige Ishida, Peter W. Michor</td>
+    <td>Symplectic structures on the space of space curves</td>
+    <td><a href="http://arxiv.org/pdf/2407.19908v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-24</td>
+    <td>Matteo Bruno, Sebastiano Segreto, Giovanni Montani</td>
+    <td>Generalized Uncertainty Principle theories and their classical interpretation</td>
+    <td><a href="http://arxiv.org/pdf/2407.17408v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-24</td>
+    <td>Marcel Guardia, José Lamas, Tere M. Seara</td>
+    <td>Oscillatory motions, parabolic orbits and collision orbits in the planar circular restricted three-body problem</td>
+    <td><a href="http://arxiv.org/pdf/2407.17343v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-22</td>
+    <td>Yingdi Qin</td>
+    <td>Shifted symplectic structure on Poisson Lie algebroid and generalized complex geometry</td>
+    <td><a href="http://arxiv.org/pdf/2407.15598v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-16</td>
+    <td>Giorgio Mantica</td>
+    <td>Behavior of correlation functions in the dynamics of the Multiparticle Quantum Arnol'd Cat</td>
+    <td><a href="http://arxiv.org/pdf/2407.11583v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-15</td>
+    <td>Maciej Dunajski, Andrzej J. Maciejewski, Maria Przybylska</td>
+    <td>Integrability of quantum dots</td>
+    <td><a href="http://arxiv.org/pdf/2407.11191v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-12</td>
+    <td>Anna Abasheva</td>
+    <td>Shafarevich-Tate groups of holomorphic Lagrangian fibrations II</td>
+    <td><a href="http://arxiv.org/pdf/2407.09178v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-12</td>
+    <td>Pete Rigas</td>
+    <td>Quantum inverse scattering for the 20-vertex model up to Dynkin automorphism: crossing probabilities, 3D Poisson structure, triangular height functions, weak integrability</td>
+    <td><a href="http://arxiv.org/pdf/2407.11066v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-12</td>
+    <td>Emmanuel Opshtein, Felix Schlenk</td>
+    <td>Liouville polarizations and the rigidity of their Lagrangian skeleta in dimension $4$</td>
+    <td><a href="http://arxiv.org/pdf/2407.09408v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-11</td>
+    <td>Michael Hutchings, Agniva Roy, Morgan Weiler, Yuan Yao</td>
+    <td>Anchored symplectic embeddings</td>
+    <td><a href="http://arxiv.org/pdf/2407.08512v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-11</td>
+    <td>Damien Calaque, Pavel Safronov</td>
+    <td>Shifted cotangent bundles, symplectic groupoids and deformation to the normal cone</td>
+    <td><a href="http://arxiv.org/pdf/2407.08622v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-11</td>
+    <td>Lingrui Ge, Svetlana Jitomirskaya</td>
+    <td>Hidden subcriticality, symplectic structure, and universality of sharp arithmetic spectral results for type I operators</td>
+    <td><a href="http://arxiv.org/pdf/2407.08866v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-10</td>
+    <td>Andrey Soldatenkov, Misha Verbitsky</td>
+    <td>Hermitian-symplectic and Kahler structures on degenerate twistor deformations</td>
+    <td><a href="http://arxiv.org/pdf/2407.07867v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-10</td>
+    <td>Adi Dickstein, Frol Zapolsky</td>
+    <td>Constraints on symplectic quasi-states</td>
+    <td><a href="http://arxiv.org/pdf/2407.08014v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-10</td>
+    <td>Fedor Bogomolov, Ljudmila Kamenova, Misha Verbitsky</td>
+    <td>Sections of Lagrangian fibrations on holomorphic symplectic manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2407.07877v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-08</td>
+    <td>Stevell Muller</td>
+    <td>Algebraically trivial automorphisms of irreducible holomorphic symplectic manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2407.06007v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-08</td>
+    <td>Nathan Duignan, David Perrella, David Pfefferlé</td>
+    <td>Global realisation of magnetic fields as 1$\frac{1}{2}$D Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2407.05692v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-08</td>
+    <td>António Gouveia, José M. Mourão, João P. Nunes</td>
+    <td>Mabuchi rays, test configurations and quantization for toric manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2407.05860v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-04</td>
+    <td>Thomas Bruun Madsen, Andrew Swann</td>
+    <td>Multi-toric geometries with larger compact symmetry</td>
+    <td><a href="http://arxiv.org/pdf/2407.03693v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-03</td>
+    <td>Annamaria Ortu</td>
+    <td>Moment maps and stability of holomorphic submersions</td>
+    <td><a href="http://arxiv.org/pdf/2407.03246v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-07-01</td>
+    <td>Robert Cardona, Fabio Gironella</td>
+    <td>Non-density results in high dimensional stable Hamiltonian topology</td>
+    <td><a href="http://arxiv.org/pdf/2407.01357v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-30</td>
+    <td>Daniel Álvarez, Marco Gualtieri, Yucong Jiang</td>
+    <td>Symplectic double groupoids and the generalized Kähler potential</td>
+    <td><a href="http://arxiv.org/pdf/2407.00831v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-29</td>
+    <td>Tomohiro Asano, Stéphane Guillermou, Yuichi Ike, Claude Viterbo</td>
+    <td>Regular Lagrangians are smooth Lagrangians</td>
+    <td><a href="http://arxiv.org/pdf/2407.00395v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-27</td>
+    <td>Hanfei Guo, Zhiyu Liu</td>
+    <td>Atomic sheaves on hyper-Kähler manifolds via Bridgeland moduli spaces</td>
+    <td><a href="http://arxiv.org/pdf/2406.19361v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-27</td>
+    <td>Christoph Böhm, Urs Hartl</td>
+    <td>Moment map flow on real reductive Lie groups and GIT estimates</td>
+    <td><a href="http://arxiv.org/pdf/2406.19340v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-26</td>
+    <td>Dai Imaike</td>
+    <td>Analytic torsion for irreducible holomorphic symplectic fourfolds with involution, I: Construction of an invariant</td>
+    <td><a href="http://arxiv.org/pdf/2406.18023v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-26</td>
+    <td>Adrián Andrada, Agustín Garrone</td>
+    <td>Construction of symplectic solvmanifolds satisfying the hard-Lefschetz condition</td>
+    <td><a href="http://arxiv.org/pdf/2406.18042v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-26</td>
+    <td>Luis Crespo, Álvaro Pelayo</td>
+    <td>The $p$-adic Jaynes-Cummings model in symplectic geometry</td>
+    <td><a href="http://arxiv.org/pdf/2406.18415v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-26</td>
+    <td>M. Benyoussef, M. W. Mansouri, SM. Sbai</td>
+    <td>On solvable complete symplectic Lie algebras</td>
+    <td><a href="http://arxiv.org/pdf/2406.18773v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-25</td>
+    <td>Emily Autumn Windes</td>
+    <td>Transversality for perturbed special Lagrangian submanifolds</td>
+    <td><a href="http://arxiv.org/pdf/2406.17948v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-25</td>
+    <td>Andreas Schüßler</td>
+    <td>The blow-down map in Lie algebroid cohomology</td>
+    <td><a href="http://arxiv.org/pdf/2406.17668v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-21</td>
+    <td>Dusa McDuff, Katrin Wehrheim</td>
+    <td>Polyfold fundamental classes and globally structured multivalued perturbations</td>
+    <td><a href="http://arxiv.org/pdf/2406.15176v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-20</td>
+    <td>Joshua Lackman</td>
+    <td>A Mathematical Definition of Path Integrals on Symplectic Manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2406.14547v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-18</td>
+    <td>E. A. Reis, G. X. A. Petronilo, R. G. G. Amorim, H. Belich, F. C. Khanna, A. E. Santana</td>
+    <td>Symplectic Representation of the Ginzburg-Landau Theory</td>
+    <td><a href="http://arxiv.org/pdf/2406.13047v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-17</td>
+    <td>Kevin Schäfers, Michael Peardon, Michael Günther</td>
+    <td>A modified Cayley transform for SU(3)</td>
+    <td><a href="http://arxiv.org/pdf/2406.11337v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-16</td>
+    <td>Chung-Ru Lee</td>
+    <td>Determination of the Hamiltonian from the Equations of Motion with Illustration from Examples</td>
+    <td><a href="http://arxiv.org/pdf/2406.10925v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-13</td>
+    <td>Davide Gaiotto, Jörg Teschner</td>
+    <td>Schur Quantization and Complex Chern-Simons theory</td>
+    <td><a href="http://arxiv.org/pdf/2406.09171v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-13</td>
+    <td>Tatsuki Kuwagaki, Adrian Petr, Vivek Shende</td>
+    <td>On Fukaya categories and prequantization bundles</td>
+    <td><a href="http://arxiv.org/pdf/2406.08852v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-12</td>
+    <td>Sebastian Haney</td>
+    <td>Infinity inner products and open Gromov--Witten invariants</td>
+    <td><a href="http://arxiv.org/pdf/2406.08693v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-12</td>
+    <td>Miguel Abreu, Leonardo Macarini</td>
+    <td>Periodic orbits of non-degenerate lacunary contact forms on prequantization bundles</td>
+    <td><a href="http://arxiv.org/pdf/2406.08462v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-10</td>
+    <td>Romina M. Arroyo, María L. Barberis, Verónica S. Diaz, Yamile Godoy, Isabel Hernández</td>
+    <td>Classification of nilpotent almost abelian Lie groups admitting left-invariant complex or symplectic structures</td>
+    <td><a href="http://arxiv.org/pdf/2406.06819v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-07</td>
+    <td>Xishen Jin, Jiawei Liu</td>
+    <td>Stability of the generalized Lagrangian mean curvature flow in cotangent bundle</td>
+    <td><a href="http://arxiv.org/pdf/2406.04591v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-05</td>
+    <td>L. Álvarez-Cónsul, M. Garcia-Fernandez, O. García-Prada, V. P. Pingali, C. -J. Yao</td>
+    <td>Gravitating vortices and Symplectic Reduction by Stages</td>
+    <td><a href="http://arxiv.org/pdf/2406.03639v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-03</td>
+    <td>Ignacio S. Gomez, Vipul Kumar Pandey, Ronaldo Thibes</td>
+    <td>Symplectic Quantization and General Constraint Structure of a Prototypical Second-Class System</td>
+    <td><a href="http://arxiv.org/pdf/2406.01543v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-03</td>
+    <td>Laurent Côté, Benjamin Gammage, Justin Hilburn</td>
+    <td>Hypertoric Fukaya categories and categories O</td>
+    <td><a href="http://arxiv.org/pdf/2406.01379v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-03</td>
+    <td>Hernán Cendra, María Eugenia García</td>
+    <td>The Optimal Reduction of a 2-Body Problem in R^3</td>
+    <td><a href="http://arxiv.org/pdf/2406.01531v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-03</td>
+    <td>Jonas Kirchhoff, Bernhard Maschke</td>
+    <td>Remarks on the geometric structure of port-Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2406.01036v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-03</td>
+    <td>Shaoyun Bai, Daniel Pomerleano, Guangbo Xu</td>
+    <td>Cohomological splitting over rationally connected bases</td>
+    <td><a href="http://arxiv.org/pdf/2406.00931v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-06-01</td>
+    <td>Roland Abuaf, Riccardo Carini</td>
+    <td>Holomorphic symplectic manifolds from semistable Higgs bundles</td>
+    <td><a href="http://arxiv.org/pdf/2406.00395v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-30</td>
+    <td>Daniel Pomerleano, Constantin Teleman</td>
+    <td>Quantization commutes with reduction again: the quantum GIT conjecture I</td>
+    <td><a href="http://arxiv.org/pdf/2405.20301v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-29</td>
+    <td>Jean-Philippe Chassé</td>
+    <td>Lagrangian metric geometry with Riemannian bounds</td>
+    <td><a href="http://arxiv.org/pdf/2405.19144v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-28</td>
+    <td>Semon Rezchikov</td>
+    <td>Cyclotomic Structures in Symplectic Topology</td>
+    <td><a href="http://arxiv.org/pdf/2405.18370v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-28</td>
+    <td>Eyup Yalcinkaya</td>
+    <td>The 4-Planes of Spin(7) Manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2405.17936v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-27</td>
+    <td>Joshua Lackman</td>
+    <td>A Derivation of Geometric Quantization via Feynman's Path Integral on Phase Space</td>
+    <td><a href="http://arxiv.org/pdf/2405.17273v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-27</td>
+    <td>Marius Mönch, Nicole Marheineke</td>
+    <td>Commutator-based operator splitting for linear port-Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2405.17106v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-25</td>
+    <td>Amirmasoud Geevechi</td>
+    <td>A Gluing Problem for a Gauged Hyperbolic PDE</td>
+    <td><a href="http://arxiv.org/pdf/2405.16092v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-23</td>
+    <td>Krzysztof Frączek</td>
+    <td>On resonant energy sets for Hamiltonian systems with reflections</td>
+    <td><a href="http://arxiv.org/pdf/2405.14464v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-23</td>
+    <td>A. M. Escobar Ruiz, L. Jiménez-Lara, J. Llibre, Marco A. Zurita</td>
+    <td>Two-center problem with harmonic-like interactions: periodic orbits and non-integrability</td>
+    <td><a href="http://arxiv.org/pdf/2405.15048v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-23</td>
+    <td>Tanguy Vernet</td>
+    <td>Counting representations of quivers with multiplicities</td>
+    <td><a href="http://arxiv.org/pdf/2405.14914v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-21</td>
+    <td>Guangbo Xu</td>
+    <td>Quantum Kirwan map and quantum Steenrod operation</td>
+    <td><a href="http://arxiv.org/pdf/2405.12902v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-21</td>
+    <td>Manuel de León, Rubén Izquierdo-López</td>
+    <td>Coisotropic reduction in Multisymplectic Geometry</td>
+    <td><a href="http://arxiv.org/pdf/2405.12898v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-18</td>
+    <td>Yao Xiao</td>
+    <td>Moment Lagrangian correspondences are unobstructed after bulk deformation</td>
+    <td><a href="http://arxiv.org/pdf/2405.11169v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-17</td>
+    <td>Stefan Haller, Cornelia Vizman</td>
+    <td>A dual pair for the group of volume preserving diffeomorphisms</td>
+    <td><a href="http://arxiv.org/pdf/2405.10737v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-15</td>
+    <td>Masato Arai, Kurando Baba</td>
+    <td>Construction of special Lagrangian submanifolds of the Taub-NUT manifold and the Atiyah-Hitchin manifold</td>
+    <td><a href="http://arxiv.org/pdf/2405.09036v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-13</td>
+    <td>Reda Chhaibi</td>
+    <td>Scattering of the Toda system and the Gaussian $β$-ensemble</td>
+    <td><a href="http://arxiv.org/pdf/2405.07951v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-13</td>
+    <td>Liyan Ni, Yihao Zhao, Zhonghan Hu</td>
+    <td>Non-unique Hamiltonians for Discrete Symplectic Dynamics</td>
+    <td><a href="http://arxiv.org/pdf/2405.07410v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-12</td>
+    <td>Jian Wang, Qinglong Zhou</td>
+    <td>The positive fundamental group of ${\rm Sp}(2n)$</td>
+    <td><a href="http://arxiv.org/pdf/2405.07398v4">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-09</td>
+    <td>Shaoyun Bai, Daniel Pomerleano</td>
+    <td>Equivariant formality in complex-oriented theories</td>
+    <td><a href="http://arxiv.org/pdf/2405.05821v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-09</td>
+    <td>Sukjoo Lee, Yin Li, Si-Yang Liu, Cheuk Yu Mak</td>
+    <td>Fukaya categories of hyperplane arrangements</td>
+    <td><a href="http://arxiv.org/pdf/2405.05856v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-09</td>
+    <td>Simone Billi, Annalisa Grossi</td>
+    <td>Non-symplectic automorphisms of prime order of O'Grady's tenfolds and cubic fourfolds</td>
+    <td><a href="http://arxiv.org/pdf/2405.05932v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-08</td>
+    <td>Teng Fei</td>
+    <td>The Geometry of Three-Forms on Symplectic Six-Manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2405.04827v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-08</td>
+    <td>Zihong Chen</td>
+    <td>Quantum Steenrod operations and Fukaya categories</td>
+    <td><a href="http://arxiv.org/pdf/2405.05242v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-07</td>
+    <td>Marco Calabrese, Simone Paleari, Tiziano Penati</td>
+    <td>Darboux's Theorem, Lie series and the standardization of the Salerno and Ablowitz-Ladik models</td>
+    <td><a href="http://arxiv.org/pdf/2405.04205v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-06</td>
+    <td>Nathan Hayford</td>
+    <td>The Ising Model Coupled to 2D Gravity: Higher-order Painlevé Equations/The $(3,4)$ String Equation</td>
+    <td><a href="http://arxiv.org/pdf/2405.03260v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-06</td>
+    <td>Nicholas Lindsay</td>
+    <td>Symplectic torus actions on complete intersections</td>
+    <td><a href="http://arxiv.org/pdf/2405.03424v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-06</td>
+    <td>Yusuke Kawamoto</td>
+    <td>Donaldson divisors and spectral invariants</td>
+    <td><a href="http://arxiv.org/pdf/2405.03444v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-06</td>
+    <td>Yuji Hirota, Noriaki Ikeda</td>
+    <td>Comomentum sections and Poisson maps in Hamiltonian Lie algebroids</td>
+    <td><a href="http://arxiv.org/pdf/2405.03533v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-03</td>
+    <td>David Clausen, Xiang Tang, Li-Sheng Tseng</td>
+    <td>Mapping Cone and Morse Theory</td>
+    <td><a href="http://arxiv.org/pdf/2405.02272v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-02</td>
+    <td>Rohil Prasad</td>
+    <td>High-dimensional families of holomorphic curves and three-dimensional energy surfaces</td>
+    <td><a href="http://arxiv.org/pdf/2405.01106v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-02</td>
+    <td>Joshua Lackman</td>
+    <td>Geometric Quantization Without Polarizations</td>
+    <td><a href="http://arxiv.org/pdf/2405.01513v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-02</td>
+    <td>Kaja Krhac, Bernhard Maschke, Arjan van der Schaft</td>
+    <td>Port-Hamiltonian systems with energy and power ports</td>
+    <td><a href="http://arxiv.org/pdf/2405.01241v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-05-01</td>
+    <td>Ioan Mărcuţ, Andreas Schüßler</td>
+    <td>The Serre spectral sequence of a Lie subalgebroid</td>
+    <td><a href="http://arxiv.org/pdf/2405.00419v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-30</td>
+    <td>Thomas Baier, Ana Cristina Ferreira, Joachim Hilgert, José M. Mourão, João P. Nunes</td>
+    <td>Fibering polarizations and Mabuchi rays on symmetric spaces of compact type</td>
+    <td><a href="http://arxiv.org/pdf/2404.19697v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-30</td>
+    <td>Katarzyna Grabowska, Janusz Grabowski, Marek Kuś, Giuseppe Marmo</td>
+    <td>Contactifications: a Lagrangian description of compact Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2404.19560v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-29</td>
+    <td>Chris Hull, Maxim Zabzine</td>
+    <td>$N=(2,2)$ superfields and geometry revisited</td>
+    <td><a href="http://arxiv.org/pdf/2404.19079v4">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-29</td>
+    <td>Hung Tran</td>
+    <td>Kähler Soliton Surfaces Are Generically Toric</td>
+    <td><a href="http://arxiv.org/pdf/2404.18866v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-29</td>
+    <td>Nikolay Kononenko</td>
+    <td>Lagrangian subvarieties of hyperspherical varieties related to $G_2$</td>
+    <td><a href="http://arxiv.org/pdf/2404.19033v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-26</td>
+    <td>Eckhard Meinrenken, Selim Tawfik</td>
+    <td>Manin pairs and moment maps revisited</td>
+    <td><a href="http://arxiv.org/pdf/2404.17518v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-26</td>
+    <td>Wai Yeung Lam</td>
+    <td>Pullback of symplectic forms to the space of circle patterns</td>
+    <td><a href="http://arxiv.org/pdf/2404.17458v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-24</td>
+    <td>Elia Fusi, Ramiro A. Lafuente, James Stanfield</td>
+    <td>The homogeneous generalized Ricci flow</td>
+    <td><a href="http://arxiv.org/pdf/2404.15749v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-22</td>
+    <td>Vestislav Apostolov, Jeffrey Streets, Yury Ustinovskiy</td>
+    <td>Formal structure of scalar curvature in generalized Kähler geometry</td>
+    <td><a href="http://arxiv.org/pdf/2404.14595v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-22</td>
+    <td>Takahiro Oba</td>
+    <td>A note on Stein fillability of circle bundles over symplectic manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2404.14028v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-22</td>
+    <td>Alex S. Arvanitakis, Dimitri Kanakaris</td>
+    <td>Localisation without supersymmetry: towards exact results from Dirac structures in 3D $N = 0$ gauge theory</td>
+    <td><a href="http://arxiv.org/pdf/2404.14472v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-18</td>
+    <td>Ramy Rashad, Stefano Stramigioli</td>
+    <td>The port-Hamiltonian structure of continuum mechanics</td>
+    <td><a href="http://arxiv.org/pdf/2404.12078v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-17</td>
+    <td>François Jauberteau, Yann Rollin</td>
+    <td>Isotropic maps and moment map flow</td>
+    <td><a href="http://arxiv.org/pdf/2404.11347v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-15</td>
+    <td>Yong-Geun Oh, Yat-Hin Suen</td>
+    <td>Fukaya's immersed Lagrangian Floer theory and microlocalization of Fukaya category</td>
+    <td><a href="http://arxiv.org/pdf/2404.09485v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-15</td>
+    <td>Sanath K. Devalapurkar</td>
+    <td>Derived geometric Satake for $\mathrm{PGL}_2^{\times 3}/\mathrm{PGL}_2^\mathrm{diag}$</td>
+    <td><a href="http://arxiv.org/pdf/2404.09853v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-15</td>
+    <td>Hiroshi Hirai, Keiya Sakabe</td>
+    <td>Gradient descent for unbounded convex functions on Hadamard manifolds and its applications to scaling problems</td>
+    <td><a href="http://arxiv.org/pdf/2404.09746v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-14</td>
+    <td>Alexander Mielke, Mark A. Peletier, Johannes Zimmer</td>
+    <td>Deriving a GENERIC system from a Hamiltonian system</td>
+    <td><a href="http://arxiv.org/pdf/2404.09284v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-11</td>
+    <td>Jean-François Barraud, Mihai Damian, Vincent Humilière, Alexandru Oancea</td>
+    <td>Floer Homology with DG Coefficients. Applications to cotangent bundles</td>
+    <td><a href="http://arxiv.org/pdf/2404.07953v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-05</td>
+    <td>Dan Goreac, Jonas Kirchhoff, Bernhard Maschke</td>
+    <td>Generating functions for irreversible Hamiltonian systems</td>
+    <td><a href="http://arxiv.org/pdf/2404.04092v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-04</td>
+    <td>Joshua Lackman</td>
+    <td>A Canonical Quantization of Poisson Manifolds: a 2-Groupoid Scheme</td>
+    <td><a href="http://arxiv.org/pdf/2404.03628v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-04</td>
+    <td>Petre Birtea, Zohreh Ravanpak, Cornelia Vizman</td>
+    <td>Generalized double bracket vector fields</td>
+    <td><a href="http://arxiv.org/pdf/2404.03221v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-02</td>
+    <td>Qiu Shi Wang</td>
+    <td>Classification of superpotentials for cohomogeneity one Ricci solitons</td>
+    <td><a href="http://arxiv.org/pdf/2404.02050v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-04-02</td>
+    <td>Peleg Bar-Lev</td>
+    <td>Algebraic structures in Lagrangian Floer cohomology modelled on differential forms</td>
+    <td><a href="http://arxiv.org/pdf/2404.02020v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-31</td>
+    <td>Marie-Claude Arnaud, Vincent Humilière, Claude Viterbo</td>
+    <td>Higher Dimensional Birkhoff attractors (with an appendix by Maxime Zavidovique)</td>
+    <td><a href="http://arxiv.org/pdf/2404.00804v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-29</td>
+    <td>Miguel Vaquero, David Martín de Diego, Jorge Cortés</td>
+    <td>Designing Poisson Integrators Through Machine Learning</td>
+    <td><a href="http://arxiv.org/pdf/2403.20139v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-28</td>
+    <td>Philippe Bolle, Marco Mazzucchelli, Andrea Venturelli</td>
+    <td>On potentials whose level sets are orbits</td>
+    <td><a href="http://arxiv.org/pdf/2403.19281v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-26</td>
+    <td>Anton Alekseev, Andrew Neitzke, Xiaomeng Xu, Yan Zhou</td>
+    <td>WKB asymptotics of Stokes matrices, spectral curves and rhombus inequalities</td>
+    <td><a href="http://arxiv.org/pdf/2403.17906v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-25</td>
+    <td>Rémi Delloque</td>
+    <td>Continuity of HYM connections with respect to metric variations</td>
+    <td><a href="http://arxiv.org/pdf/2403.16814v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-25</td>
+    <td>Álvaro Muñiz-Brea</td>
+    <td>Lagrangian cobordisms and K-theory of symplectic bielliptic surfaces</td>
+    <td><a href="http://arxiv.org/pdf/2403.17098v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-23</td>
+    <td>Takashi Ono</td>
+    <td>Harmonic Bundles with Symplectic Structures</td>
+    <td><a href="http://arxiv.org/pdf/2403.15719v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-23</td>
+    <td>Nobuo Iida, Masaki Taniguchi</td>
+    <td>Monopoles and transverse knots</td>
+    <td><a href="http://arxiv.org/pdf/2403.15763v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-20</td>
+    <td>Jingyi Chen, Micah Warren</td>
+    <td>A Geometric flow towards hamiltonian stationary submanifolds</td>
+    <td><a href="http://arxiv.org/pdf/2403.13997v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-18</td>
+    <td>Joana Cirici, Scott O. Wilson</td>
+    <td>Homotopy BV-algebras in Hermitian geometry</td>
+    <td><a href="http://arxiv.org/pdf/2403.12314v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-18</td>
+    <td>Pazit Haim-Kislev, Michael Khanevsky, Asaf Kislev, Daniel Rosen</td>
+    <td>Pseudo-holomorphic triangles and the median quasi-state</td>
+    <td><a href="http://arxiv.org/pdf/2403.12248v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-18</td>
+    <td>Andreas Fring, Takano Taira, Bethan Turner</td>
+    <td>Higher time-derivative theories from space-time interchanged integrable field theories</td>
+    <td><a href="http://arxiv.org/pdf/2403.11949v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-18</td>
+    <td>Mehdi Lejmi, Scott O. Wilson</td>
+    <td>Conformally symplectic structures and the Lefschetz condition</td>
+    <td><a href="http://arxiv.org/pdf/2403.12304v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-18</td>
+    <td>Mateo Anarella</td>
+    <td>Extrinsically homogeneous Lagrangian submanifolds of the pseudo-nearly Kähler $\mathrm{SL}(2,\mathbb{R})\times\mathrm{SL}(2,\mathbb{R})$</td>
+    <td><a href="http://arxiv.org/pdf/2403.11962v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-15</td>
+    <td>Kevin Schäfers, Jacob Finkenrath, Michael Günther, Francesco Knechtli</td>
+    <td>Hessian-free force-gradient integrators</td>
+    <td><a href="http://arxiv.org/pdf/2403.10370v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-12</td>
+    <td>Shin-itiro Goto</td>
+    <td>From the Fokker-Planck equation to a contact Hamiltonian system</td>
+    <td><a href="http://arxiv.org/pdf/2403.07334v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-11</td>
+    <td>Rayssa Caju, Jesse Ratzkin, Almir Silva Santos</td>
+    <td>Moduli space theory for complete, constant Q-curvature metrics on finitely punctured spheres</td>
+    <td><a href="http://arxiv.org/pdf/2403.06511v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-11</td>
+    <td>Egor Shelukhin</td>
+    <td>A symplectic Hilbert-Smith conjecture</td>
+    <td><a href="http://arxiv.org/pdf/2403.07195v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-08</td>
+    <td>Matías I. Caruso, Javier Fernández, Cora Tori, Marcela Zuccalli</td>
+    <td>On discrete Routh reduction and structures on the reduced space</td>
+    <td><a href="http://arxiv.org/pdf/2403.05305v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-08</td>
+    <td>Jinfeng Song</td>
+    <td>Quantum duality principle and quantum symmetric pairs</td>
+    <td><a href="http://arxiv.org/pdf/2403.05167v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-05</td>
+    <td>Daniel López Garcia, Nicolas Martinez Alba</td>
+    <td>Reduction of Cosymplectic groupoids by cosymplectic moment maps</td>
+    <td><a href="http://arxiv.org/pdf/2403.03178v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-04</td>
+    <td>Hui Li</td>
+    <td>Hamiltonian $S^1$-manifolds which are like a coadjoint orbit of $G_2$</td>
+    <td><a href="http://arxiv.org/pdf/2403.01825v4">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-03-01</td>
+    <td>Leonor Godinho, Nicholas Lindsay, Silvia Sabatini</td>
+    <td>On a symplectic generalization of a Hirzebruch problem</td>
+    <td><a href="http://arxiv.org/pdf/2403.00949v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-29</td>
+    <td>Marta Dell'Atti, Thomas Kecker</td>
+    <td>Geometric approach for the identification of Hamiltonian systems of quasi-Painlevé type</td>
+    <td><a href="http://arxiv.org/pdf/2402.19053v3">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-28</td>
+    <td>Markus Lohmayer, Giuseppe Capobianco, Sigrid Leyendecker</td>
+    <td>Exergetic Port-Hamiltonian Systems for Multibody Dynamics</td>
+    <td><a href="http://arxiv.org/pdf/2402.18095v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-27</td>
+    <td>Markus Lohmayer, Owen Lynch, Sigrid Leyendecker</td>
+    <td>Exergetic Port-Hamiltonian Systems Modeling Language</td>
+    <td><a href="http://arxiv.org/pdf/2402.17640v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-22</td>
+    <td>Maciej Dunajski, Timothy Moy</td>
+    <td>Heavenly metrics, hyper-Lagrangians and Joyce structures</td>
+    <td><a href="http://arxiv.org/pdf/2402.14352v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-19</td>
+    <td>Sonja Hohloch</td>
+    <td>Homoclinic Floer homology via direct limits</td>
+    <td><a href="http://arxiv.org/pdf/2402.12345v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-16</td>
+    <td>Kai Hugtenburg</td>
+    <td>On the quantum differential equations for a family of non-Kähler monotone symplectic manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2402.10867v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-16</td>
+    <td>Santiago Barbieri</td>
+    <td>Semi-algebraic Geometry and generic Hamiltonian stability</td>
+    <td><a href="http://arxiv.org/pdf/2402.10707v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-14</td>
+    <td>Vyacheslav Lysov</td>
+    <td>Chern-Gauss-Bonnet theorem via BV localization</td>
+    <td><a href="http://arxiv.org/pdf/2402.09162v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-13</td>
+    <td>Dmitri Alekseevsky, Gianni Manno, Giovanni Moreno</td>
+    <td>Invariant Monge-Ampère equations on contactified para-Kähler manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2402.08315v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-11</td>
+    <td>Harald Schmid</td>
+    <td>On the eigenvalues of the spheroidal wave equation</td>
+    <td><a href="http://arxiv.org/pdf/2402.07133v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-11</td>
+    <td>Stephan Mescher</td>
+    <td>Geometric and topological properties of manifolds in robot motion planning</td>
+    <td><a href="http://arxiv.org/pdf/2402.07265v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-10</td>
+    <td>Shuho Kanda</td>
+    <td>The hard Lefschetz duality for locally conformally almost Kähler manifolds</td>
+    <td><a href="http://arxiv.org/pdf/2402.06893v1">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-09</td>
+    <td>Zihong Chen</td>
+    <td>On operadic open-closed maps in characteristic $p$</td>
+    <td><a href="http://arxiv.org/pdf/2402.06183v2">PDF</a></td>
+</tr>
+<tr>
+    <td>2024-02-08</td>
+    <td>Daniele Sepe, Susan Tolman</td>
+    <td>Connectedness of level sets for non-degenerate integrable systems that extend complexity one torus actions</td>
+    <td><a href="http://arxiv.org/pdf/2402.05814v2">PDF</a></td>
+</tr>
+<tr>
+    </table>
+    
+    
+    
+    <div class="no-results" id="noResults">
+        <p>Aucun article trouvé correspondant à votre recherche.</p>
+        <p>Essayez de modifier vos critères de recherche.</p>
+    </div>
+
+    <script>
+        // Variables globales
+        let allArticles = [];
+        let filteredArticles = [];
+        let autoUpdateEnabled = false;
+        let updateInterval;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            extractArticles();
+            setupEventListeners();
+            updateResultCount();
+        });
+
+        function extractArticles() {
+            const rows = document.querySelectorAll('#articlesBody tr');
+            allArticles = Array.from(rows).map(row => {
+                const cells = row.querySelectorAll('td');
+                return {
+                    element: row,
+                    date: cells[0].textContent.trim(),
+                    authors: cells[1].textContent.trim(),
+                    title: cells[2].textContent.trim(),
+                    pdf: cells[3].innerHTML
+                };
+            });
+            filteredArticles = [...allArticles];
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('yearFilter').addEventListener('change', handleYearFilter);
+            document.getElementById('showTop10').addEventListener('click', showTop10);
+            document.getElementById('showAll').addEventListener('click', showAll);
+            document.getElementById('toggleAutoUpdate').addEventListener('click', toggleAutoUpdate);
+            document.getElementById('manualUpdate').addEventListener('click', manualUpdate);
+            document.getElementById('intervalSelect').addEventListener('change', updateIntervalSetting);
+        }
+
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            filteredArticles = allArticles.filter(article => {
+                const matchesSearch = searchTerm === '' || 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.authors.toLowerCase().includes(searchTerm) ||
+                    article.date.includes(searchTerm);
+                
+                const matchesYear = yearFilter === '' || article.date.startsWith(yearFilter);
+                
+                return matchesSearch && matchesYear;
+            });
+            
+            displayArticles();
+            updateResultCount();
+        }
+
+        function handleYearFilter() {
+            handleSearch();
+        }
+
+        function displayArticles() {
+            const tbody = document.getElementById('articlesBody');
+            const noResults = document.getElementById('noResults');
+            const table = document.getElementById('articlesTable');
+            
+            if (!tbody || !table) return; // Protection si le tableau n'existe pas encore
+            
+            tbody.innerHTML = '';
+            
+            if (filteredArticles.length === 0) {
+                noResults.style.display = 'block';
+                table.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                table.style.display = 'table';
+                
+                filteredArticles.forEach(article => {
+                    const row = article.element.cloneNode(true);
+                    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                    if (searchTerm) {
+                        highlightSearchTerm(row, searchTerm);
+                    }
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function highlightSearchTerm(row, searchTerm) {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, index) => {
+                if (index < 3) {
+                    const content = cell.innerHTML;
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    cell.innerHTML = content.replace(regex, '<span class="highlight">$1</span>');
+                }
+            });
+        }
+
+        function showTop10() {
+            filteredArticles = allArticles.slice(0, 10);
+            displayArticles();
+            updateResultCount();
+            document.getElementById('searchInput').value = '';
+            document.getElementById('yearFilter').value = '';
+        }
+
+        function showAll() {
+            filteredArticles = [...allArticles];
+            displayArticles();
+            updateResultCount();
+            document.getElementById('searchInput').value = '';
+            document.getElementById('yearFilter').value = '';
+        }
+
+        function updateResultCount() {
+            const resultCount = document.getElementById('resultCount');
+            const articleCount = document.getElementById('articleCount');
+            
+            if (filteredArticles.length === allArticles.length) {
+                resultCount.textContent = 'Showing all articles';
+            } else {
+                resultCount.textContent = `Showing ${filteredArticles.length} of ${allArticles.length} articles`;
+            }
+            
+            articleCount.textContent = allArticles.length;
+        }
+
+        function toggleAutoUpdate() {
+            const button = document.getElementById('toggleAutoUpdate');
+            const status = document.getElementById('updateStatus');
+            
+            if (autoUpdateEnabled) {
+                clearInterval(updateInterval);
+                autoUpdateEnabled = false;
+                button.textContent = 'Enable Auto-Update';
+                document.getElementById('nextUpdate').textContent = 'Not scheduled';
+                status.className = 'update-status';
+            } else {
+                const interval = parseInt(document.getElementById('intervalSelect').value) * 60000;
+                updateInterval = setInterval(manualUpdate, interval);
+                autoUpdateEnabled = true;
+                button.textContent = 'Disable Auto-Update';
+                updateNextUpdateTime();
+                status.className = 'update-status updating';
+            }
+        }
+
+        function updateNextUpdateTime() {
+            if (autoUpdateEnabled) {
+                const interval = parseInt(document.getElementById('intervalSelect').value);
+                const nextUpdate = new Date(Date.now() + interval * 60000);
+                document.getElementById('nextUpdate').textContent = nextUpdate.toLocaleTimeString();
+            }
+        }
+
+        function updateIntervalSetting() {
+            const newInterval = document.getElementById('intervalSelect').value;
+            document.getElementById('updateInterval').textContent = `Every ${newInterval} minutes`;
+            
+            if (autoUpdateEnabled) {
+                toggleAutoUpdate(); // Désactive
+                toggleAutoUpdate(); // Réactive avec le nouvel intervalle
+            }
+        }
+
+        function manualUpdate() {
+            const lastUpdate = document.getElementById('lastUpdate');
+            const updateStatus = document.getElementById('updateStatus');
+            
+            lastUpdate.textContent = new Date().toLocaleString();
+            updateStatus.className = 'update-status';
+            
+            if (autoUpdateEnabled) {
+                updateNextUpdateTime();
+            }
+            
+            console.log('Update completed');
+        }
+    </script>
+
+</body>
+</html>
