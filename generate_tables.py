@@ -4,187 +4,158 @@ import os
 import html
 
 def generate_html_table():
+    """Génère le tableau HTML à partir du CSV"""
     try:
-        # Vérifier que le fichier CSV existe
+        # Fichiers
         csv_file = "symplectic_geometry_articles.csv"
+        template_file = "index_template.html"
+        output_file = "index.html"
+        
+        print(f"📊 Chargement des données depuis {csv_file}...")
+        
+        # Vérifier que le CSV existe
         if not os.path.exists(csv_file):
-            print(f"Erreur: Le fichier {csv_file} n'existe pas.")
+            print(f"❌ Erreur: {csv_file} n'existe pas!")
             return False
         
-        # Charger le fichier CSV
-        print("Chargement du fichier CSV...")
+        # Charger le CSV
         df = pd.read_csv(csv_file, encoding='utf-8')
+        print(f"✅ {len(df)} articles chargés")
         
         # Vérifier les colonnes nécessaires
         required_columns = ['published_date', 'authors', 'title', 'url', 'id']
         missing_columns = [col for col in required_columns if col not in df.columns]
+        
         if missing_columns:
-            print(f"Erreur: Colonnes manquantes dans le CSV: {missing_columns}")
+            print(f"❌ Colonnes manquantes: {missing_columns}")
             print(f"Colonnes disponibles: {list(df.columns)}")
             return False
         
         # Nettoyer les données
         df = df.fillna("Non spécifié")
         
-        # Trier par date de publication (format supposé: YYYY-MM-DD)
+        # Trier par date
         try:
             df['published_date'] = pd.to_datetime(df['published_date'], errors='coerce')
             df = df.sort_values(by="published_date", ascending=False)
-            # Reformater les dates pour l'affichage
+            # Formatter les dates pour l'affichage
             df['published_date'] = df['published_date'].dt.strftime('%Y-%m-%d')
             df['published_date'] = df['published_date'].fillna("Date inconnue")
+            print("✅ Données triées par date")
         except Exception as e:
-            print(f"Attention: Problème avec le tri des dates: {e}")
-            df = df.sort_values(by="published_date", ascending=False)
+            print(f"⚠️ Problème avec le tri des dates: {e}")
         
-        # Générer les lignes HTML pour le tableau
-        print("Génération des lignes HTML...")
+        # Générer les lignes HTML
+        print("🔄 Génération des lignes HTML...")
         rows_html = ""
+        
         for index, row in df.iterrows():
-            # Échapper le HTML pour éviter les problèmes d'injection
+            # Échapper le HTML pour la sécurité
             published_date = html.escape(str(row['published_date']))
             authors = html.escape(str(row['authors']))
             title = html.escape(str(row['title']))
             url = html.escape(str(row['url']))
             article_id = html.escape(str(row['id']))
             
-            rows_html += f"""        <tr>
+            # Générer la ligne HTML
+            row_html = f"""        <tr>
             <td>{published_date}</td>
             <td>{authors}</td>
             <td>{title}</td>
             <td><a href="{url}" target="_blank">{article_id}</a></td>
         </tr>\n"""
+            
+            rows_html += row_html
         
-        # Vérifier que le template existe
-        template_file = "index_template.html"
+        print(f"✅ {len(df)} lignes HTML générées")
+        
+        # Charger le template
+        print(f"📝 Chargement du template {template_file}...")
+        
         if not os.path.exists(template_file):
-            print(f"Erreur: Le fichier template {template_file} n'existe pas.")
-            # Créer un template basique
-            print("Création d'un template HTML basique...")
-            create_basic_template()
-        
-        # Charger le modèle HTML
-        print("Chargement du template HTML...")
-        with open(template_file, "r", encoding="utf-8") as f:
-            template = f.read()
-        
-        # Vérifier que la zone d'injection existe
-        if "<!--ARTICLE_TBODY_HERE-->" not in template:
-            print("Erreur: Le marker <!--ARTICLE_TBODY_HERE--> n'existe pas dans le template.")
+            print(f"❌ Erreur: {template_file} n'existe pas!")
             return False
         
-        # Remplacer la zone d'injection
-        final_html = template.replace("<!--ARTICLE_TBODY_HERE-->", rows_html)
+        with open(template_file, "r", encoding="utf-8") as f:
+            template_content = f.read()
         
-        # Sauvegarder la version générée
-        output_file = "index.html"
+        # Vérifier la présence du marker
+        marker = "<!--ARTICLE_TBODY_HERE-->"
+        if marker not in template_content:
+            print(f"❌ Erreur: Marker '{marker}' non trouvé dans le template!")
+            return False
+        
+        print("✅ Template chargé et marker trouvé")
+        
+        # Remplacer le marker par les données
+        final_html = template_content.replace(marker, rows_html)
+        
+        # Vérifier que le remplacement a eu lieu
+        if marker in final_html:
+            print("❌ Erreur: Le marker n'a pas été remplacé!")
+            return False
+        
+        # Sauvegarder le fichier final
+        print(f"💾 Sauvegarde vers {output_file}...")
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(final_html)
         
-        print(f"✅ Fichier HTML généré avec succès: {output_file}")
-        print(f"📊 {len(df)} articles traités")
-        return True
-        
-    except FileNotFoundError as e:
-        print(f"Erreur: Fichier non trouvé - {e}")
-        return False
-    except pd.errors.EmptyDataError:
-        print("Erreur: Le fichier CSV est vide.")
-        return False
+        # Vérifier le résultat
+        if os.path.exists(output_file):
+            file_size = os.path.getsize(output_file)
+            print(f"✅ Fichier généré avec succès!")
+            print(f"📄 Taille: {file_size:,} octets")
+            print(f"📊 Articles: {len(df)}")
+            return True
+        else:
+            print("❌ Erreur: Fichier de sortie non créé!")
+            return False
+            
     except Exception as e:
-        print(f"Erreur inattendue: {e}")
+        print(f"❌ Erreur inattendue: {e}")
         return False
 
-def create_basic_template():
-    """Crée un template HTML basique si il n'existe pas"""
-    template_content = """<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Articles de Géométrie Symplectique</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .date-col { width: 12%; }
-        .authors-col { width: 25%; }
-        .title-col { width: 50%; }
-        .id-col { width: 13%; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>📐 Articles de Géométrie Symplectique</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th class="date-col">Date de Publication</th>
-                    <th class="authors-col">Auteurs</th>
-                    <th class="title-col">Titre</th>
-                    <th class="id-col">Lien</th>
-                </tr>
-            </thead>
-            <tbody>
-<!--ARTICLE_TBODY_HERE-->
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>"""
-    
-    with open("index_template.html", "w", encoding="utf-8") as f:
-        f.write(template_content)
-    print("✅ Template HTML basique créé: index_template.html")
+def update_last_update_time():
+    """Met à jour le timestamp dans le HTML si nécessaire"""
+    try:
+        output_file = "index.html"
+        if os.path.exists(output_file):
+            with open(output_file, "r", encoding="utf-8") as f:
+                content = f.read()
+            
+            # Remplacer le timestamp si présent
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            if 'id="lastUpdate"' in content:
+                # Pattern plus flexible pour le remplacement
+                import re
+                pattern = r'(<span id="lastUpdate">)[^<]*(</span>)'
+                replacement = f'\\g<1>{current_time}\\g<2>'
+                content = re.sub(pattern, replacement, content)
+                
+                with open(output_file, "w", encoding="utf-8") as f:
+                    f.write(content)
+                print(f"🕒 Timestamp mis à jour: {current_time}")
+    except Exception as e:
+        print(f"⚠️ Erreur mise à jour timestamp: {e}")
 
-# Exécuter la fonction
-if __name__ == "__main__":
+def main():
+    """Fonction principale"""
     print("🚀 Début de la génération HTML...")
+    print("=" * 50)
+    
     success = generate_html_table()
+    
     if success:
-        print("🎉 Traitement terminé avec succès!")
+        update_last_update_time()
+        print("=" * 50)
+        print("🎉 Génération terminée avec succès!")
+        print("👀 Ouvrez index.html dans votre navigateur pour voir le résultat")
     else:
-        print("❌ Échec du traitement. Vérifiez les erreurs ci-dessus.")
+        print("=" * 50)
+        print("❌ Échec de la génération!")
+        print("💡 Utilisez debug_generate_html_table() pour plus de détails")
+    
+    return success
+
+if __name__ == "__main__":
+    main()
