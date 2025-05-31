@@ -1,1 +1,0 @@
-# symplectic-geometry-arxiv-tracker
